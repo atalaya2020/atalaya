@@ -1,12 +1,14 @@
 package com.example.demo;
 
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class JsonReader {
 	@SuppressWarnings("unchecked")
@@ -102,13 +104,23 @@ public class JsonReader {
 				
 			}
 
-		} catch (Exception e) {
+		} catch (ParseException pe) {
+			pe.printStackTrace();
+			
+			// el formato del JSON es incorrecto
+		}
+		catch(IOException e) {
 			e.printStackTrace();
+			// Fallo en la lectura del fichero
+		}
+		catch(Exception e) {
+			
 		}
 		
 		return analizador;
 
 	}
+	
 
 }
 

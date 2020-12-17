@@ -32,5 +32,32 @@ public class Parametro {
 	public void setValor(String valor) {
 		this.valor = valor;
 	}
+	
+public boolean validar() {
+		
+		boolean valido = false;
+		
+		if(this.getNombre().equals("")) {
+			valido = false;
+			return valido;
+			// Falta nombre
+		}
+		else if(this.getTipo() == null) {
+			valido = false;
+			return valido;
+			// Falta descripcion
+		}
+		else if(this.getValor() == null) {
+			valido = false;
+			return valido;
+			// Falta descripcion
+		}
+		
+		else {
+			valido = true;
+		}
+		
+		return valido;
+	}
 
 }

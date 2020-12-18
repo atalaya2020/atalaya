@@ -68,7 +68,7 @@ public class Analisis {
 
 		if(this.getNombre().equals("")) {
 			valido = false;
-			// Falta nombre
+						// Falta nombre
 		}
 		else if(this.getDescripcion().equals("")) {
 			valido = false;

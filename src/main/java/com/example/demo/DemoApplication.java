@@ -45,6 +45,11 @@ public class DemoApplication {
 		
 		ArrayList<Analisis> analizador = JsonReader.read(file);
 		ArrayList<Indicador> indicadores = analizador.get(0).getIndicadores();
+
+		if(analizador.get(0).validar()) {
+			System.out.println("El JSON es válido");
+		}
+		
 		return String.format(indicadores.get(0).getNombre());
 	}
 

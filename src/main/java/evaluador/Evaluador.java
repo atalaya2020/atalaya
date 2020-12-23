@@ -63,6 +63,7 @@ public class Evaluador {
 					multiple = evaluacion.get(i);
 					if (multiple.getNivel() == nivel) {
 						multiple.evalua(evaluacion);
+						// El resultado de la condición completa es el resultado de la condición del nivel mínimo
 						if (nivel == minNivel) {
 							result = multiple.getResultado();
 						}
@@ -78,11 +79,12 @@ public class Evaluador {
 	}
 	
 	private void extraerCondiciones () {
+	// Recorre el texto de la condición indicada, identificando por niveles el texto comprendido entre paréntesis. Cada trozo de texto comprendido entre paréntesis del mismo nivel, será una condición
 		int nivel = 0;
 		String txCondicion;		
 		Integer indCond;
 		
-		ArrayList<Integer> abiertos = new ArrayList<Integer>();
+		ArrayList<Integer> abiertos = new ArrayList<Integer>(); // Almacena las posiciones en el texto en la que se encuntra el '(' que abre la condición actual. El índice se corresponderá con el nivel
 		
 		CondicionMultiple multiple;		
 		System.out.println("Condición completa: " + this.condicionCompleta);
@@ -90,11 +92,14 @@ public class Evaluador {
 		for (int i = 0;i<this.condicionCompleta.length();i++) {
 			c = this.condicionCompleta.charAt(i);
 			if (c == abre) {
+				// Por cada '(' se guarda en el array la posición en la que se encuentra en el nivel actual
 				abiertos.add(nivel, new Integer(i));
 				nivel++;
 			} else {
 				if (c == cierra) {					
+					// Cuando se encuentra un ')' se extre la condición desde el inicial guardado en el array hasta la posición en la que se cierra el nivel
 					txCondicion = this.condicionCompleta.substring(abiertos.get(nivel-1).intValue(), i + 1);
+					// El texto obtenido puede ser una operación, valor, ente paréntesis o una condación. Si es valor, debe ignorarse, si es condición debe tratarse.
 					if (esCondicion(txCondicion)) {
 						multiple = new CondicionMultiple();
 						multiple.setIdCondicion(indCondicion);
@@ -114,6 +119,7 @@ public class Evaluador {
 	}
 	
 	private void infoCondicionMultiple(Integer indCond) {
+	// Se completa la información de la condición recién creada, creando sus condiciones hijas y relacionándolas con ellas
 		CondicionMultiple madre;
 		CondicionMultiple hija;
 		String[] simples = new String [] {};
@@ -132,11 +138,12 @@ public class Evaluador {
 				evaluacion.set(i,  hija);
 			}			
 		}
-
+		// Las partes del texto de la condición que estén entre paréntesis se eliminan del texto de la condición pues, por ser de un nivel superior, ya se habrán tratado.
 		texto = eliminarCondicionesInteriores(madre.getTexto());
+		// Se obtienen el número de operadores AND y OR que tiene la condición.
 		iAnd = contarCaracter(texto, opLogicos[0]);
 		iOr = contarCaracter(texto, opLogicos[1]);
-		
+		// Si la condición contiene operadores de un sólo tipo, se le asigna el tipo. Si contiene los dos operadores, se tratará aparte		
 		if (iAnd > 0 && iOr > 0) {
 			analizarCondicion(indCond);			
 		} else{
@@ -152,29 +159,34 @@ public class Evaluador {
 				}	
 			}
 		}
-		
+		// Para obtener las condiciones simples de la condición. Si no tiene ninguno de los dos operadores, será una condición simple. Si tiene varios operadores, se utilizará el 
+		// operador lógico para separar cada una de las condiciones simples.
 		if ((iAnd > 0 && iOr == 0) || (iAnd == 0 && iOr > 0)) {
-			simples = texto.substring(1, texto.length()-1).split(litOperador);}
-		else {
-			if (iAnd == 0 && iOr == 0) { 
-				simples = new String [] {texto};
-			}
+			simples = texto.substring(1, texto.length()-1).split(litOperador);
 		}
-		if ((iAnd > 0 && iOr == 0) || (iAnd == 0 && iOr > 0) || (iAnd == 0 && iOr == 0)) 	{
+		if ((iAnd > 0 && iOr == 0) || (iAnd == 0 && iOr > 0)) 	{
 			for (int i = 0; i< simples.length; i++) {			
 				hija = new CondicionMultiple();				
 				hija.setIdCondicion(indCondicion);
 				hija.setNivel(nivel+1);
 				hija.setTexto(formatoCondicion(simples[i]));	
 				hija.setMadre(madre.getIdCondicion());					 			
-				operadoresCondicion(simples[i]);
+				hija.setCondicion(operadoresCondicion(simples[i]));
 				evaluacion.add(indCondicion, hija);				
 				indCondicion++;			
 			}	
+		} else {
+			if  (iAnd == 0 && iOr == 0) {
+				madre.setCondicion(operadoresCondicion(texto));
+				evaluacion.set(madre.getIdCondicion(), madre);
+			}
 		}
 	}
 	
 	private void analizarCondicion(Integer indCond) {
+	// La condición compuesta contiene condiciones simples entre las que hay relaciones AND y OR. Al estar al mismo nivel de agrupación, en este caso, se da prioridad a la relación OR,
+	// creando una relación OR entre las condiciones que estén así relacionadas entre ellas, que se relacionará como AND con el resto de condiciones.
+		
 		CondicionMultiple madre;
 		CondicionMultiple hija;
 		CondicionMultiple nieta;
@@ -186,7 +198,8 @@ public class Evaluador {
 		madre = evaluacion.get(indCond);
 		madre.setTipo(opLogicos[0].trim());
 		evaluacion.set(indCond, madre);
-		texto =eliminarCondicionesInteriores(madre.getTexto());
+		// Las partes del texto de la condición que estén entre paréntesis se eliminan del texto de la condición pues, por ser de un nivel superior, ya se habrán tratado.
+		texto = eliminarCondicionesInteriores(madre.getTexto());
 		// La condición se decompone en condiciones o grupos de condiciones que tendrán una relación AND.
 		partes = texto.split(opLogicos[0]);
 		for (int i = 0; i< partes.length; i++) {
@@ -221,10 +234,12 @@ public class Evaluador {
 	}
 	
 	private Condicion operadoresCondicion(String txCondicion) {
+	// A partir de un texto que contiene una condición simple, obtiene los operandos y operador de y crea el objeto Condición que devuelve como resultado
 		Condicion nuevaCond = null;
 		int i = 0;
 		String operador = "";
 		
+		// Obtiene el operador utilizado en la condición
 		i = 0;
 		while (operador != "" && i < operadores.length) {
 			if (txCondicion.indexOf(operadores[i]) >= 0) {
@@ -232,7 +247,7 @@ public class Evaluador {
 			}
 			i++;
 		}	
-		
+		// Si se ha encontrado el operador, divide la condición en tres partes: operando1, operador y operando2.
 		if (operador != "") {
 			String[] minimas = txCondicion.split(operador);
 			if (minimas.length == 3) {
@@ -242,27 +257,38 @@ public class Evaluador {
 				nuevaCond.setOperador(operador);
 				return nuevaCond;
 			} else {
-				// tratar error	condición incompleta	
+				sumarError ("La condición es errónea. Falta un operador: " + txCondicion); 
 			}				
 		}else {
-			// tratar error operador no válido
+			sumarError ("La condición es errónea. No se ha definido ningún operador: " + txCondicion); 
 		}
 		return nuevaCond;
 	}
 	
 	private boolean validarCondicion() {
+		// Comprueba la sintaxis de la condición
 		boolean result = new Boolean(true);
 		this.condicionCompleta = formatoCondicion(this.condicionCompleta);	
-	
+		int iAbre = contarCaracter(this.condicionCompleta, "(");
+		int iCierra = contarCaracter(this.condicionCompleta, ")");
+				
 		// En la condición, el número de "(" debe ser igual al de ")".
-		if (contarCaracter(this.condicionCompleta, "(") != contarCaracter(this.condicionCompleta, ")")) 	{result = false;}		
+		if (iAbre != iCierra) 	{
+			result = false;	
+			if (iAbre > iCierra) {
+				sumarError("Falta paréntesis \\)");
+			} else {
+				sumarError("Falta paréntesis \\(");
+			}
+				
+		}		
 		return result;
 	}
 	
 	private String formatoCondicion(String cadena) {
 		String cadenaFormato;		
 		cadenaFormato = cadena.trim();
-		// La condición completa debe estar entre paréntesis. 
+		// La condición completa debe estar entre paréntesis, así se asegura que el nivel mínimo tenga una sola condición, que es la completa.. 
 		cadenaFormato = "(" + cadenaFormato + ")";	
 		// Se añade un espacio delante y detrás de cada uno de los operadores.
 		for (int i = 0; i< operadores.length;i++) {
@@ -304,12 +330,12 @@ public class Evaluador {
 	}
 	
 	private String eliminarCondicionesInteriores(String texto) {
+	// Elimina del texto de entrada las partes de texto contenidas entre paréntesis, manteniendo los paréntesis de inicio y fin del texto.
 		String textoFinal;
 		textoFinal = texto;
 		int iAbre = 0;
 		int i;
-		boolean cambio;
-		
+		boolean cambio;		
 
 		char c;
 		cambio = true;
@@ -331,17 +357,22 @@ public class Evaluador {
 		}
 		while (contarCaracter(textoFinal, "  ") > 0) {		
 			textoFinal = textoFinal.replaceAll("  ", " ");
-		}		
+		}	
+		// Se corrige la repetición de operadores lógicos resultante de le eliminación del texto entre paréntesis que había entre ellos. 
 		textoFinal = textoFinal.replaceAll(" AND AND ", " AND ");
 		textoFinal = textoFinal.replaceAll(" OR OR ", " OR ");
 		textoFinal = textoFinal.replaceAll(" AND \\)", "\\)");
 		textoFinal = textoFinal.replaceAll(" OR \\)", "\\)");	
 		textoFinal = textoFinal.replaceAll("\\( AND ", "\\(");
-		textoFinal = textoFinal.replaceAll("\\( OR ", "\\(");		
+		textoFinal = textoFinal.replaceAll("\\( OR ", "\\(");	
+		if (textoFinal.indexOf(" AND OR ") > 0 || textoFinal.indexOf(" OR AND ") > 0) {
+			sumarError("La relación lógica en la condición no es correcta: " + texto);
+		}
 		return textoFinal;
 	}	 
 	
 	private boolean esCondicion(String texto) {
+	// Identidica si es una condición o un valor, para saber cómo debe tratarse. Si el texto contiene algún operador, será una condición.
 		boolean esCond = false;
 		for (int i = 0; i < operadores.length; i++) {
 			if (texto.indexOf(operadores[i]) >= 0) {
@@ -349,6 +380,11 @@ public class Evaluador {
 			}
 		}			
 		return esCond;
+	}
+	
+	private void sumarError(String txError) {
+		int i = errores.size();
+		errores.add(i, txError);  ;
 	}
 }
  

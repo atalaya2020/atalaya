@@ -6,6 +6,7 @@ public class Evaluador {
 	
 	private String condicionCompleta;
 	ArrayList<CondicionMultiple> evaluacion = new ArrayList<CondicionMultiple>();
+	ArrayList<String> errores = new ArrayList<String>();
 	private String operadores [] = new String [] {"<=", ">=", "<>", "=", "<", ">"};	
 	private String opLogicos [] = new String [] {" AND ", " OR "};
 	private char abre = '(';
@@ -32,40 +33,46 @@ public class Evaluador {
 	}
 	
 	public boolean evaluar ()  {
-		boolean result = new Boolean(true);
+		boolean result = true;
 		CondicionMultiple multiple;
 		Condicion simple;
-		int nivelMax = 0;
-		int nivelMin = 0;
+		int maxNivel = 0;
+		int minNivel = 0;
 		
 		result = validarCondicion();
 		
 		if (result) {
-			extraerCondiciones();		
-		}
-		
-		System.out.println("Mostrando Condiciones"); 
-		for (int i = 0; i < evaluacion.size(); i++) { 
-			multiple = evaluacion.get(i);
-			if (multiple.getNivel() > nivelMax) { nivelMax = multiple.getNivel(); }
-			if (multiple.getNivel() < nivelMin) { nivelMin = multiple.getNivel(); }
+			extraerCondiciones();
 			
-			System.out.println("Nivel: " + multiple.getNivel() + " " +  multiple.getIdCondicion() + " " + multiple.getTexto() + " Madre: " +  multiple.getMadre() + " Tipo: " + multiple.getTipo()); 
-			simple = multiple.getCondicion(); 
-			if (simple != null) {
-				System.out.println("Condición simple: " + simple.getOperando1() + " " +  simple.getOperador() + " " + simple.getOperando2()); 
-			} 
-		}
-		
-		for (int nivel = nivelMax; nivel >= nivelMin; nivel--) {
+			System.out.println("Mostrando Condiciones"); 
 			for (int i = 0; i < evaluacion.size(); i++) { 
 				multiple = evaluacion.get(i);
-				if (multiple.getNivel() == nivel) {
-					multiple.evalua(evaluacion);
-					result = multiple.getResultado();
-				}				
-			}			
-		}		
+				// Se obtienen los niveles de profundidad mínimo y máximo de las condiciones  
+				if (multiple.getNivel() > maxNivel) { maxNivel = multiple.getNivel(); }
+				if (multiple.getNivel() < minNivel) { minNivel = multiple.getNivel(); }
+				
+				System.out.println("Nivel: " + multiple.getNivel() + " " +  multiple.getIdCondicion() + " " + multiple.getTexto() + " Madre: " +  multiple.getMadre() + " Tipo: " + multiple.getTipo()); 
+				simple = multiple.getCondicion(); 
+				if (simple != null) {
+					System.out.println("Condición simple: " + simple.getOperando1() + " " +  simple.getOperador() + " " + simple.getOperando2()); 
+				} 
+			}
+			// Para obtener el resultado de la condición, se evalúan las condiciones simples de mayor a menor nivel de profundidad, teniendo en cuenta las relaciones definidas entre ellas 
+			for (int nivel = maxNivel; nivel >= minNivel; nivel--) {
+				for (int i = 0; i < evaluacion.size(); i++) { 
+					multiple = evaluacion.get(i);
+					if (multiple.getNivel() == nivel) {
+						multiple.evalua(evaluacion);
+						if (nivel == minNivel) {
+							result = multiple.getResultado();
+						}
+					}				
+				}			
+			}
+		}
+		else {
+			result = false;
+		}
 		return result;	
 		
 	}

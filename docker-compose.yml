@@ -1,0 +1,14 @@
+services:
+    atalayadb:
+      image: mongo:latest
+      container_name: "atalayadb"
+      ports:
+        - 27017:27017
+        
+    atalayainterface:
+      image: atalaya:v2
+      container_name: "atalayainterface"
+      ports:
+        - 8080:8080
+      links: 
+        - atalayadb

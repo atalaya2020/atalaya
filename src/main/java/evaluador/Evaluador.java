@@ -1,18 +1,25 @@
 package evaluador;
 
 import java.util.ArrayList;
-
+// Clase que evalúa una condición compleja. Puede devolver tres posibles resultados:
+//1. Se ha evaluado la condición y se cumple (true)
+//0. Se ha evaluado la condició y no se cumple (false)
+//-1. Se han detrectado errores en la condición y no se ha evaluado.
 public class Evaluador {
 	
 	private String condicionCompleta;
-	ArrayList<CondicionMultiple> evaluacion = new ArrayList<CondicionMultiple>();
-	ArrayList<String> errores = new ArrayList<String>();
+	private ArrayList<CondicionMultiple> evaluacion = new ArrayList<CondicionMultiple>();
+	private ArrayList<String> errores = new ArrayList<String>();
 	private String operadores [] = new String [] {"<=", ">=", "<>", "=", "<", ">"};	
 	private String opLogicos [] = new String [] {" AND ", " OR "};
 	private char abre = '(';
 	private char cierra = ')';
 	private Integer indCondicion = 0;
 	
+	public ArrayList<String> getErrores() {
+		return errores;
+	}
+	 
 	public String getCondicionCompleta() {
 		return condicionCompleta;
 	}
@@ -25,23 +32,26 @@ public class Evaluador {
 		this.condicionCompleta = condicionCompleta;	
 	}
 		
-	public boolean evaluar (String condicion)  {
-		boolean result = new Boolean(true);
+	public int evaluar (String condicion)  {
+		int result = 0;
 		this.condicionCompleta = condicion;
 		result = this.evaluar();
 		return result;
 	}
 	
-	public boolean evaluar ()  {
-		boolean result = true;
+	public int evaluar ()  {
+		int result = 0;
+		boolean valido = true;
 		CondicionMultiple multiple;
 		Condicion simple;
 		int maxNivel = 0;
-		int minNivel = 0;
+		int minNivel = 0;		
 		
-		result = validarCondicion();
+		evaluacion.clear();
+		errores.clear();
+		valido = validarCondicion();
 		
-		if (result) {
+		if (valido) {
 			extraerCondiciones();
 			
 			System.out.println("Mostrando Condiciones"); 
@@ -50,11 +60,14 @@ public class Evaluador {
 				// Se obtienen los niveles de profundidad mínimo y máximo de las condiciones  
 				if (multiple.getNivel() > maxNivel) { maxNivel = multiple.getNivel(); }
 				if (multiple.getNivel() < minNivel) { minNivel = multiple.getNivel(); }
-				
-				System.out.println("Nivel: " + multiple.getNivel() + " " +  multiple.getIdCondicion() + " " + multiple.getTexto() + " Madre: " +  multiple.getMadre() + " Tipo: " + multiple.getTipo()); 
+				if (multiple.getNegacion()) {
+					System.out.println("Nivel: " + multiple.getNivel() + " " +  multiple.getIdCondicion() + " (NOT " + multiple.getTexto() + ") Madre: " +  multiple.getMadre() + " Tipo: " + multiple.getTipo() + " Negación: " + multiple.getNegacion());
+				} else {
+					System.out.println("Nivel: " + multiple.getNivel() + " " +  multiple.getIdCondicion() + " " + multiple.getTexto() + " Madre: " +  multiple.getMadre() + " Tipo: " + multiple.getTipo() + " Negación: " + multiple.getNegacion());
+				}
 				simple = multiple.getCondicion(); 
 				if (simple != null) {
-					System.out.println("Condición simple: " + simple.getOperando1() + " " +  simple.getOperador() + " " + simple.getOperando2()); 
+					System.out.println("Condición simple: " + simple.getNegOperando1() + " -> " + simple.getOperando1() + " -> " +  simple.getOperador() + " -> " + simple.getNegOperando2() + " -> " + simple.getOperando2()); 
 				} 
 			}
 			// Para obtener el resultado de la condición, se evalúan las condiciones simples de mayor a menor nivel de profundidad, teniendo en cuenta las relaciones definidas entre ellas 
@@ -65,14 +78,18 @@ public class Evaluador {
 						multiple.evalua(evaluacion);
 						// El resultado de la condición completa es el resultado de la condición del nivel mínimo
 						if (nivel == minNivel) {
-							result = multiple.getResultado();
+							if (multiple.getResultado()) {
+								result = 1;
+							} else {
+								result = 0;
+							}							
 						}
 					}				
 				}			
 			}
 		}
 		else {
-			result = false;
+			result = -1;
 		}
 		return result;	
 		
@@ -99,13 +116,18 @@ public class Evaluador {
 				if (c == cierra) {					
 					// Cuando se encuentra un ')' se extre la condición desde el inicial guardado en el array hasta la posición en la que se cierra el nivel
 					txCondicion = this.condicionCompleta.substring(abiertos.get(nivel-1).intValue(), i + 1);
-					// El texto obtenido puede ser una operación, valor, ente paréntesis o una condación. Si es valor, debe ignorarse, si es condición debe tratarse.
+					// El texto obtenido puede ser una valor, operación ente paréntesis, o una condición. Si es valor, debe ignorarse, si es condición debe tratarse.
 					if (esCondicion(txCondicion)) {
 						multiple = new CondicionMultiple();
 						multiple.setIdCondicion(indCondicion);
 						multiple.setNivel(nivel-1);
 						multiple.setTexto(txCondicion);	
-						System.out.println("Nivel: " + multiple.getNivel() + " " + multiple.getIdCondicion() + " " + multiple.getTexto() + " Madre: " + multiple.getMadre() + " Tipo: " + multiple.getTipo());
+						if ((abiertos.get(nivel-1).intValue() - 4) >= 0) {				
+							if (this.condicionCompleta.substring(abiertos.get(nivel-1).intValue() - 4, i + 1).startsWith("NOT")) {
+								multiple.setNegacion(true);	
+							}
+						}						
+						System.out.println("Nivel: " + multiple.getNivel() + " " + multiple.getIdCondicion() + " " + multiple.getTexto() + " "  + multiple.getNegacion());
 						indCond = indCondicion;
 						evaluacion.add(indCond, multiple);		
 						indCondicion++;
@@ -170,7 +192,7 @@ public class Evaluador {
 				hija.setIdCondicion(indCondicion);
 				hija.setNivel(nivel+1);
 				hija.setTexto(formatoCondicion(simples[i]));	
-				hija.setMadre(madre.getIdCondicion());					 			
+				hija.setMadre(madre.getIdCondicion());
 				hija.setCondicion(operadoresCondicion(simples[i]));
 				evaluacion.add(indCondicion, hija);				
 				indCondicion++;			
@@ -238,29 +260,31 @@ public class Evaluador {
 		Condicion nuevaCond = null;
 		int i = 0;
 		String operador = "";
-		
 		// Obtiene el operador utilizado en la condición
 		i = 0;
-		while (operador != "" && i < operadores.length) {
+		while (i < operadores.length) {
 			if (txCondicion.indexOf(operadores[i]) >= 0) {
 				operador = operadores[i];
+				i = operadores.length + 4;
 			}
 			i++;
-		}	
+		}		
+
 		// Si se ha encontrado el operador, divide la condición en tres partes: operando1, operador y operando2.
 		if (operador != "") {
-			String[] minimas = txCondicion.split(operador);
-			if (minimas.length == 3) {
+			String[] minimas = txCondicion.split(operador);			
 				nuevaCond = new Condicion();				
 				nuevaCond.setOperando1(minimas[0].trim());
-				nuevaCond.setOperando2(minimas[1].trim());					
+				if (minimas.length == 2) {
+					nuevaCond.setOperando2(minimas[1].trim());					
+				}			
 				nuevaCond.setOperador(operador);
-				return nuevaCond;
-			} else {
-				sumarError ("La condición es errónea. Falta un operador: " + txCondicion); 
-			}				
+			//	nuevoError ("La condición es errónea. Falta un operador: " + txCondicion); 
+							
 		}else {
-			sumarError ("La condición es errónea. No se ha definido ningún operador: " + txCondicion); 
+			nuevaCond = new Condicion();	
+			nuevaCond.setOperando1(txCondicion);
+		//	nuevoError ("La condición es errónea. No se ha definido ningún operador: " + txCondicion); 
 		}
 		return nuevaCond;
 	}
@@ -276,9 +300,9 @@ public class Evaluador {
 		if (iAbre != iCierra) 	{
 			result = false;	
 			if (iAbre > iCierra) {
-				sumarError("Falta paréntesis \\)");
+				nuevoError("Falta paréntesis \\)");
 			} else {
-				sumarError("Falta paréntesis \\(");
+				nuevoError("Falta paréntesis \\(");
 			}
 				
 		}		
@@ -301,20 +325,27 @@ public class Evaluador {
 		cadenaFormato = cadenaFormato.replaceAll(">  =", ">=");		
 		cadenaFormato = cadenaFormato.replaceAll("< >", "<>");
 		cadenaFormato = cadenaFormato.replaceAll("<  >", "<>");
+		cadenaFormato = cadenaFormato.replaceAll("! =", "<>");
+		cadenaFormato = cadenaFormato.replaceAll("!  =", "<>");
+		cadenaFormato = cadenaFormato.replaceAll("!", " NOT ");		
 		// Convierte a mayúsculas todos los operadores AND y OR
 		for (int i = 0; i< opLogicos.length;i++) {
 			cadenaFormato = cadenaFormato.replaceAll(opLogicos[i].toLowerCase(), opLogicos[i]);
-		}		
-		// Se eliminan los espacios de más		
-		while (contarCaracter(cadenaFormato, "  ") > 0) {		
-			cadenaFormato = cadenaFormato.replaceAll("  ", " ");
 		}
-		while (contarCaracter(cadenaFormato, "( ") > 0) {		
-			cadenaFormato = cadenaFormato.replaceAll("( ", "(");
-		}
-		while (contarCaracter(cadenaFormato, " )") > 0) {		
-			cadenaFormato = cadenaFormato.replaceAll(" )", ")");
-		}
+		cadenaFormato = cadenaFormato.replaceAll(" not ", " NOT ");
+		cadenaFormato = cadenaFormato.replaceAll("\\(not\\(", "\\( NOT \\(");
+		cadenaFormato = cadenaFormato.replaceAll("\\(NOT\\(", "\\( NOT \\(");
+		cadenaFormato = cadenaFormato.replaceAll("\\( not\\( ", "( NOT \\(");
+		cadenaFormato = cadenaFormato.replaceAll("\\( NOT\\( ", "\\( NOT \\(");
+		cadenaFormato = cadenaFormato.replaceAll("\\(not \\( ", "( NOT \\(");
+		cadenaFormato = cadenaFormato.replaceAll("\\ NOT \\( ", "\\( NOT \\(");
+		// Se eliminan los espacios de más	
+		cadenaFormato = cadenaFormato.replaceAll("\\(", " \\(");
+		cadenaFormato = cadenaFormato.replaceAll("\\) ", "\\) ");
+		cadenaFormato = remplazarCadena(cadenaFormato, "  ", " ");	
+		cadenaFormato = cadenaFormato.replaceAll("\\( ", "\\(");
+		cadenaFormato = cadenaFormato.replaceAll(" \\)", "\\)");
+
 		return cadenaFormato;
 	}
 	
@@ -332,11 +363,12 @@ public class Evaluador {
 	private String eliminarCondicionesInteriores(String texto) {
 	// Elimina del texto de entrada las partes de texto contenidas entre paréntesis, manteniendo los paréntesis de inicio y fin del texto.
 		String textoFinal;
+		String valCond;
+		
 		textoFinal = texto;
 		int iAbre = 0;
 		int i;
-		boolean cambio;		
-
+		boolean cambio;
 		char c;
 		cambio = true;
 		while (cambio == true) {
@@ -347,29 +379,62 @@ public class Evaluador {
 				if (c == abre) {
 					iAbre = i;
 				} else {
-					if (c == cierra) {		
-						textoFinal = textoFinal.replace(textoFinal.substring(iAbre, i + 1), " ");
-						cambio = true;				
+					if (c == cierra) {
+						valCond = textoFinal.substring(iAbre, i + 1);
+						if (!esCondicion(valCond) ) {
+							textoFinal = cambiarCaracter (textoFinal, iAbre, '[');
+							textoFinal = cambiarCaracter (textoFinal, i, ']');
+						} else {
+							if ((iAbre - 4) >= 0) {							
+								if (textoFinal.substring(iAbre - 4, i + 1).startsWith("NOT")) {							
+									iAbre = iAbre - 4;
+								}
+							}
+							textoFinal = textoFinal.replace(textoFinal.substring(iAbre, i + 1), " ");
+						}												
+						cambio = true;
 					}					
 				}
-				i++;
+				i++;				
 			}	
 		}
-		while (contarCaracter(textoFinal, "  ") > 0) {		
-			textoFinal = textoFinal.replaceAll("  ", " ");
-		}	
-		// Se corrige la repetición de operadores lógicos resultante de le eliminación del texto entre paréntesis que había entre ellos. 
-		textoFinal = textoFinal.replaceAll(" AND AND ", " AND ");
-		textoFinal = textoFinal.replaceAll(" OR OR ", " OR ");
-		textoFinal = textoFinal.replaceAll(" AND \\)", "\\)");
-		textoFinal = textoFinal.replaceAll(" OR \\)", "\\)");	
-		textoFinal = textoFinal.replaceAll("\\( AND ", "\\(");
-		textoFinal = textoFinal.replaceAll("\\( OR ", "\\(");	
-		if (textoFinal.indexOf(" AND OR ") > 0 || textoFinal.indexOf(" OR AND ") > 0) {
-			sumarError("La relación lógica en la condición no es correcta: " + texto);
-		}
+		textoFinal = limpiaCondicion(textoFinal);
+
 		return textoFinal;
 	}	 
+	
+	private String limpiaCondicion (String texto) {
+		String textoLimpio = texto;
+		// Se corrige la repetición de operadores lógicos resultante de le eliminación del texto entre paréntesis que había entre ellos. 
+		
+		textoLimpio = remplazarCadena(textoLimpio, "  ", " ");	
+		textoLimpio = remplazarCadena(textoLimpio, " AND AND ", " AND ");
+		textoLimpio = remplazarCadena(textoLimpio, " OR OR ", " OR ");
+		textoLimpio = textoLimpio.replaceAll(" AND \\)", "\\)");
+		textoLimpio = textoLimpio.replaceAll("\\( AND ", "\\(");		
+		textoLimpio = textoLimpio.replaceAll(" OR \\)", "\\)");	
+		textoLimpio = textoLimpio.replaceAll("\\( OR ", "\\(");	
+		
+		textoLimpio = textoLimpio.replaceAll("\\[", "\\(");	
+		textoLimpio = textoLimpio.replaceAll("\\]", "\\)");
+		textoLimpio = textoLimpio.replaceAll("\\( ", "\\(");		
+		textoLimpio = textoLimpio.replaceAll(" \\)", "\\)");		
+		textoLimpio = remplazarCadena(textoLimpio, "  ", " ");	
+		
+		if (textoLimpio.indexOf(" AND OR ") > 0 || textoLimpio.indexOf(" OR AND ") > 0) {
+			nuevoError("La relación lógica en la condición no es correcta: " + textoLimpio);
+		}		
+		return textoLimpio;
+	}
+	
+	private String remplazarCadena(String cadena, String busca, String cambia) {
+		String remplazo = cadena;
+		while (remplazo.indexOf(busca) > 0) {		
+			remplazo = remplazo.replaceAll(busca, cambia);
+		}	
+//		remplazo = remplazarCadena(remplazo, "  ", " ");
+		return remplazo;
+	}
 	
 	private boolean esCondicion(String texto) {
 	// Identidica si es una condición o un valor, para saber cómo debe tratarse. Si el texto contiene algún operador, será una condición.
@@ -381,8 +446,13 @@ public class Evaluador {
 		}			
 		return esCond;
 	}
+	private String cambiarCaracter (String cadena, int pos, char car) {
+		String cambiada;
+		cambiada = cadena.substring(0, pos) + car + cadena.substring(pos+1);
+		return cambiada;		
+	}	
 	
-	private void sumarError(String txError) {
+	private void nuevoError(String txError) {
 		int i = errores.size();
 		errores.add(i, txError);  ;
 	}

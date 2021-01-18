@@ -23,4 +23,25 @@ public class Evento {
 		this.salida = salida;
 	}
 	
+public boolean validar() {
+		
+		boolean valido = false;
+		
+		if(this.getFormatoSalida().equals("")) {
+			valido = false;
+			return valido;
+			// Falta nombre
+		}
+		else if(this.getSalida() == null) {
+			valido = false;
+			return valido;
+			// Falta descripcion
+		}
+		
+		else {
+			valido = true;
+		}
+		
+		return valido;
+	}
 }

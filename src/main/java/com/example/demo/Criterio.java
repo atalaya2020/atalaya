@@ -56,5 +56,41 @@ public class Criterio {
 	public void setResultado(Object resultado) {
 		this.resultado = resultado;
 	}
+	
+	public boolean validar() {
+		
+		boolean valido = false;
+		
+		if(this.getNombre().equals("")) {
+			valido = false;
+			return valido;
+			// Falta nombre
+		}
+		else if(this.getDescripcion().equals("")) {
+			valido = false;
+			return valido;
+			// Falta descripcion
+		}
+		else if(this.getEvaluacion().equals("")) {
+			valido = false;
+			return valido;
+			// Falta descripcion
+		}
+		else if(this.getTipoResultado().equals("")) {
+			valido = false;
+			return valido;
+			// Falta descripcion
+		}
+		else if(this.getResultado() == null) {
+			valido = false;
+			return valido;
+			// Falta descripcion
+		}
+		else {
+			valido = true;
+		}
+		
+		return valido;
+	}
 
 }

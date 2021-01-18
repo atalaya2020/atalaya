@@ -74,6 +74,50 @@ public class Indicador {
 	public void setFlag(boolean flag) {
 		this.flag = flag;
 	}
+	
+	public boolean validar() {
+		boolean valido = false;
+		
+		if(this.getNombre().equals("")) {
+			valido = false;
+			// Falta nombre
+		}
+		else if(this.getDescripcion().equals("")) {
+			valido = false;
+			// Falta descripcion
+		}
+		else if(this.getFuente().equals("")) {
+			valido = false;
+			// Falta descripcion
+		}
+		else if(this.getTipo().equals("")) {
+			valido = false;
+			// Falta descripcion
+		}
+		else if(this.getComando().equals("")) {
+			valido = false;
+			// Falta descripcion
+		}
+		else if(this.getResultado() == null) {
+			valido = false;
+			// Falta descripcion
+		}
+		else {
+		for (int i = 0; i<this.parametros.size(); i++) {
+			valido = parametros.get(i).validar();
+			if(valido == false) {
+				return valido;
+				// un criterio no es valido
+			}
+		}
+		
+			valido = true;
+		}
+		
+		
+		
+		return valido;
+	}
 
 
 }

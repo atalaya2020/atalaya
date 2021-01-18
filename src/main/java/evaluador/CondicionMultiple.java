@@ -81,10 +81,10 @@ public class CondicionMultiple {
 			for (int i = 0; i < evaluacion.size(); i++) { 
 				multiple = evaluacion.get(i);
 				if (multiple.getMadre() == idCondicion)	{					
-					if (tipo == "AND" && multiple.getResultado() == false) {
+					if (tipo == "AND" && !multiple.getResultado() ) {
 						resultado = false;
 					}
-					if (tipo == "OR" && multiple.getResultado() == true) {
+					if (tipo == "OR" && multiple.getResultado()) {
 						resultado = true;
 					}					
 				}			

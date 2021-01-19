@@ -1,4 +1,4 @@
-package evaluador;
+package com.atalaya.evaluador;
 // Clase para representar cada una de las condiciones simpres de una condición compleja. 
 
 

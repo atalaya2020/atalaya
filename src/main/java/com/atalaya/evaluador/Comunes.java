@@ -1,4 +1,4 @@
-package evaluador;
+package com.atalaya.evaluador;
 
 public class Comunes {
 	public static int tpIndErroneo = -1;

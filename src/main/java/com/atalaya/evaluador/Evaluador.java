@@ -1,4 +1,4 @@
-package evaluador;
+package com.atalaya.evaluador;
 
 import com.example.demo.Indicador;
 
@@ -27,11 +27,8 @@ public class Evaluador {
 	
 	public ArrayList<String> getErrores() {
 		return errores;
-	}
-	 
-	public void setIndicadores(ArrayList<Indicador> indicadores) {
-		this.indicadores = indicadores;
-	}
+	}	 
+
 	public String getCondicionCompleta() {
 		return condicionCompleta;
 	}
@@ -39,14 +36,20 @@ public class Evaluador {
 		this.condicionCompleta = condicionCompleta;
 	}	
 	
-	public Evaluador (String condicionCompleta) {		
+	public void setIndicadores(ArrayList<Indicador> indicadores) {
+		this.indicadores = indicadores;
+	}
+	
+	public Evaluador (String condicionCompleta, ArrayList<Indicador> indicadores) {		
 		super();		
 		this.condicionCompleta = condicionCompleta;	
+		this.indicadores = indicadores;
 	}
 		
-	public int evaluar (String condicion)  {
+	public int evaluar (String condicion, ArrayList<Indicador> indicadores)  {
 		int result = 0;
-		this.condicionCompleta = condicion;
+		this.condicionCompleta = condicion;		
+		this.indicadores = indicadores;
 		result = this.evaluar();
 		return result;
 	}
@@ -61,7 +64,13 @@ public class Evaluador {
 		
 		evaluacion.clear();
 		errores.clear();
-		valido = validarCondicion();
+		
+		if (condicionCompleta == "" || condicionCompleta == null) {
+			valido = false;
+			nuevoError("No se ha indicado ninguna condición para evaluar");
+		} else {
+			valido = validarCondicion();
+		}
 		
 		if (valido) {
 			extraerCondiciones();
@@ -112,6 +121,7 @@ public class Evaluador {
 		else {
 			result = -1;
 		}
+		
 		if (result == -1 ) {
 			System.out.println("MOSTRANDO ERRORES");
 			for (int e = 0; e < errores.size(); e++) {
@@ -597,17 +607,20 @@ public class Evaluador {
 	}
 	
 	private String cambiarCaracter (String cadena, int pos, char car) {
+	// Sustituye en una cadena el carácter situado en una posición por el indicado.
 		String cambiada;
 		cambiada = cadena.substring(0, pos) + car + cadena.substring(pos+1);
 		return cambiada;		
 	}	
 	
 	private void nuevoError(String txError) {
+	// Añade el nuevo error detectado a la lista de errores de la evaluación		
 		int i = errores.size();
 		errores.add(i, txError);  ;
 	}
 	
 	private boolean comprobarCondiciones() {
+	// Recorre la lista de condiciones encontradas en la consulta completa para determinar si la información obtenida es correcta y se puede evaluar la condición compleja
 		boolean result = true;		
 		CondicionMultiple multiple;		
 		
@@ -626,6 +639,7 @@ public class Evaluador {
 	}
 	
 	private boolean comprobarOperando(Operando oper) {
+	// Comprueba si la información obtenida para el valor del opernado es completa y coherente.
 		boolean comprobado = true;
 		if (oper.getTipo() == constantes.tpIndErroneo) {
 			comprobado = false;
@@ -647,6 +661,7 @@ public class Evaluador {
 	}
 	
 	private int esIndicador (String operando) {
+	// Comprueba si la cadena recibida como parámetro corresponde a alguno de los indicadores definidios en el análisis
 		int esIndica = constantes.tpNoIndicador;
 		String[] tramos = new String [] {};
 		tramos = operando.split("\\.");
@@ -665,6 +680,7 @@ public class Evaluador {
 	}	
 
 	private int esValor(String operando) {
+	// Comprueba si la cadena recibida como párametro corresponde a un valor: Los valores pueden ser lógicos, de cadena, numéricos o de fecha.
 		int valor = constantes.tpVlNoTipo;
 		String oper = operando;  
 
@@ -694,9 +710,10 @@ public class Evaluador {
 	}
 		
 	private Operando nuevoOperando(String nombre) {
+	// Crea el operando de una condición simple. 
 		int tipo;
 		Operando oper = new Operando();			
-		
+		// El operando puede ser de tres tipos: Indicador, valor o fórmula. Éste último aún no se ha codificado, por lo que se identifica como erróneo.	
 		oper.setNombre(nombre);		
 		tipo = esIndicador(oper.getNombre());
 		if (tipo == constantes.tpIndicador) {
@@ -708,13 +725,14 @@ public class Evaluador {
 				oper.setTipoValor(constantes.tpVlNoTipo);				
 			} else {			
 				tipo = esValor(nombre);
+				// Si es de tipo valor, guarda el tipo de valor que es.
 				if (tipo != constantes.tpVlNoTipo) {
 					oper.setTipo(constantes.tpValor);
 					oper.setTipoValor(tipo);				
 				} 
 			}
 		}
-		
+		// Si el operando es un Indicador. Crea el objeto indicador del operando.
 		if (oper.getTipo() == constantes.tpIndicador) {
 			String[] tramos = new String [] {};
 			tramos = oper.getNombre().split("\\."); 
@@ -730,6 +748,7 @@ public class Evaluador {
 	}
 	
 	private boolean esFecha (String fecha) {
+	// Comprueba si la cadena recibida corresponde a una fecha		
 		boolean vale = false;
 		String formatosFecha [] = new String [] {"dd/MM/yyyy","dd-MM-yyyy", "MM/dd/yyyy", "MM-dd-yyyy", "yyyy/MM/dd", "yyyy-MM-dd", "dd/MM/yy","dd-MM-yy", "MM/dd/yy", "MM-dd-yy", "yy/MM/dd", "yy-MM-dd"};
 		String formatosHora [] = new String [] {"hh:mm:ss","hh:mm", "HH:mm:ss", "HH:mm"};
@@ -750,8 +769,7 @@ public class Evaluador {
 				}
 				formato= new SimpleDateFormat(txFormato);
 		        try {		        	
-		            fecParse = formato.parse(txFecha);	            
-		            System.out.println("Formato detectado: " + txFormato);
+		            fecParse = formato.parse(txFecha);           		            
 		            f = formatosFecha.length + 5;
 		            h = formatosHora.length + 5;
 		            vale = true;	

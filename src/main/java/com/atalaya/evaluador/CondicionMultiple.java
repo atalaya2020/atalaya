@@ -1,4 +1,4 @@
-package evaluador;
+package com.atalaya.evaluador;
 
 import java.util.ArrayList;
 // Clase para representar cada una de las condiciones compuestas que forman parte de una condición compleja

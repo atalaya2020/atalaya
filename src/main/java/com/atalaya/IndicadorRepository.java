@@ -10,7 +10,7 @@ import com.modelodatos.Indicador;
 @Repository
 public interface IndicadorRepository extends MongoRepository<Indicador, String> {
 
-	  public Indicador findByName(String name);
+	  public Indicador findByNombre(String nombre);
 	  public List<Indicador> findByFuente(String fuente);
 
 	}

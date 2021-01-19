@@ -57,7 +57,12 @@ public class Condicion {
 		
 		if (evaluado) {return resultado;  } 
 		else {
-			result = false;
+			if (operando1.getResultado() == operando2.getResultado()) {
+				result = true;
+			} else {
+				result = false;
+			}			
+			evaluado = true;
 		}
 		if (negacion) 	{result = !result;	}
 		return result;

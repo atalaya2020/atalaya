@@ -84,25 +84,32 @@ public class Operando {
 	
 	private void ejecutar() {
 		
-		if (!ejecutado) {
-			if (tipo == constantes.tpIndicador) {
-				
+		if (!this.ejecutado) {
+			if (this.tipo == constantes.tpIndicador) {
+				if (this.indicador.ejecutar() == 0) {
+					this.resultado = this.indicador.getResultado();					
+				} else {
+					this.resultado = null;
+				}				
 			} else {
-				if (tipo == constantes.tpValor) {
-					if (tipoValor == constantes.tpVlBoolean) {
-						resultado = Boolean.parseBoolean(this.nombre);
+				if (this.tipo == constantes.tpValor) {
+					if (this.tipoValor == constantes.tpVlBoolean) {
+						this.resultado = Boolean.parseBoolean(this.nombre);
 					} else {
-						if (tipoValor == constantes.tpVlString) {
-							resultado = this.nombre;
+						if (this.tipoValor == constantes.tpVlString) {
+							this.resultado = this.nombre;
 						} else {
-							if (tipoValor == constantes.tpVlInt) {
-								resultado = Integer.parseInt(this.nombre);
+							if (this.tipoValor == constantes.tpVlInt) {
+								this.resultado = Integer.parseInt(this.nombre);
 							} 
 						}
 					}
 					
-				}
+				}				
 			}
+		}
+		if (this.resultado != null) {
+			this.ejecutado = true;
 		}
 	}
 	

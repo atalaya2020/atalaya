@@ -122,13 +122,13 @@ public class Evaluador {
 			result = -1;
 		}
 		
-		if (result == -1 ) {
-			System.out.println("MOSTRANDO ERRORES");
-			for (int e = 0; e < errores.size(); e++) {
-				String error = errores.get(e);
-				System.out.println(error);
-			}
-		}
+//		if (result == -1 ) {
+//			System.out.println("MOSTRANDO ERRORES");
+//			for (int e = 0; e < errores.size(); e++) {
+//				String error = errores.get(e);
+//				System.out.println(error);
+//			}
+//		}
 		return result;	
 		
 	}
@@ -364,7 +364,6 @@ public class Evaluador {
 			}
 			i++;
 		}		
-
 		// Si se ha encontrado el operador, divide la condición en tres partes: operando1, operador y operando2.
 		if (operador != "") {
 			String[] minimas = txCondicion.split(operador);			
@@ -378,8 +377,8 @@ public class Evaluador {
 				nuevaCond.setOperador(operador);
 			//	nuevoError ("La condición es errónea. Falta un operador: " + txCondicion); 
 								
-		}else {
-			nuevaCond = new Condicion();	
+		} else {
+			nuevaCond = new Condicion();				
 			Operando oper1 = nuevoOperando(aislarOperando(txCondicion));	
 			nuevaCond.setOperando1(oper1);
 			Operando oper2 = nuevoOperando("true");
@@ -406,9 +405,9 @@ public class Evaluador {
 			if (iAbre != iCierra) 	{
 				result = false;	
 				if (iAbre > iCierra) {
-					nuevoError("Falta paréntesis \\)");
+					nuevoError("Falta paréntesis )");
 				} else {
-					nuevoError("Falta paréntesis \\(");
+					nuevoError("Falta paréntesis (");
 				}					
 			}		
 		}
@@ -419,7 +418,9 @@ public class Evaluador {
 		String cadenaFormato;		
 		cadenaFormato = cadena.trim();
 		// La condición completa debe estar entre paréntesis, así se asegura que el nivel mínimo tenga una sola condición, que es la completa.. 
-		cadenaFormato = "(" + cadenaFormato + ")";	
+		if (!entreParentesis(cadena) ) {
+			cadenaFormato = "(" + cadenaFormato + ")";
+		}
 		// Se añade un espacio delante y detrás de cada uno de los operadores.
 		for (int i = 0; i< operadores.length;i++) {
 			cadenaFormato = cadenaFormato.replaceAll(operadores[i].toLowerCase(), " " + operadores[i] + " ");			
@@ -453,6 +454,32 @@ public class Evaluador {
 		cadenaFormato = cadenaFormato.replaceAll(" \\)", "\\)");
 		cadenaFormato = cadenaFormato.replaceAll("\\'", constantes.comillas);
 		return cadenaFormato;
+	}
+	
+	private boolean entreParentesis(String cadena) {
+		boolean entre = false;
+		int nivel = 0;
+	
+		ArrayList<Integer> abiertos = new ArrayList<Integer>(); // Almacena las posiciones en el texto en la que se encuntra el '(' que abre la condición actual. El índice se corresponderá con el nivel
+		cadena = cadena.trim();
+		char c;
+		for (int i = 0;i<this.condicionCompleta.length();i++) {
+			c = this.condicionCompleta.charAt(i);
+			if (c == abre) {
+				// Por cada '(' se guarda en el array la posición en la que se encuentra en el nivel actual
+				abiertos.add(nivel, new Integer(i));
+				nivel++;
+			} else {
+				if (c == cierra) {		
+					if ((nivel - 1) == 0 && cadena.startsWith("(")  && abiertos.get(nivel - 1) == 0 && i == (cadena.length() - 1)) {
+						entre = true;
+					}
+					abiertos.remove(nivel - 1);	
+					nivel--;
+				}					
+			}				
+		}			
+		return entre;
 	}
 	
 	private static int contarCaracter(String cadena, String car) {
@@ -682,8 +709,8 @@ public class Evaluador {
 	private int esValor(String operando) {
 	// Comprueba si la cadena recibida como párametro corresponde a un valor: Los valores pueden ser lógicos, de cadena, numéricos o de fecha.
 		int valor = constantes.tpVlNoTipo;
-		String oper = operando;  
-
+		String oper = operando; 
+		
 		if (operando.toUpperCase().equals(constantes.verdadero) || operando.toUpperCase().equals(constantes.falso)) {
 			valor = constantes.tpVlBoolean;
 		} else {
@@ -696,6 +723,7 @@ public class Evaluador {
 			} else {
 				if (contarCaracter(operando, constantes.comillas) == 0) {
 					oper = oper.replaceAll("\\,", "\\.");
+					
 					try {
 						Integer.parseInt(oper);
 						valor = constantes.tpVlInt;
@@ -781,8 +809,7 @@ public class Evaluador {
 				txFormato= formatosFecha[f];		
 				formato= new SimpleDateFormat(txFormato);
         		try {
-        			fecParse = formato.parse(txFecha);
-        			System.out.println("Formato detectado: " + txFormato);	        			
+        			fecParse = formato.parse(txFecha);        			        			
         			f = formatosFecha.length + 5;
         			vale = true;
         		} catch (ParseException eh) {

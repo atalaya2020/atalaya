@@ -36,13 +36,14 @@ public class LaunchAtalaya {
 	public String json() {
 		boolean valido = true;		
 		int cumplido = -1;
-		String mensaje = "";
+		String salida = "";
+		int iError = 0;
 		
-		String file = "C:\\JSC\\SQL\\EjemploJSON_2.json";
+		String file = "C:\\JSC\\SQL\\EjemploJSON.json";
 		
 		ArrayList<Analisis> analizador = JsonReader.read(file);
-		ArrayList<Indicador> indicadores = analizador.get(0).getIndicadores();
-		ArrayList<String> errores = new ArrayList<String>();
+		
+		ArrayList<String> mensaje = new ArrayList<String>();
 		
 		for (int a = 0; a < analizador.size();a++) {
 			if(!analizador.get(0).validar()) {
@@ -52,37 +53,44 @@ public class LaunchAtalaya {
 		valido = true;
 		if(valido) {
 			for (int a = 0; a < analizador.size();a++) {
-				for (int c = 0; c < analizador.get(0).getCriterios().size(); c++) {
-					Criterio criAnaliza = analizador.get(0).getCriterios().get(c);
-					Evaluador criEvalua = new Evaluador (criAnaliza.getEvaluacion(), analizador.get(a).getIndicadores());
-					cumplido = criEvalua.evaluar();
+				for (int c = 0; c < analizador.get(a).getCriterios().size(); c++) {								
+					Criterio criAnaliza = analizador.get(a).getCriterios().get(c);					
+					Evaluador criEvalua = new Evaluador (criAnaliza.getEvaluacion(), analizador.get(a).getIndicadores());					
+					cumplido = criEvalua.evaluar();					
 					switch (cumplido) {
 					case -1:
-					// Se han detecado errores en la evaluación 
-						System.out.println("La condición indicada en el criterio " + criAnaliza.getNombre() + " no es correcta. Se han detectado los siguientes errores: ");
-						errores = criEvalua.getErrores();
-				    	for (int e = 0; e < errores.size(); e++) {
-				    		System.out.println(errores.get(e));
-				    	}				    	
-				    case 0:
-				    // La evaluación ha dado como resultado que se no cumple. No deben generarse los eventos asociados al criterio.
-				    	mensaje = "El criterio no cumple la condición";
+					// Se han detecado errores en la evaluación
+						mensaje.add(iError, "La condición indicada en el criterio " + criAnaliza.getNombre() + " no es correcta.");
+						iError++;
+				    	for (int e = 0; e < criEvalua.getErrores().size(); e++) {
+				    		mensaje.add(iError, criEvalua.getErrores().get(e));
+				    		iError++;
+				    	}	
+				    	break;
+					case 0:
+					   // La evaluación ha dado como resultado que se no cumple. No deben generarse los eventos asociados al criterio.
+						mensaje.add(iError, "El criterio " + criAnaliza.getNombre() + " no cumple la condición. No se generan eventos.");
+						iError++;
+						break;
 					case 1:
 					// La evaluación ha dado como resultado que se cumple. Deben generarse los eventos asociados al criterio.
-						mensaje = "El criterio cumple la condición";
-				    }
+						mensaje.add(iError, "El criterio " + criAnaliza.getNombre() + " cumple la condición. Se generan los eventos siguientes:");
+						iError++;
+						break;
+					}
 				}
 			}
 		} else {
-			System.out.println("El JSON no es válido");
+			mensaje.add(iError, "El fichero json no es válido");
+			iError++;
 		}		
-		
-		if (cumplido == -1) {
-			mensaje = "";
-			for (int e = 0; e < errores.size(); e++) {
-				mensaje = mensaje + "\r\n" + errores.get(e);
-			}			
-		} 
-		return mensaje;
+
+		salida = "";
+		for (int e = 0; e < mensaje.size(); e++) {
+			salida = salida + "<br>" + mensaje.get(e) ;
+		}			
+
+		System.out.println("Mensaje: " + salida.replaceAll("<br>", "\r\n")   );
+		return String.format(salida);
 	}
 }

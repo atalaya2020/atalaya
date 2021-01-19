@@ -8,7 +8,7 @@ public class Indicador {
 	@Id
 	private String id;
 	
-	private String name;
+	private String nombre;
 	private String fuente;
 	private String comando;
 	
@@ -16,19 +16,20 @@ public class Indicador {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Indicador(String name, String fuente, String comando) {
+	public Indicador(String nombre, String fuente, String comando) {
 		
-		setName(name);
-		setFuente(fuente);
-		setComando(comando);
+		super();
+		this.setNombre(nombre);
+		this.setFuente(fuente);
+		this.setComando(comando);
 		// TODO Auto-generated constructor stub
 	}
 	
-	public String getName() {
-		return name;
+	public String getNombre() {
+		return nombre;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 	public String getFuente() {
 		return fuente;

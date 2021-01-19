@@ -9,8 +9,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class Indicador {
 
@@ -21,6 +23,7 @@ public class Indicador {
 	private String comando;
 	private ArrayList<Parametro> parametros;
 	private String[] resultado;
+	private Vector<Object[]> resultadoEjecucion;
 	private boolean flag;
 
 
@@ -35,6 +38,7 @@ public class Indicador {
 		this.parametros = parametros;
 		this.resultado = resultado;
 		this.flag = flag;
+		this.resultadoEjecucion = new Vector<Object[]>();
 	}
 	public String getNombre() {
 		return nombre;
@@ -78,15 +82,23 @@ public class Indicador {
 	public void setResultado(String[] resultado) {
 		this.resultado = resultado;
 	}
+	public Vector<Object[]> getResultadoEjecucion() {
+		return resultadoEjecucion;
+	}
+	public void setResultadoEjecucion(Vector<Object[]> resultadoEjecucion) {
+		this.resultadoEjecucion = resultadoEjecucion;
+	}
+
 	public boolean isFlag() {
 		return flag;
 	}
 	public void setFlag(boolean flag) {
 		this.flag = flag;
 	}
-	public Object[] ejecutar() {
+
+	public int ejecutar() {
 		ResultSet rs = null;
-		Object[] salida = new Object[this.resultado.length];
+
 		if (this.tipo.equalsIgnoreCase("Query")) {
 
 			try {
@@ -119,7 +131,6 @@ public class Indicador {
 				rs = pstmt.executeQuery();
 
 				ResultSetMetaData metadata=null;
-				int num_columnas;
 
 				try
 				{
@@ -128,59 +139,135 @@ public class Indicador {
 
 				} catch (SQLException e)
 				{
-					return null;
+					return -1;
 				}
 
-				try
-				{
-					num_columnas = metadata.getColumnCount();
+				int num_columnas_extraccion;
 
-				} catch (SQLException e)
+				boolean vacio = false;
+
+				int num_columnas = metadata.getColumnCount();
+
+				if (this.resultado == null ||  this.resultado.length == 0)
 				{
-					return null;
+					num_columnas_extraccion = num_columnas;
+					this.resultado = new String[num_columnas];
+					vacio = true;
+				}
+				else
+				{
+					num_columnas_extraccion = this.resultado.length;
 				}
 
-				//int[] column_types = new int[num_columnas];
-
-				for(int i=0; i<this.resultado.length; i++)
+				int[] column_types = new int[num_columnas];
+				
+				for(int i=0; i<num_columnas_extraccion; i++)
 				{
-					Object value = new Object();
-
-					if (this.resultado[i] == null)
-					{
-						salida[i]=null;
-						continue;
-					};
-
-
-					//else if (column_types[i] == Types.VARCHAR)
-
-					try
-					{
-						value  = rs.getString(this.resultado[i]);
-
+					if(vacio) {
+						try
+						{
+							String column_name = metadata.getColumnName(i+1);
+							this.resultado[i]=column_name;
+							column_types[i] = metadata.getColumnType(i+1);
+						}
+						catch(SQLException e)
+						{
+						}
 					}
-					catch (NullPointerException e)
-					{
-						value = null;
-					} catch (SQLException e) {
+					else {
 
-						value = null;
+						boolean encontrado = false;
+						for (int j=0;j<num_columnas;j++)
+						{
+							String column_name = metadata.getColumnName(j+1);
+							int coltype = metadata.getColumnType(j+1);
+							if (column_name.equalsIgnoreCase(this.resultado[i]))
+							{
+								column_types[i] = coltype;
+								encontrado = true;
+								break;
+							}
+						}
 					}
-
-//					else if (column_types[i] == Types.VARCHAR)
-//					
-//					try
-//					{
-//						value = rs.getObject(this.resultado[i]);
-//					} catch (SQLException e)
-//					{
-//						value = null;
-//					}
-
-					salida[i]=value;
 				}
+				while(rs.next())
+				{
+					Object[] row = new Object[num_columnas_extraccion];
+					for(int i=0;i<num_columnas_extraccion;i++)
+					{
+						Object value = new Object();
+						if (this.resultado[i] == null)
+						{
+							value=null;
+							continue;
+						}
+						
+						if (column_types[i] == Types.TIMESTAMP)
+						{
+							try
+							{
+								value = new Timestamp(rs.getTimestamp(this.resultado[i]).getTime());
+							}
+							catch (NullPointerException e)
+							{
+								value = null;
+								
+							} catch (SQLException e)
+							{
+								value = null;
+								return -1;
+							}
+						}
+						
+						else if (column_types[i] == Types.INTEGER)
+						{
+							try
+							{
+								value  = rs.getInt(this.resultado[i]);
 
+							}
+							catch (NullPointerException e)
+							{
+								value = null;
+							} catch (SQLException e) {
+
+								value = null;
+								return -1;
+							}
+						}
+
+
+						else if (column_types[i] == Types.VARCHAR) {
+
+							try
+							{
+								value  = rs.getString(this.resultado[i]);
+
+							}
+							catch (NullPointerException e)
+							{
+								value = null;
+							} catch (SQLException e) {
+
+								value = null;
+								return -1;
+							}
+
+						}
+						else {
+							try
+							{
+								value = rs.getObject(this.resultado[i]);
+							} catch (SQLException e)
+							{
+
+								value = null;
+							}
+						}
+						row[i] = value;
+					}
+					this.resultadoEjecucion.add(row);
+				}
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -192,7 +279,7 @@ public class Indicador {
 		else {
 
 		}
-		return salida;
+		return 0;
 
 	}
 

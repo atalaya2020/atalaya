@@ -14,12 +14,24 @@ public class main {
 		Parametro param = new Parametro("numero", "entero", "0");
 		array.add(param);
 		
-		Indicador ind = new Indicador("DNI mayor 0", "Personas con DNI mayor a 1", "Mysql", "Query", query, array, resultado , false);
-		Object[] rs = ind.ejecutar();
-
-				for(int i = 0; i< rs.length; i++) {
-				System.out.println(rs[i].toString());
+		Indicador ind = new Indicador("DNI mayor 0", "Personas con DNI mayor a 0", "Mysql", "Query", query, array, resultado , false);
+		int ok = ind.ejecutar();
+		if(ok == 0) {
+			for(int i = 0; i< ind.getResultadoEjecucion().size(); i++) {
+			for(int j = 0; j< ind.getResultadoEjecucion().size(); j++)	{
+			try
+			{
+				System.out.println(ind.getResultadoEjecucion().elementAt(i)[j]);
+			}
+			catch (NullPointerException e)
+			{
+				System.out.println("triste");
+			}
+			}
+				
+				
 				}
+		}
 			
 	}
 }

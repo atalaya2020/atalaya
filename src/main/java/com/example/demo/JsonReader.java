@@ -11,6 +11,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 public class JsonReader {
+
 	@SuppressWarnings("unchecked")
 	public static ArrayList<Analisis> read(String file) 
 	{
@@ -33,7 +34,7 @@ public class JsonReader {
 				JSONObject analisis = (JSONObject)iteratorAn.next();
 				String nombreAn = (String) analisis.get("Nombre");	
 				String descAn = (String)analisis.get("Descripcion");
-				
+
 				JSONArray conjCriterios = (JSONArray)analisis.get("Criterios");
 				Iterator<JSONObject> iteratorCrit = conjCriterios.iterator();
 				ArrayList<Criterio> criterios = new ArrayList<Criterio>();
@@ -47,18 +48,18 @@ public class JsonReader {
 					String evalCrit = (String)criterio.get("Evaluacion");			
 					String tipoResCrit = (String)criterio.get("TipoResultado");			
 					Object resCrit = (Object)criterio.get("Resultado");
-					
+
 					criterios.add(new Criterio(nombreCrit, descCrit, evalCrit, tipoResCrit, resCrit));
 
 				}
-				
+
 				JSONArray conjIndicadores = (JSONArray)analisis.get("Indicadores");
 				Iterator<JSONObject> iterator3 = conjIndicadores.iterator();
 				ArrayList<Indicador> indicadores = new ArrayList<Indicador>();
-				
+
 				while(iterator3.hasNext()) {
 					//indicador a indicador
-					
+
 					JSONObject indicador = (JSONObject)iterator3.next();
 					String nombreInd = (String) indicador.get("Nombre");
 					String descInd = (String)indicador.get("Descripcion");
@@ -69,20 +70,25 @@ public class JsonReader {
 					JSONArray conjParam = (JSONArray)indicador.get("Parametros");
 					Iterator<JSONObject> iteratorParametros = conjParam.iterator();
 					ArrayList<Parametro> parametros = new ArrayList<Parametro>();
-					
+
 					while(iteratorParametros.hasNext()) {
-						
+
 						JSONObject parametro = (JSONObject)iteratorParametros.next();
 						String nombreParam = (String) parametro.get("Nombre");
 						String tipoParam = (String) parametro.get("Tipo");
 						String valorParam = (String)parametro.get("Valor");
-						
+
 						parametros.add(new Parametro(nombreParam, tipoParam, valorParam));
 					}
-					
-					Object resInd = (Object)indicador.get("Resultado");
+
+					JSONArray listRes = (JSONArray)indicador.get("Resultado");
+					String[] resInd = new String[100];
+					for(int i = 0; i< listRes.size(); i++) {
+						resInd[i] = listRes.get(i).toString();
+					}
+
 					boolean flagInd = false;
-					
+
 					indicadores.add(new Indicador(nombreInd, descInd, fuenteInd, tipoInd, comandInd, parametros, resInd, flagInd));
 				}
 
@@ -96,12 +102,12 @@ public class JsonReader {
 					JSONObject evento = (JSONObject)iteratorAlarm.next();
 					String formatEven = (String) evento.get("FormatoSalida");		
 					Object salEven = (Object)evento.get("Salida");
-					
+
 					eventos.add(new Evento(formatEven, salEven));
 
 				}
 				analizador.add(new Analisis(nombreAn, descAn, indicadores, criterios, eventos));
-				
+
 			}
 
 		} catch (ParseException pe) {
@@ -116,7 +122,7 @@ public class JsonReader {
 		catch(Exception e) {
 			
 		}
-		
+
 		return analizador;
 
 	}

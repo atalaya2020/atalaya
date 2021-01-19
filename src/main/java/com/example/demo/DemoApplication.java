@@ -40,7 +40,7 @@ public class DemoApplication {
 	@GetMapping("/json")
 	public String json(@RequestParam(value = "name", defaultValue = "World") String name) {
 		
-		String file = "C:\\Workspaces\\EjemploJSON.json";
+		String file = "C:\\EjemploJSON.json";
 		
 		
 		ArrayList<Analisis> analizador = JsonReader.read(file);

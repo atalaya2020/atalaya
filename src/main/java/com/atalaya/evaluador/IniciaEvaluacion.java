@@ -11,9 +11,10 @@ public class IniciaEvaluacion {
 		
 		ArrayList<Parametro> parametros = new ArrayList<Parametro>();
 		ArrayList<Indicador> indicadores = new ArrayList<Indicador>();
+		String resultado [] = new String [] {};	
 		
 		for (int i = 0; i < 11;i++) {			
-			indicar = new Indicador("Indicador" + i, "", "", "" ,"", parametros, new Object(), false);
+			indicar = new Indicador("Indicador" + i, "", "", "" ,"", parametros, resultado, false);
 			indicadores.add(i, indicar);
 		}
 		

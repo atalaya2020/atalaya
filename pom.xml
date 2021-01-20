@@ -9,11 +9,11 @@
 		<version>2.4.1</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
-	<artifactId>demo</artifactId>
+	<groupId>com.atalaya</groupId>
+	<artifactId>atalaya</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>demo</name>
-	<description>Demo project for Spring Boot</description>
+	<name>atalaya</name>
+	<description>Atalaya project for Spring Boot</description>
 
 	<properties>
 		<java.version>1.8</java.version>
@@ -61,16 +61,33 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.22</version>
 		</dependency>
-
-
 	</dependencies>
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
+		<plugin>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-maven-plugin</artifactId>
+		       	<configuration>
+		      <!--  		<skip>true</skip>  -->			
+		  			<mainClass>com.atalaya.launch.LaunchAtalaya</mainClass> 
+     			</configuration>
+		</plugin>	
+		<plugin>
+		  <!-- Build an executable JAR -->
+		  <groupId>org.apache.maven.plugins</groupId>
+		  <artifactId>maven-jar-plugin</artifactId>
+		  <version>3.1.0</version>
+		  <configuration>
+		    <archive>
+		      <manifest>
+		        <addClasspath>true</addClasspath>
+		        <classpathPrefix>lib/</classpathPrefix>
+		        <mainClass>com.atalaya.launch.LaunchAtalaya</mainClass>
+		      </manifest>
+		    </archive>
+		  </configuration>
+		</plugin>
 		</plugins>
 	</build>
 

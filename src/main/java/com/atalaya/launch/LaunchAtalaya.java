@@ -32,8 +32,9 @@ public class LaunchAtalaya {
 //		MongoDatabase database = mongoClient.getDatabase("test");
 	}
 	
-	@GetMapping("/json")
-	public String json() {
+
+	@GetMapping("/atalaya")
+	public String atalaya() {
 		boolean valido = true;		
 		int cumplido = -1;
 		String salida = "";
@@ -50,7 +51,7 @@ public class LaunchAtalaya {
 				valido = false;
 			}			
 		}				
-		valido = true;
+
 		if(valido) {
 			for (int a = 0; a < analizador.size();a++) {
 				for (int c = 0; c < analizador.get(a).getCriterios().size(); c++) {								

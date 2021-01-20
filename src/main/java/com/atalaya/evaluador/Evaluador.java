@@ -457,6 +457,8 @@ public class Evaluador {
 	}
 	
 	private boolean entreParentesis(String cadena) {
+	// Comprueba si la conrición completa contenida en el parámetro cadena está indicada entre paréntesis. 
+	// Estará entre paréntesis si la primera y última posición de la cadena contienen, respectivamente '(' y ')' y el paréntesis de la última posición cierra el de la primera
 		boolean entre = false;
 		int nivel = 0;
 	
@@ -471,7 +473,7 @@ public class Evaluador {
 				nivel++;
 			} else {
 				if (c == cierra) {		
-					if ((nivel - 1) == 0 && cadena.startsWith("(")  && abiertos.get(nivel - 1) == 0 && i == (cadena.length() - 1)) {
+					if ((nivel - 1) == 0 && cadena.startsWith("(")  && (abiertos.get(nivel - 1) == 0) && (i == (cadena.length() - 1))) {
 						entre = true;
 					}
 					abiertos.remove(nivel - 1);	

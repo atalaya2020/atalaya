@@ -9,7 +9,7 @@ public class Operando {
 	private Object resultado;
 	private boolean ejecutado;
 	private Indicador indicador;
-	private Comunes constantes;
+	private Comunes constantes;	
 	
 	public String getNombre() {		
 		return nombre;
@@ -76,7 +76,7 @@ public class Operando {
 	
 	private boolean operandoNegado(String operando) {
 		boolean negado = false;
-		if (operando.startsWith("NOT")) {
+		if (operando.trim().startsWith("NOT")) {
 			negado = true;
 		}		
 		return negado;
@@ -87,7 +87,10 @@ public class Operando {
 		if (!this.ejecutado) {
 			if (this.tipo == constantes.tpIndicador) {
 				if (this.indicador.ejecutar() == 0) {
-					this.resultado = this.indicador.getResultado();					
+					this.resultado = this.indicador.getResultadoEjecucion();	
+					if (this.nombre.toUpperCase().endsWith("ROWCOUNT")) {
+						this.resultado = this.indicador.getResultadoEjecucion().size();
+					}
 				} else {
 					this.resultado = null;
 				}				

@@ -32,15 +32,14 @@ public class LaunchAtalaya {
 //		MongoDatabase database = mongoClient.getDatabase("test");
 	}
 	
-
 	@GetMapping("/atalaya")
 	public String atalaya() {
 		boolean valido = true;		
 		int cumplido = -1;
 		String salida = "";
 		int iError = 0;
-		
-		String file = "C:\\JSC\\SQL\\EjemploJSON.json";
+		String file = "C:\\JSC\\SQL\\AlumnoAprobado.json";
+//		String file = "C:\\JSC\\SQL\\EjemploJSON.json";
 		
 		ArrayList<Analisis> analizador = JsonReader.read(file);
 		
@@ -51,11 +50,11 @@ public class LaunchAtalaya {
 				valido = false;
 			}			
 		}				
-
+		
 		if(valido) {
 			for (int a = 0; a < analizador.size();a++) {
 				for (int c = 0; c < analizador.get(a).getCriterios().size(); c++) {								
-					Criterio criAnaliza = analizador.get(a).getCriterios().get(c);					
+					Criterio criAnaliza = analizador.get(a).getCriterios().get(c);	
 					Evaluador criEvalua = new Evaluador (criAnaliza.getEvaluacion(), analizador.get(a).getIndicadores());					
 					cumplido = criEvalua.evaluar();					
 					switch (cumplido) {

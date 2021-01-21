@@ -1,5 +1,11 @@
 package com.atalaya.evaluador;
+import java.util.Vector;
+import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.util.Arrays;
+
 import com.example.demo.Indicador;
+import com.example.demo.Parametro;
 
 public class Operando {
 	private String nombre;
@@ -49,6 +55,7 @@ public class Operando {
 	}
 	
 	public Object getResultado() {		
+		ejecutar();
 		return resultado;
 	}
 	public void setResultado(Object resultado) {
@@ -83,9 +90,10 @@ public class Operando {
 	}	
 	
 	private void ejecutar() {
-		
+	// Ejecuta el operando. Si es un indicador, ejecutará el indicador. Si no, convertirá el valor al tipo correspondiente.	
 		if (!this.ejecutado) {
 			if (this.tipo == constantes.tpIndicador) {
+				parametrosIndicador();
 				if (this.indicador.ejecutar() == 0) {
 					this.resultado = this.indicador.getResultadoEjecucion();	
 					if (this.nombre.toUpperCase().endsWith("ROWCOUNT")) {
@@ -114,6 +122,44 @@ public class Operando {
 		if (this.resultado != null) {
 			this.ejecutado = true;
 		}
+	}
+	
+	private void parametrosIndicador() {
+	// Recorre los parámetros del indicador para asignar los valores que tengan referencias a otros indicadores. 
+	Indicador indOper = this.indicador;			
+	
+		for (int p = 0; p < indOper.getParametros().size(); p++) {			
+			if (indOper.getParametros().get(p).getIndicador() != null   ) {
+				if (indOper.getParametros().get(p).getIndicador().ejecutar() == 0) {					
+					Object valor = calcularValorParametro (indOper.getParametros().get(p));	
+					indOper.getParametros().get(p).setValor(valor.toString());					
+				}
+			}
+		}
+	}
+	
+	private Object calcularValorParametro(Parametro param) {
+	// Si el valor de un parámetro, extrae del resultado de la ejecución de ese indicador el valor que debe asignar al parámetro 
+		Object valParam = new Object();
+		Indicador indParam = param.getIndicador();		
+
+	// Recupera la primera fila del resultado de ejecución
+		Object[] linea = param.getIndicador().getResultadoEjecucion().elementAt(0);
+		
+	// Del nombre del indicador obtiene el nombre de la columna cuyo valor debe sacar. 
+		String[] tramos = indParam.getNombre().split("\\.");
+		String columna = tramos [tramos.length -1];		
+
+	// 
+		int c = 0;
+		while (c < param.getIndicador().getResultado().length ) {
+			if (columna.equals(param.getIndicador().getResultado()[c])) {
+				valParam = linea[c];
+				c = param.getIndicador().getResultado().length + 5;
+			}
+			c++;
+		}		
+		return valParam;
 	}
 	
 }

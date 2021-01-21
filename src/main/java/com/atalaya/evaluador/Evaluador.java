@@ -50,6 +50,7 @@ public class Evaluador {
 		int result = 0;
 		this.condicionCompleta = condicion;		
 		this.indicadores = indicadores;
+		indicadoresParametros();
 		result = this.evaluar();
 		return result;
 	}
@@ -690,7 +691,7 @@ public class Evaluador {
 	}
 	
 	private int esIndicador (String operando) {
-	// Comprueba si la cadena recibida como parámetro corresponde a alguno de los indicadores definidios en el análisis
+	// Comprueba si la cadena recibida como parámetro corresponde a alguno de los indicadores definidios en el análisis. Devuelve  -1, si es erróneo, 0 si no lo es, y 1 si es indicador.
 		int esIndica = constantes.tpNoIndicador;
 		String[] tramos = new String [] {};
 		tramos = operando.split("\\.");
@@ -741,7 +742,7 @@ public class Evaluador {
 		
 	private Operando nuevoOperando(String nombre) {
 	// Crea el operando de una condición simple. 
-		int tipo;
+		int tipo;		
 		Operando oper = new Operando();			
 		// El operando puede ser de tres tipos: Indicador, valor o fórmula. Éste último aún no se ha codificado, por lo que se identifica como erróneo.	
 		oper.setNombre(nombre);		
@@ -769,7 +770,7 @@ public class Evaluador {
 			for (int t = 0; t < tramos.length; t++) {		
 				for (int i = 0; i < indicadores.size(); i++) {	
 					if (indicadores.get(i).getNombre().equals(tramos[t])) {
-						oper.setIndicador(indicadores.get(i));				
+						oper.setIndicador(indicadores.get(i));			
 					}
 				}
 			}			
@@ -821,5 +822,33 @@ public class Evaluador {
 		}
 		return vale;		
 	}
+	private void indicadoresParametros() {
+	// Por cada uno de los indicadores del análisis, recorre su lista de parámetros y identificando los que en sus valores hagan referencia a un indicador para ponerlo como indicador del parámetro	
+	
+		for (int i = 0; i < this.indicadores.size(); i++) {
+			for (int p = 0; p < this.indicadores.get(i).getParametros().size(); p++) {
+				String[] tramos = new String [] {};
+				tramos = this.indicadores.get(i).getParametros().get(p).getValor().split("\\."); 
+				for (int t = 0; t < tramos.length; t++) {		
+					for (int n = 0; n< indicadores.size(); n++) {	
+						if (indicadores.get(n).getNombre().equals(tramos[t])) {
+							if (n != i) {
+								this.indicadores.get(i).getParametros().get(p).setIndicador(indicadores.get(n));
+							} else {
+								nuevoError("Los valores de los parámetros de un indicador no pueden hace rferencia al mismo indicador: " + indicadores.get(n).getNombre());
+							}
+						}
+					}
+				}
+				
+				
+				
+			}				
+		}
+		
+			
+			
+	}
+
 }
  

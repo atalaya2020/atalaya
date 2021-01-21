@@ -53,15 +53,62 @@ public class Condicion {
 	}
 	
 	public boolean evalua() {
-	boolean result = true;	
-		
+	boolean result = false;	
+	String oper1;
+	String oper2;
+	int iOper1 = 0;
+	int iOper2 = 0;
+	boolean numerica;
+	int compara;
+	
 		if (evaluado) {return resultado;  } 
 		else {
-			if (operando1.getResultado() == operando2.getResultado()) {
-				result = true;
+			// Recupera los resultados de cada uno de los operandos de la condicióna.
+			oper1 = operando1.getResultado().toString().trim();
+			oper2 = operando2.getResultado().toString().trim();			
+			// Convierte ambos resultados a int para decidir si la comparación será numérica o alfabéteica.
+			numerica = true;
+			try {
+				iOper1 = Integer.parseInt(oper1);				
+			} catch (NumberFormatException e3) {				
+				numerica = false;
+			}	
+			try {
+				iOper2 = Integer.parseInt(oper2);				
+			} catch (NumberFormatException e3) {				
+				numerica = false;
+			}
+			// Si ha podido convertir a int ambos resultados, los comparará numéricamente. Si no, hará comparación alfabéticamente.
+			if (numerica) {			
+				switch (this.operador) {
+				case "=":
+					if (iOper1 == iOper2) 	{	result = true;		}
+				case "<":
+					if (iOper1 < iOper2) 	{	result = true;		}
+				case ">":
+					if (iOper1 > iOper2)	{	result = true;		}
+				case ">=":
+					if (iOper1 >= iOper2) 	{	result = true;		}
+				case "<=":
+					if (iOper1 <= iOper2) 	{	result = true;		}
+				case "<>":	
+					if (iOper1 != iOper2) 	{	result = true;		}
+				}		
 			} else {
-				result = false;
-			}			
+				compara = oper1.compareToIgnoreCase(oper2);
+				if (compara < 0 && (this.operador.equals("<") || this.operador.equals("<=") || this.operador.equals("<>"))) {
+					result = true; 
+				} else {
+					if (compara == 0 && (this.operador.equals("=") || this.operador.equals("<=") || this.operador.equals(">="))) {
+						result = true;
+					} else {
+						if (compara > 0 && (this.operador.equals(">") || this.operador.equals(">=") || this.operador.equals("<>"))) {
+							result = true;
+						}
+					}
+				}					
+			}
+			
 			evaluado = true;
 		}
 		if (negacion) 	{result = !result;	}

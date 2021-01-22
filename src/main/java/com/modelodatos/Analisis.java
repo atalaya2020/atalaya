@@ -1,25 +1,25 @@
-package com.example.demo;
+package com.modelodatos;
 
 import java.util.ArrayList;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection="analisis")
 public class Analisis {
 	private String nombre;
 	private String descripcion;
 	private ArrayList<Indicador> indicadores;
 	private ArrayList<Criterio> criterios;
-	private ArrayList<Evento> eventos;
 
 
 
 
-	public Analisis(String nombre, String descripcion, ArrayList<Indicador> indicadores, ArrayList<Criterio> criterios,
-			ArrayList<Evento> eventos) {
+	public Analisis(String nombre, String descripcion , ArrayList<Indicador> indicadores, ArrayList<Criterio> criterios) {
 		super();
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.indicadores = indicadores;
 		this.criterios = criterios;
-		this.eventos = eventos;
 	}
 
 	public String getNombre() {
@@ -54,16 +54,8 @@ public class Analisis {
 		this.criterios = criterios;
 	}
 
-	public ArrayList<Evento> getEventos() {
-		return eventos;
-	}
 
-	public void setEventos(ArrayList<Evento> eventos) {
-		this.eventos = eventos;
-	}
-
-
-	public boolean validar() {
+	/*public boolean validar() {
 		boolean valido = true;
 
 		if(this.getNombre().equals("")) {
@@ -75,7 +67,7 @@ public class Analisis {
 			// Falta descripcion
 		}
 
-		else {
+		/*else {
 
 			ArrayList<Indicador> indicadores= this.getIndicadores();
 
@@ -115,6 +107,6 @@ public class Analisis {
 
 
 		return valido;
-	}
+	}*/
 
 }

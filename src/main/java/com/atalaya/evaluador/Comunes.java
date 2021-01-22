@@ -4,6 +4,7 @@ public class Comunes {
 	public static int tpIndErroneo = -1;
 	public static int tpNoIndicador = 0;
 	public static int tpIndicador	= 1;
+	public static String tpMarcaIndicador = "#";
 	public static int tpValor	= 2;	
 	public static int tpVlNoTipo = 0;
 	public static int tpVlBoolean = 1;

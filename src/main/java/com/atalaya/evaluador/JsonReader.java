@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.atalaya.evaluador;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -10,17 +10,30 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.modelodatos.Analisis;
+import com.modelodatos.Criterio;
+import com.modelodatos.Indicador;
+import com.modelodatos.Parametro;
+
 public class JsonReader {
 
 	@SuppressWarnings("unchecked")
-	public static ArrayList<Analisis> read(String file) 
+	public static ArrayList<Analisis> read(Object objIn) 
 	{
 		ArrayList<Analisis> analizador = new ArrayList<Analisis>();
-		JSONParser parser = new JSONParser();
-
-		try {
-			Object obj = parser.parse(new FileReader(file));
-
+		JSONParser parser = new JSONParser();	
+		
+		try 
+		{
+			Object obj = null;
+			
+			if (objIn.getClass().equals(String.class))
+			{
+				obj = parser.parse(new FileReader((String)objIn));
+			}
+			else
+				obj = objIn;
+			
 			// JSON object para mapear el documento
 			JSONObject jsonObject = (JSONObject) obj;
 
@@ -89,24 +102,10 @@ public class JsonReader {
 
 					boolean flagInd = false;
 
-					indicadores.add(new Indicador(nombreInd, descInd, fuenteInd, tipoInd, comandInd, parametros, resInd, flagInd));
+					indicadores.add(new Indicador(nombreInd, descInd, fuenteInd, tipoInd, comandInd, parametros, resInd));
 				}
 
-
-				JSONArray conjEvent = (JSONArray)analisis.get("Eventos");
-				Iterator<JSONObject> iteratorAlarm = conjEvent.iterator();
-				ArrayList<Evento> eventos = new ArrayList<Evento>();
-				while(iteratorAlarm.hasNext()) {
-					//alarma a alarma
-
-					JSONObject evento = (JSONObject)iteratorAlarm.next();
-					String formatEven = (String) evento.get("FormatoSalida");		
-					Object salEven = (Object)evento.get("Salida");
-
-					eventos.add(new Evento(formatEven, salEven));
-
-				}
-				analizador.add(new Analisis(nombreAn, descAn, indicadores, criterios, eventos));
+				analizador.add(new Analisis(nombreAn, descAn, indicadores, criterios));
 
 			}
 

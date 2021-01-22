@@ -1,11 +1,12 @@
 package com.atalaya.evaluador;
+
 import java.util.Vector;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Arrays;
 
-import com.example.demo.Indicador;
-import com.example.demo.Parametro;
+import com.modelodatos.Indicador;
+import com.modelodatos.Parametro;
 
 public class Operando {
 	private String nombre;
@@ -14,7 +15,8 @@ public class Operando {
 	private boolean negado;
 	private Object resultado;
 	private boolean ejecutado;
-	private Indicador indicador;
+	private IndicadorProxy indicador;
+	
 	private Comunes constantes;	
 	
 	public String getNombre() {		
@@ -60,15 +62,14 @@ public class Operando {
 	}
 	public void setResultado(Object resultado) {
 		this.resultado = resultado;			
-	}
+	}	
 	
-	public Indicador getIndicador() {		
+	public IndicadorProxy getIndicador() {
 		return indicador;
 	}
-	
-	public void setIndicador(Indicador indicador) {
-		this.indicador = indicador;			
-	}	
+	public void setIndicador(IndicadorProxy indicador) {
+		this.indicador = indicador;
+	}
 	
 	public void Operando () {	
 		this.tipo = 0;
@@ -91,18 +92,57 @@ public class Operando {
 	
 	private void ejecutar() {
 	// Ejecuta el operando. Si es un indicador, ejecutará el indicador. Si no, convertirá el valor al tipo correspondiente.	
-		if (!this.ejecutado) {
-			if (this.tipo == constantes.tpIndicador) {
-				parametrosIndicador();
-				if (this.indicador.ejecutar() == 0) {
-					this.resultado = this.indicador.getResultadoEjecucion();	
+		if (!this.ejecutado)
+		{
+			if (this.tipo == constantes.tpIndicador) 
+			{
+				if (!this.getIndicador().isFlag()) {
+					//parametrosIndicador();
+					if (this.getIndicador().ejecutar() == 0) {
+						String[] tramos = new String [] {};
+						tramos = this.getNombre().split("\\.");
+						Object valParam = new Object();
+						Object[] linea = this.getIndicador().getResultadoEjecucion().elementAt(0);
+						int c = 0;
+						while (c < this.getIndicador().getIndicador().getResultado().length) {
+							if (tramos[1].equals(this.getIndicador().getIndicador().getResultado()[c])) {
+								valParam = linea[c];
+								break;
+							}
+							c++;
+						}
+						this.resultado = valParam;	
+						
+						if (this.nombre.toUpperCase().endsWith("ROWCOUNT")) {
+							this.resultado = this.indicador.getResultadoEjecucion().size();
+						}
+					} else {
+						this.resultado = null;
+					}
+				}
+				else
+				{
+					String[] tramos = new String [] {};
+					tramos = this.getNombre().split("\\.");
+					Object valParam = new Object();
+					Object[] linea = this.getIndicador().getResultadoEjecucion().elementAt(0);
+					int c = 0;
+					while (c < this.getIndicador().getIndicador().getResultado().length) {
+						if (tramos[1].equals(this.getIndicador().getIndicador().getResultado()[c])) {
+							valParam = linea[c];
+							break;
+						}
+						c++;
+					}
+					this.resultado = valParam;	
+					
 					if (this.nombre.toUpperCase().endsWith("ROWCOUNT")) {
 						this.resultado = this.indicador.getResultadoEjecucion().size();
 					}
-				} else {
-					this.resultado = null;
-				}				
-			} else {
+				}
+			} 
+			else 
+			{
 				if (this.tipo == constantes.tpValor) {
 					if (this.tipoValor == constantes.tpVlBoolean) {
 						this.resultado = Boolean.parseBoolean(this.nombre);
@@ -124,12 +164,25 @@ public class Operando {
 		}
 	}
 	
-	private void parametrosIndicador() {
-	// Recorre los parámetros del indicador para asignar los valores que tengan referencias a otros indicadores. 
-	Indicador indOper = this.indicador;			
+/*	private void parametrosIndicador() {
+		// Recorre los parámetros del indicador para asignar los valores que tengan referencias a otros indicadores. 
+		IndicadorProxy indOper = this.indicador;			
 	
-		for (int p = 0; p < indOper.getParametros().size(); p++) {			
-			if (indOper.getParametros().get(p).getIndicador() != null   ) {
+		for (int p = 0; p < indOper.getIndicador().getParametros().size(); p++) {			
+			if (indOper.getIndicador().getParametros().get(p).getValor().startsWith(constantes.tpMarcaIndicador)) {
+				
+				String[] tramos = new String [] {};
+				tramos = indOper.getIndicador().getParametros().get(p).getValor().split("\\.");
+				
+				for (int i = 0; i < indicadores.size(); i++) 
+				{	
+					if (indicadores.get(i).getIndicador().getNombre().equals(tramos[0].substring(1))) 
+					{
+						oper.setIndicador(indicadores.get(i));
+						break;
+					}
+				}
+				
 				if (indOper.getParametros().get(p).getIndicador().ejecutar() == 0) {					
 					Object valor = calcularValorParametro (indOper.getParametros().get(p));	
 					indOper.getParametros().get(p).setValor(valor.toString());					
@@ -160,6 +213,6 @@ public class Operando {
 			c++;
 		}		
 		return valParam;
-	}
+	}*/
 	
 }

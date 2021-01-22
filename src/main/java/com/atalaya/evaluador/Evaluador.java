@@ -1,6 +1,7 @@
 package com.atalaya.evaluador;
 
-import com.example.demo.Indicador;
+import com.modelodatos.Indicador;
+import com.modelodatos.Parametro;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,7 +17,7 @@ public class Evaluador {
 	private String condicionCompleta;
 	private ArrayList<CondicionMultiple> evaluacion = new ArrayList<CondicionMultiple>();
 	private ArrayList<String> errores = new ArrayList<String>();
-	private ArrayList<Indicador> indicadores = new ArrayList<Indicador>();
+	private ArrayList<IndicadorProxy> indicadores = new ArrayList<IndicadorProxy>();
 	private String operadores [] = new String [] {"<=", ">=", "<>", "=", "<", ">"};	
 	private String opLogicos [] = new String [] {" AND ", " OR "};
 	private char abre = '(';
@@ -36,24 +37,25 @@ public class Evaluador {
 		this.condicionCompleta = condicionCompleta;
 	}	
 	
-	public void setIndicadores(ArrayList<Indicador> indicadores) {
+	public void setIndicadores(ArrayList<IndicadorProxy> indicadores) {
 		this.indicadores = indicadores;
 	}
 	
 	public Evaluador (String condicionCompleta, ArrayList<Indicador> indicadores) {		
 		super();		
 		this.condicionCompleta = condicionCompleta;	
-		this.indicadores = indicadores;
+		
+		for (int i=0;i<indicadores.size();i++)
+			this.indicadores.add(new IndicadorProxy(indicadores.get(i)));
 	}
 		
-	public int evaluar (String condicion, ArrayList<Indicador> indicadores)  {
+	/*public int evaluar (String condicion, ArrayList<Indicador> indicadores)  {
 		int result = 0;
 		this.condicionCompleta = condicion;		
 		this.indicadores = indicadores;
-		indicadoresParametros();
 		result = this.evaluar();
 		return result;
-	}
+	}*/
 	
 	public int evaluar ()  {
 		int result = 0;
@@ -74,6 +76,7 @@ public class Evaluador {
 		}
 		
 		if (valido) {
+			//informa la lista evaluacion
 			extraerCondiciones();
 			
 			System.out.println("Mostrando Condiciones"); 
@@ -97,6 +100,7 @@ public class Evaluador {
 					}
 				} 
 			}
+			//valida que los operandos de las condiciones o evaluaciones sean validos
 			if (comprobarCondiciones()) {
 				// Para obtener el resultado de la condición, se evalúan las condiciones simples de mayor a menor nivel de profundidad, teniendo en cuenta las relaciones definidas entre ellas 
 				for (int nivel = maxNivel; nivel >= minNivel; nivel--) {
@@ -693,19 +697,26 @@ public class Evaluador {
 	private int esIndicador (String operando) {
 	// Comprueba si la cadena recibida como parámetro corresponde a alguno de los indicadores definidios en el análisis. Devuelve  -1, si es erróneo, 0 si no lo es, y 1 si es indicador.
 		int esIndica = constantes.tpNoIndicador;
-		String[] tramos = new String [] {};
-		tramos = operando.split("\\.");
-
-		for (int t = 0; t < tramos.length; t++) {		
-			for (int i = 0; i < indicadores.size(); i++) {	
-				if (indicadores.get(i).getNombre().equals(tramos[t])) {
-					esIndica = constantes.tpIndicador;					
-				}
-			}
-		}
-		if (tramos.length > 1 && esIndica == constantes.tpNoIndicador) {
+		
+		if (operando.startsWith(constantes.tpMarcaIndicador))
+		{	
 			esIndica = constantes.tpIndErroneo;
+			
+			String[] tramos = new String [] {};
+			tramos = operando.split("\\.");
+			
+			for (int i = 0; i < indicadores.size(); i++) 
+			{	
+				if (indicadores.get(i).getIndicador().getNombre().equals(tramos[0].substring(1))) 
+				{
+					esIndica = constantes.tpIndicador;
+					break;
+				}
+			}	
 		}
+		else
+			esIndica = constantes.tpNoIndicador;
+		
 		return esIndica;		
 	}	
 
@@ -726,7 +737,6 @@ public class Evaluador {
 			} else {
 				if (contarCaracter(operando, constantes.comillas) == 0) {
 					oper = oper.replaceAll("\\,", "\\.");
-					
 					try {
 						Integer.parseInt(oper);
 						valor = constantes.tpVlInt;
@@ -747,10 +757,26 @@ public class Evaluador {
 		// El operando puede ser de tres tipos: Indicador, valor o fórmula. Éste último aún no se ha codificado, por lo que se identifica como erróneo.	
 		oper.setNombre(nombre);		
 		tipo = esIndicador(oper.getNombre());
-		if (tipo == constantes.tpIndicador) {
+		if (tipo == constantes.tpIndicador) 
+		{
 			oper.setTipo(constantes.tpIndicador);
 			oper.setTipoValor(constantes.tpVlIndicador);
-		} else {
+			
+			String[] tramos = new String [] {};
+			tramos = oper.getNombre().split("\\.");
+			
+			for (int i = 0; i < indicadores.size(); i++) 
+			{	
+				if (indicadores.get(i).getIndicador().getNombre().equals(tramos[0].substring(1))) 
+				{
+					oper.setIndicador(indicadores.get(i));
+					parametrosIndicador(indicadores.get(i));
+					break;
+				}
+			}
+		} 
+		else 
+		{
 			if (tipo == constantes.tpIndErroneo) {
 				oper.setTipo(constantes.tpIndErroneo);
 				oper.setTipoValor(constantes.tpVlNoTipo);				
@@ -763,18 +789,6 @@ public class Evaluador {
 				} 
 			}
 		}
-		// Si el operando es un Indicador. Crea el objeto indicador del operando.
-		if (oper.getTipo() == constantes.tpIndicador) {
-			String[] tramos = new String [] {};
-			tramos = oper.getNombre().split("\\."); 
-			for (int t = 0; t < tramos.length; t++) {		
-				for (int i = 0; i < indicadores.size(); i++) {	
-					if (indicadores.get(i).getNombre().equals(tramos[t])) {
-						oper.setIndicador(indicadores.get(i));			
-					}
-				}
-			}			
-		}		
 		return oper;
 	}
 	
@@ -822,33 +836,39 @@ public class Evaluador {
 		}
 		return vale;		
 	}
-	private void indicadoresParametros() {
-	// Por cada uno de los indicadores del análisis, recorre su lista de parámetros y identificando los que en sus valores hagan referencia a un indicador para ponerlo como indicador del parámetro	
 	
-		for (int i = 0; i < this.indicadores.size(); i++) {
-			for (int p = 0; p < this.indicadores.get(i).getParametros().size(); p++) {
+	//Miedito me da. He metido recursividad por la posible depenedencia entre indicadores esto habria que resolverlo de otra manera que seria 
+	//realizar una batida continua (despues de la ejecucion de cualquier indicador) e ir resolviendo los indicadores segun su dependencia
+	private void parametrosIndicador(IndicadorProxy indOper) {
+		
+		for (int p = 0; p < indOper.getIndicador().getParametros().size(); p++) {			
+			if (indOper.getIndicador().getParametros().get(p).getValor().startsWith(constantes.tpMarcaIndicador)) {
+				
 				String[] tramos = new String [] {};
-				tramos = this.indicadores.get(i).getParametros().get(p).getValor().split("\\."); 
-				for (int t = 0; t < tramos.length; t++) {		
-					for (int n = 0; n< indicadores.size(); n++) {	
-						if (indicadores.get(n).getNombre().equals(tramos[t])) {
-							if (n != i) {
-								this.indicadores.get(i).getParametros().get(p).setIndicador(indicadores.get(n));
-							} else {
-								nuevoError("Los valores de los parámetros de un indicador no pueden hace rferencia al mismo indicador: " + indicadores.get(n).getNombre());
+				tramos = indOper.getIndicador().getParametros().get(p).getValor().split("\\.");
+				
+				for (int i = 0; i < indicadores.size(); i++) 
+				{	
+					if (indicadores.get(i).getIndicador().getNombre().equals(tramos[0].substring(1))) 
+					{
+						parametrosIndicador(indicadores.get(i));
+						if (indicadores.get(i).ejecutar() == 0 && (indicadores.get(i).getResultadoEjecucion()!=null) && indicadores.get(i).getResultadoEjecucion().size()>0) {					
+							String columna = tramos[1];
+							Object valParam = new Object();
+							Object[] linea = indicadores.get(i).getResultadoEjecucion().elementAt(0);
+							int c = 0;
+							while (c < indicadores.get(i).getIndicador().getResultado().length ) {
+								if (columna.equals(indicadores.get(i).getIndicador().getResultado()[c])) {
+									valParam = linea[c];
+									break;
+								}
+								c++;
 							}
+							indOper.getIndicador().getParametros().get(p).setValor(valParam.toString());					
 						}
 					}
 				}
-				
-				
-				
-			}				
+			}
 		}
-		
-			
-			
 	}
-
 }
- 

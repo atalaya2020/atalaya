@@ -1,5 +1,5 @@
 package com.atalaya.evaluador;
-// Clase para representar cada una de las condiciones simpres de una condición compleja. 
+//Clase para representar cada una de las condiciones simpres de una condición compleja. 
 
 
 public class Condicion {
@@ -82,17 +82,17 @@ public class Condicion {
 			if (numerica) {			
 				switch (this.operador) {
 				case "=":
-					if (iOper1 == iOper2) 	{	result = true;		}
+					if (iOper1 == iOper2) 	{	result = true;break;		}
 				case "<":
-					if (iOper1 < iOper2) 	{	result = true;		}
+					if (iOper1 < iOper2) 	{	result = true;break;		}
 				case ">":
-					if (iOper1 > iOper2)	{	result = true;		}
+					if (iOper1 > iOper2)	{	result = true;break;		}
 				case ">=":
-					if (iOper1 >= iOper2) 	{	result = true;		}
+					if (iOper1 >= iOper2) 	{	result = true;break;		}
 				case "<=":
-					if (iOper1 <= iOper2) 	{	result = true;		}
+					if (iOper1 <= iOper2) 	{	result = true;break;		}
 				case "<>":	
-					if (iOper1 != iOper2) 	{	result = true;		}
+					if (iOper1 != iOper2) 	{	result = true;break;		}
 				}		
 			} else {
 				compara = oper1.compareToIgnoreCase(oper2);

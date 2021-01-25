@@ -1,7 +1,7 @@
 package com.modelodatos;
 
 import java.util.ArrayList;
-
+import com.atalaya.evaluador.IndicadorProxy;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="analisis")
@@ -10,16 +10,15 @@ public class Analisis {
 	private String descripcion;
 	private ArrayList<Indicador> indicadores;
 	private ArrayList<Criterio> criterios;
+	private ArrayList<Indicador> eventos;
 
-
-
-
-	public Analisis(String nombre, String descripcion , ArrayList<Indicador> indicadores, ArrayList<Criterio> criterios) {
+	public Analisis(String nombre, String descripcion , ArrayList<Indicador> indicadores, ArrayList<Criterio> criterios, ArrayList<Indicador> eventos) {
 		super();
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.indicadores = indicadores;
 		this.criterios = criterios;
+		this.eventos = eventos;
 	}
 
 	public String getNombre() {
@@ -54,6 +53,26 @@ public class Analisis {
 		this.criterios = criterios;
 	}
 
+	public ArrayList<Indicador> getEventos() {
+		return eventos;
+	}
+
+	public void setEventos(ArrayList<Indicador> eventos) {
+		this.eventos = eventos;
+	}
+	
+	
+	public void eventosCriterio (String [] eventosCriterio) {
+		
+		for (int ec = 0; ec < eventosCriterio.length; ec++) {
+			for (int e = 0; e < this.eventos.size(); e++) {
+				if (eventosCriterio[ec].equals(this.eventos.get(e).getNombre())) {
+					IndicadorProxy evento = new IndicadorProxy(this.eventos.get(e));
+					evento.generarEvento();					
+				}
+			}
+		}
+	}
 
 	/*public boolean validar() {
 		boolean valido = true;

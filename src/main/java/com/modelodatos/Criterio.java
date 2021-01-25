@@ -7,14 +7,16 @@ public class Criterio {
 	private String evaluacion;
 	private String tipoResultado;
 	private Object resultado;
+	private String [] eventos;
 
-	public Criterio(String nombre, String descripcion, String evaluacion, String tipoResultado, Object resultado) {
+	public Criterio(String nombre, String descripcion, String evaluacion, String tipoResultado, Object resultado, String[] eventos) {
 		super();
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.evaluacion = evaluacion;
 		this.tipoResultado = tipoResultado;
 		this.resultado = resultado;
+		this.eventos = eventos;
 	}
 
 	public String getNombre() {
@@ -55,6 +57,14 @@ public class Criterio {
 
 	public void setResultado(Object resultado) {
 		this.resultado = resultado;
+	}
+	
+	public String [] getEventos() {
+		return eventos;
+	}
+
+	public void setEventos(String [] eventos) {
+		this.eventos = eventos;
 	}
 	
 	public boolean validar() {

@@ -64,6 +64,7 @@ public class AtalayaApplication {
 				case 1:
 				// La evaluación ha dado como resultado que se cumple. Deben generarse los eventos asociados al criterio.
 					mensaje.add(iError, "El criterio " + criAnaliza.getNombre() + " cumple la condición. Se generan los eventos siguientes:");
+					analisis.eventosCriterio(criEvalua.getEventos());
 					iError++;
 					break;
 				}

@@ -1,12 +1,13 @@
 package com.atalaya.evaluador;
 
-import com.modelodatos.Indicador;
-import com.modelodatos.Parametro;
-
-import java.util.ArrayList;
-import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+import com.modelodatos.Criterio;
+import com.modelodatos.Evento;
+import com.modelodatos.Indicador;
 
 // Clase que evalúa una condición compleja. Puede devolver tres posibles resultados:
 //1. Se ha evaluado la condición y se cumple (true)
@@ -18,6 +19,8 @@ public class Evaluador {
 	private ArrayList<CondicionMultiple> evaluacion = new ArrayList<CondicionMultiple>();
 	private ArrayList<String> errores = new ArrayList<String>();
 	private ArrayList<IndicadorProxy> indicadores = new ArrayList<IndicadorProxy>();
+	private ArrayList<EventoProxy> eventos = new ArrayList<EventoProxy>();
+	private String[] eventosCriterio = null;
 	private String operadores [] = new String [] {"<=", ">=", "<>", "=", "<", ">"};	
 	private String opLogicos [] = new String [] {" AND ", " OR "};
 	private char abre = '(';
@@ -41,12 +44,30 @@ public class Evaluador {
 		this.indicadores = indicadores;
 	}
 	
-	public Evaluador (String condicionCompleta, ArrayList<Indicador> indicadores) {		
+	public ArrayList<EventoProxy> getEventos() {
+		return eventos;
+	}
+
+	public void setEventos(ArrayList<EventoProxy> eventos) {
+		this.eventos = eventos;
+	}
+	
+	public Evaluador (Criterio criterio, ArrayList<Indicador> indicadores, ArrayList<Evento> eventos) {		
 		super();		
-		this.condicionCompleta = condicionCompleta;	
+		this.condicionCompleta = criterio.getEvaluacion();
+		this.eventosCriterio = criterio.getEventos();
 		
 		for (int i=0;i<indicadores.size();i++)
 			this.indicadores.add(new IndicadorProxy(indicadores.get(i)));
+		
+		for (int ec = 0; ec < this.eventosCriterio.length; ec++) {
+			for (int e = 0; e < eventos.size(); e++) {
+				if (eventosCriterio[ec].equals(eventos.get(e).getNombre())) {
+					this.eventos.add(new EventoProxy(eventos.get(e)));					
+				}
+			}
+		}
+		
 	}
 		
 	/*public int evaluar (String condicion, ArrayList<Indicador> indicadores)  {
@@ -112,6 +133,7 @@ public class Evaluador {
 							if (nivel == minNivel) {
 								if (multiple.getResultado()) {
 									result = 1;
+									eventosCriterio();
 								} else {
 									result = 0;
 								}							
@@ -871,4 +893,46 @@ public class Evaluador {
 			}
 		}
 	}
+	
+	public void eventosCriterio () {
+		
+		for (int e = 0; e < this.eventos.size(); e++) {
+			parametrosEvento(this.eventos.get(e));
+			this.eventos.get(e).generarEvento();
+		}
+
+	}
+	
+	private void parametrosEvento(EventoProxy eventoPrx) {
+		
+		for (int p = 0; p < eventoPrx.getEvento().getParametros().size(); p++) {			
+			if (eventoPrx.getEvento().getParametros().get(p).getValor().startsWith(constantes.tpMarcaIndicador)) {
+				
+				String[] tramos = new String [] {};
+				tramos = eventoPrx.getEvento().getParametros().get(p).getValor().split("\\.");
+				
+				for (int i = 0; i < indicadores.size(); i++) 
+				{	
+					if (indicadores.get(i).getIndicador().getNombre().equals(tramos[0].substring(1))) 
+					{
+						if ((indicadores.get(i).getResultadoEjecucion()!=null) && indicadores.get(i).getResultadoEjecucion().size()>0) {					
+							String columna = tramos[1];
+							Object valParam = new Object();
+							Object[] linea = indicadores.get(i).getResultadoEjecucion().elementAt(0);
+							int c = 0;
+							while (c < indicadores.get(i).getIndicador().getResultado().length ) {
+								if (columna.equals(indicadores.get(i).getIndicador().getResultado()[c])) {
+									valParam = linea[c];
+									break;
+								}
+								c++;
+							}
+							eventoPrx.getEvento().getParametros().get(p).setValor(valParam.toString());					
+						}
+					}
+				}
+			}
+		}
+	}
+	
 }

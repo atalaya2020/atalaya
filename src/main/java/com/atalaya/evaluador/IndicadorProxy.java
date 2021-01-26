@@ -13,15 +13,6 @@ import java.util.Vector;
 
 import com.modelodatos.Indicador;
 
-import org.apache.axis.client.Call;
-import org.apache.axis.client.Service;
-import org.apache.axis.encoding.XMLType;
-import javax.xml.namespace.QName;
-import javax.xml.rpc.ParameterMode;
-import javax.xml.rpc.ServiceException;
-import java.net.MalformedURLException;
-import java.rmi.RemoteException;
-
 public class IndicadorProxy {
 	
 	private Vector<Object[]> resultadoEjecucion;
@@ -70,9 +61,10 @@ public class IndicadorProxy {
 				try {
 	
 					conexion = DriverManager.getConnection(
-							"jdbc:mysql://localhost:33060/alumnadodb?useServerPrepStmts=true",
-							"root", "atalaya");
-	
+							//"jdbc:mysql://localhost:3306/alumnadodb?useServerPrepStmts=true&useSSL=false&allowPublicKeyRetrieval=true",
+							"jdbc:mysql://alumnadodb:3306/alumnadodb?useServerPrepStmts=true&useSSL=false&allowPublicKeyRetrieval=true",
+							"root", "atalaya"); 
+	 
 					PreparedStatement pstmt = conexion.prepareStatement(this.indicador.getComando());
 					for(int i = 0; i< this.indicador.getParametros().size(); i++) {
 						if(this.indicador.getParametros().get(i).getTipo().equalsIgnoreCase("String")) {
@@ -293,85 +285,5 @@ public class IndicadorProxy {
 		}		
 		
 		return valido;
-	}
-	
-	public void generarEvento () {
-		
-		if (this.indicador.getFuente().equals("WS")) {							// Llamada a un Web Service
-			llamaWebService();
-		}			
-	}
-
-	private boolean llamaWebService() {
-		boolean llamada = true;
-		String salida = "";
-		String endPoint = this.indicador.getComando();
-		String nameSpace = "";
-		String servicio = "";
-    	QName tipoParam = new QName("");
-    	QName tipoRetorno = new QName("");
-    	Object retorno = new Object();
-    	
-	    Service  service = new Service(); 
-	    try {
-	    	Call call    = (Call) service.createCall();
-	    	call.setTargetEndpointAddress( new java.net.URL(endPoint) );				
-
-		    String paramWS [] = new String [this.indicador.getParametros().size() - 1];
-		    int iWS = 0;
-		    for (int p = 0; p < this.indicador.getParametros().size(); p++) {
-	
-		    	if (this.indicador.getParametros().get(p).getTipo().equalsIgnoreCase("STRING")) {
-		    		tipoParam = XMLType.XSD_STRING;
-		    	} else {
-		    		if (this.indicador.getParametros().get(p).getTipo().equalsIgnoreCase("INT")) {
-		    			tipoParam = XMLType.XSD_INT;
-		    		}
-		    	}	
-		    	if (this.indicador.getParametros().get(p).getNombre().equalsIgnoreCase("NAMESPACE")) {
-		    		nameSpace = this.indicador.getParametros().get(p).getValor();
-		    	} else {
-		    		if (this.indicador.getParametros().get(p).getNombre().equalsIgnoreCase("SERVICIO")) {
-		    			servicio = this.indicador.getParametros().get(p).getValor();
-		    		} else {
-		    			if (this.indicador.getParametros().get(p).getNombre().equalsIgnoreCase("RETORNO")) {
-		    				tipoRetorno = tipoParam;
-				    	} else {
-			    			call.addParameter(this.indicador.getParametros().get(p).getNombre(), tipoParam, ParameterMode.IN );	
-			    			paramWS[iWS] = this.indicador.getParametros().get(p).getValor();
-					  		iWS++;
-						}
-		    		}
-		    	}
-		    }		
-		    call.setOperationName(new QName(nameSpace, servicio));
-		    call.setReturnType(tipoRetorno);		    
-		    Object objInvocar [] = new Object [paramWS.length];
-		    
-		    for (int p = 0; p < paramWS.length; p++) {
-		    	objInvocar[p] = paramWS[p];
-		    }	
-		    retorno = call.invoke( objInvocar);
- 
-		    } 	catch (ServiceException e) 
-		    {
-		    	llamada = false;
-		    } catch (MalformedURLException e) 
-		    {	
-		    	llamada = false;
-		    } catch (RemoteException e) 
-		    {
-		    	llamada = false;
-		    }			    
-	 	    
-	    
-	    if (llamada) {
-	    	salida = retorno.toString();
-	    } else {
-	    	salida = "No se ha podido llamar al Web Service " + indicador.getNombre();
-	    }
-	    String.format(salida);
-	    return llamada;
-	    
 	}
 }

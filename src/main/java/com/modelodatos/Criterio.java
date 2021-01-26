@@ -67,7 +67,7 @@ public class Criterio {
 		this.eventos = eventos;
 	}
 	
-	public boolean validar() {
+/*	public boolean validar() {
 		
 		boolean valido = false;
 		
@@ -101,6 +101,6 @@ public class Criterio {
 		}
 		
 		return valido;
-	}
+	}*/
 
 }

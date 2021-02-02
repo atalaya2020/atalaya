@@ -1,16 +1,15 @@
-package com.atalaya.evaluador;
-//Clase para representar cada una de las condiciones simpres de una condici贸n compleja. 
+package main.java.com.atalaya.evaluador;
+//Clase para representar cada una de las condiciones simpres de una condici髇 compleja. 
 
 
 public class Condicion {
 
-	private Operando operando1;		// Primer operando de la condici贸n
-	private Operando operando2;		// Segundo operando de la condici贸n
-	private String operador;		// Operador de la condici贸n
-	private boolean resultado;		// Resultado de la condici贸n
-	private boolean negacion;		// Indica si la condici贸n es negada
-
-	private boolean evaluado;		// Flaga que indica si la condici贸n se ha evaluado ya o no. Es un campo intero, no tiene m茅todos get y set
+	private Operando operando1;		// Primer operando de la condici髇
+	private Operando operando2;		// Segundo operando de la condici髇
+	private String operador;		// Operador de la condici髇
+	private boolean resultado;		// Resultado de la condici髇
+	private boolean negacion;		// Indica si la condici髇 es negada
+	private boolean evaluada;		// Flaga que indica si la condici髇 se ha evaluado ya o no. Es un campo intero, no tiene m茅todos get y set
 	
 	public Operando getOperando1() {
 		return operando1;
@@ -47,72 +46,15 @@ public class Condicion {
 		this.negacion = negacion;
 	}	
 	
+	public boolean getEvaluada() {
+		return evaluada;
+	}
+	public void setEvaluada(boolean evaluada) {
+		this.evaluada = evaluada;
+	}	
 	public void Condicion() {
 		this.resultado = false;
 		this.negacion = false;
-	}
-	
-	public boolean evalua() {
-	boolean result = false;	
-	String oper1;
-	String oper2;
-	int iOper1 = 0;
-	int iOper2 = 0;
-	boolean numerica;
-	int compara;
-	
-		if (evaluado) {return resultado;  } 
-		else {
-			// Recupera los resultados de cada uno de los operandos de la condici贸na.
-			oper1 = operando1.getResultado().toString().trim();
-			oper2 = operando2.getResultado().toString().trim();			
-			// Convierte ambos resultados a int para decidir si la comparaci贸n ser谩 num茅rica o alfab茅teica.
-			numerica = true;
-			try {
-				iOper1 = Integer.parseInt(oper1);				
-			} catch (NumberFormatException e3) {				
-				numerica = false;
-			}	
-			try {
-				iOper2 = Integer.parseInt(oper2);				
-			} catch (NumberFormatException e3) {				
-				numerica = false;
-			}
-			// Si ha podido convertir a int ambos resultados, los comparar谩 num茅ricamente. Si no, har谩 comparaci贸n alfab茅ticamente.
-			if (numerica) {			
-				switch (this.operador) {
-				case "=":
-					if (iOper1 == iOper2) 	{	result = true;break;		}
-				case "<":
-					if (iOper1 < iOper2) 	{	result = true;break;		}
-				case ">":
-					if (iOper1 > iOper2)	{	result = true;break;		}
-				case ">=":
-					if (iOper1 >= iOper2) 	{	result = true;break;		}
-				case "<=":
-					if (iOper1 <= iOper2) 	{	result = true;break;		}
-				case "<>":	
-					if (iOper1 != iOper2) 	{	result = true;break;		}
-				}		
-			} else {
-				compara = oper1.compareToIgnoreCase(oper2);
-				if (compara < 0 && (this.operador.equals("<") || this.operador.equals("<=") || this.operador.equals("<>"))) {
-					result = true; 
-				} else {
-					if (compara == 0 && (this.operador.equals("=") || this.operador.equals("<=") || this.operador.equals(">="))) {
-						result = true;
-					} else {
-						if (compara > 0 && (this.operador.equals(">") || this.operador.equals(">=") || this.operador.equals("<>"))) {
-							result = true;
-						}
-					}
-				}					
-			}
-			
-			evaluado = true;
-		}
-		if (negacion) 	{result = !result;	}
-		return result;
 	}
 	
 }

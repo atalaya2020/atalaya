@@ -1,4 +1,4 @@
-package com.modelodatos;
+package main.java.com.modelodatos;
 
 import java.util.ArrayList;
 

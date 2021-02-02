@@ -1,4 +1,4 @@
-package com.atalaya.evaluador;
+package main.java.com.atalaya.evaluador;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.Vector;
 
-import com.modelodatos.Indicador;
+import main.java.com.modelodatos.Indicador;
 
 public class IndicadorProxy {
 	

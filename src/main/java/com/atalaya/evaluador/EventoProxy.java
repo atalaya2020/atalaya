@@ -1,8 +1,10 @@
-package com.atalaya.evaluador;
+package main.java.com.atalaya.evaluador;
 
 import org.springframework.web.client.RestTemplate;
 
-import com.modelodatos.Evento;
+import main.java.com.modelodatos.Evento;
+import main.java.com.modelodatos.Parametro;
+
 
 public class EventoProxy {
 
@@ -19,6 +21,11 @@ public class EventoProxy {
 
 	public EventoProxy(Evento ev) {
 		evento = ev;
+		// TODO Auto-generated constructor stub	
+	}
+	
+	public EventoProxy() {
+		evento = new Evento();
 		// TODO Auto-generated constructor stub	
 	}
 	
@@ -136,5 +143,10 @@ public class EventoProxy {
 		
 	    return llamada;
 	    
+	}
+	
+	public void nuevoParametro(String nombre, String tipo, String valor) {
+		Parametro param = new Parametro(nombre, tipo, valor);
+		this.evento.getParametros().add(this.evento.getParametros().size(), param);
 	}
 }

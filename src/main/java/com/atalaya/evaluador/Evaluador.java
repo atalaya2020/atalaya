@@ -1,26 +1,24 @@
-package com.atalaya.evaluador;
+package main.java.com.atalaya.evaluador;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.modelodatos.Criterio;
-import com.modelodatos.Evento;
-import com.modelodatos.Indicador;
+import main.java.com.modelodatos.Criterio;
+import main.java.com.modelodatos.Evento;
+import main.java.com.modelodatos.Indicador;
 
-// Clase que eval√∫a una condici√≥n compleja. Puede devolver tres posibles resultados:
-//1. Se ha evaluado la condici√≥n y se cumple (true)
-//0. Se ha evaluado la condici√≥ y no se cumple (false)
-//-1. Se han detrectado errores en la condici√≥n y no se ha evaluado.
+// Clase que eval˙a una condiciÛn compleja. Puede devolver tres posibles resultados:
+//1. Se ha evaluado la condiciÛn y se cumple (true)
+//0. Se ha evaluado la condiciÛn y no se cumple (false)
+//-1. Se han detectado errores en la condiciÛn y no se ha evaluado.
 public class Evaluador {
 	
 	private String condicionCompleta;
 	private ArrayList<CondicionMultiple> evaluacion = new ArrayList<CondicionMultiple>();
 	private ArrayList<String> errores = new ArrayList<String>();
-	private ArrayList<IndicadorProxy> indicadores = new ArrayList<IndicadorProxy>();
-	private ArrayList<EventoProxy> eventos = new ArrayList<EventoProxy>();
-	private String[] eventosCriterio = null;
+	private AnalisisProxy analisis;
 	private String operadores [] = new String [] {"<=", ">=", "<>", "=", "<", ">"};	
 	private String opLogicos [] = new String [] {" AND ", " OR "};
 	private char abre = '(';
@@ -40,34 +38,10 @@ public class Evaluador {
 		this.condicionCompleta = condicionCompleta;
 	}	
 	
-	public void setIndicadores(ArrayList<IndicadorProxy> indicadores) {
-		this.indicadores = indicadores;
-	}
-	
-	public ArrayList<EventoProxy> getEventos() {
-		return eventos;
-	}
-
-	public void setEventos(ArrayList<EventoProxy> eventos) {
-		this.eventos = eventos;
-	}
-	
-	public Evaluador (Criterio criterio, ArrayList<Indicador> indicadores, ArrayList<Evento> eventos) {		
+	public Evaluador (AnalisisProxy analisis) {		
 		super();		
-		this.condicionCompleta = criterio.getEvaluacion();
-		this.eventosCriterio = criterio.getEventos();
-		
-		for (int i=0;i<indicadores.size();i++)
-			this.indicadores.add(new IndicadorProxy(indicadores.get(i)));
-		
-		for (int ec = 0; ec < this.eventosCriterio.length; ec++) {
-			for (int e = 0; e < eventos.size(); e++) {
-				if (eventosCriterio[ec].equals(eventos.get(e).getNombre())) {
-					this.eventos.add(new EventoProxy(eventos.get(e)));					
-				}
-			}
-		}
-		
+		this.analisis = analisis;		
+			
 	}
 		
 	/*public int evaluar (String condicion, ArrayList<Indicador> indicadores)  {
@@ -78,20 +52,91 @@ public class Evaluador {
 		return result;
 	}*/
 	
-	public int evaluar ()  {
+	public StringBuffer evaluarAnalisis() {
+		StringBuffer mensaje = new StringBuffer();
+		int iError = 0;
+		int cumplido = 0;
+		boolean encontrado = false;
+
+		mensaje.append("</br>Ejecutado el analisis: <b>"+ analisis.getNombre() + "</b></br>");
+		
+		for (int c = 0; c < analisis.getCriterios().size(); c++) {	
+			cumplido = 0;
+			CriterioProxy criEvalua = analisis.getCriterios().get(c);
+			
+			for (int ec = 0; ec < criEvalua.getCriterio().getEventos().length; ec++) {
+				encontrado = false;
+				for (int e = 0; e < analisis.getEventos().size(); e++) {
+					if (!criEvalua.getCriterio().getEventos()[ec].equalsIgnoreCase(analisis.getEventos().get(e).getEvento().getNombre())) {
+						encontrado = true;							
+					}
+				}
+				if (!encontrado) {
+					nuevoError("El evento " + criEvalua.getCriterio().getEventos()[ec] + " definido en el criterio " + criEvalua.getCriterio().getNombre() + " no est· definido en el an·lisis " + analisis.getNombre());
+					cumplido = -1;
+				}
+			}					
+			
+			if (cumplido == 0) {
+				cumplido = evaluarCriterio(criEvalua);
+			} 
+			
+			switch (cumplido) {
+			case -1:
+			// Se han detecado errores en la evaluaci√≥n
+				// mensaje.append("<br>La condiciÛn indicada en el criterio <b>" + criEvalua.getNombre() + "</b> no es correcta.</br>");
+				mensaje.append("<br>La definiciÛn del criterio <b>" + criEvalua.getCriterio().getNombre() + "</b> no es correcta.</br>");
+				iError++;
+		    	for (int e = 0; e < this.errores.size(); e++) {
+		    		//mensaje.add(iError, criEvalua.getErrores().get(e));
+		    		mensaje.append("<br><b>"+this.errores.get(e)+"</b></br>");
+		    		iError++;
+		    	}	
+		    	break;
+			case 0:
+			   // La evaluaci√≥n ha dado como resultado que se no cumple. No deben generarse los eventos asociados al criterio.				
+				mensaje.append("<br>El criterio <b>" + criEvalua.getCriterio().getNombre() + "</b> no cumple la condiciÛn. No se generan eventos.</br>");
+				iError++;
+				break;
+			case 1:
+			// La evaluaci√≥n ha dado como resultado que se cumple. Deben generarse los eventos asociados al criterio.
+				//mensaje.add(iError, "El criterio " + criAnaliza.getNombre() + " cumple la condiciÛn '" +criAnaliza.getEvaluacion() + "'");
+				mensaje.append("<br>El criterio <b>" + criEvalua.getCriterio().getNombre() + "</b> cumple la condiciÛn <b>'" + criEvalua.getCriterio().getEvaluacion() + "'</b> </br>");
+				//mensaje.add(iError, "Se han generado los siguientes eventos:");
+				mensaje.append("</br>Se han generado los siguientes eventos:</br>");
+				for (int e = 0; e < criEvalua.getCriterio().getEventos().length; e++)
+				{
+					//mensaje.add(iError, criEvalua.getEventos().get(e).getNombre() + " ejecutado con el resultado: "+ criEvalua.getEventos().get(e).getResultadoEjecucion());
+					//mensaje.append("</br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<b>"+criEvalua.getEventos().get(e).getEvento().getNombre() + "</b> ejecutado con el resultado: <b>"+ criEvalua.getEventos().get(e).getResultadoEjecucion() + "</b></br>");
+					for (int ea = 0; ea < this.analisis.getEventos().size(); ea++) {
+						if (this.analisis.getEventos().get(ea).getEvento().getNombre().equalsIgnoreCase(criEvalua.getCriterio().getEventos()[e])) {
+							mensaje.append("</br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<b>"+criEvalua.getCriterio().getEventos()[e] + "</b> ejecutado con el resultado: <b>"+ this.analisis.getEventos().get(ea).getResultadoEjecucion() + "</b></br>");
+						}
+					}
+				}				
+				iError++;
+				break;
+			}
+
+		}
+		return mensaje;
+	}	
+	
+	public int evaluarCriterio (CriterioProxy criEvaluar)  {
 		int result = 0;
 		boolean valido = true;
 		CondicionMultiple multiple;
 		Condicion simple;
 		int maxNivel = 0;
 		int minNivel = 0;		
+		this.condicionCompleta = criEvaluar.getCriterio().getEvaluacion();
 		
 		evaluacion.clear();
 		errores.clear();
 		
 		if (condicionCompleta == "" || condicionCompleta == null) {
 			valido = false;
-			nuevoError("No se ha indicado ninguna condici√≥n para evaluar");
+			nuevoError("No se ha indicado ninguna condiciÛn para evaluar");
 		} else {
 			valido = validarCondicion();
 		}
@@ -103,7 +148,7 @@ public class Evaluador {
 			System.out.println("Mostrando Condiciones"); 
 			for (int i = 0; i < evaluacion.size(); i++) { 
 				multiple = evaluacion.get(i);
-				// Se obtienen los niveles de profundidad m√≠nimo y m√°ximo de las condiciones  
+				// Se obtienen los niveles de profundidad mÌnimo y m·ximo de las condiciones  
 				if (multiple.getNivel() > maxNivel) { maxNivel = multiple.getNivel(); }
 				if (multiple.getNivel() < minNivel) { minNivel = multiple.getNivel(); }
 				if (multiple.getNegacion()) {
@@ -114,26 +159,27 @@ public class Evaluador {
 				simple = multiple.getCondicion(); 
 				if (simple != null) {
 					if (simple.getOperando2() != null) {
-					System.out.println("Condici√≥n simple: " + simple.getOperando1().getNegado() + " -> " + simple.getOperando1().getNombre() + " -> " +  simple.getOperador() + " -> " + simple.getOperando2().getNegado() + " -> " + simple.getOperando2().getNombre());
+					System.out.println("CondiciÛn simple: " + simple.getOperando1().getNegado() + " -> " + simple.getOperando1().getNombre() + " -> " +  simple.getOperador() + " -> " + simple.getOperando2().getNegado() + " -> " + simple.getOperando2().getNombre());
 					System.out.println("Operandos: " + simple.getOperando1().getTipo() + " -> " + simple.getOperando1().getTipoValor() + " -> " + simple.getOperando2().getTipo() + " -> " + simple.getOperando2().getTipoValor());
 					} else {
-						System.out.println("Condici√≥n simple: " + simple.getOperando1().getNegado() + " -> " + simple.getOperando1().getNombre() + " -> null -> null -> null");
+						System.out.println("CondiciÛn simple: " + simple.getOperando1().getNegado() + " -> " + simple.getOperando1().getNombre() + " -> null -> null -> null");
 					}
 				} 
 			}
-			//valida que los operandos de las condiciones o evaluaciones sean validos
+			
+			//valida que los operandos de las condiciones o evaluaciones sean v·lidos
 			if (comprobarCondiciones()) {
-				// Para obtener el resultado de la condici√≥n, se eval√∫an las condiciones simples de mayor a menor nivel de profundidad, teniendo en cuenta las relaciones definidas entre ellas 
+				// Para obtener el resultado de la condiciÛn, se eval√∫an las condiciones simples de mayor a menor nivel de profundidad, teniendo en cuenta las relaciones definidas entre ellas 
 				for (int nivel = maxNivel; nivel >= minNivel; nivel--) {
 					for (int i = 0; i < evaluacion.size(); i++) { 
 						multiple = evaluacion.get(i);
 						if (multiple.getNivel() == nivel) {
-							multiple.evalua(evaluacion);
-							// El resultado de la condici√≥n completa es el resultado de la condici√≥n del nivel m√≠nimo
+							evaluaCondicionMultiple(multiple);
+							// El resultado de la condiciÛn completa es el resultado de la condiciÛn del nivel mÌnimo
 							if (nivel == minNivel) {
 								if (multiple.getResultado()) {
 									result = 1;
-									eventosCriterio();
+									eventosCriterio(criEvaluar);
 								} else {
 									result = 0;
 								}							
@@ -161,27 +207,27 @@ public class Evaluador {
 	}
 	
 	private void extraerCondiciones () {
-	// Recorre el texto de la condici√≥n indicada, identificando por niveles el texto comprendido entre par√©ntesis. Cada trozo de texto comprendido entre par√©ntesis del mismo nivel, ser√° una condici√≥n
+	// Recorre el texto de la condiciÛn indicada, identificando por niveles el texto comprendido entre parÈntesis. Cada trozo de texto comprendido entre parÈntesis del mismo nivel, ser√° una condiciÛn
 		int nivel = 0;
 		String txCondicion;		
 		Integer indCond;
 		
-		ArrayList<Integer> abiertos = new ArrayList<Integer>(); // Almacena las posiciones en el texto en la que se encuntra el '(' que abre la condici√≥n actual. El √≠ndice se corresponder√° con el nivel
+		ArrayList<Integer> abiertos = new ArrayList<Integer>(); // Almacena las posiciones en el texto en la que se encuntra el '(' que abre la condiciÛn actual. El √≠ndice se corresponder√° con el nivel
 		
 		CondicionMultiple multiple;		
-		System.out.println("Condici√≥n completa: " + this.condicionCompleta);
+		System.out.println("condiciÛn completa: " + this.condicionCompleta);
 		char c;
 		for (int i = 0;i<this.condicionCompleta.length();i++) {
 			c = this.condicionCompleta.charAt(i);
 			if (c == abre) {
-				// Por cada '(' se guarda en el array la posici√≥n en la que se encuentra en el nivel actual
+				// Por cada '(' se guarda en el array la posiciÛn en la que se encuentra en el nivel actual
 				abiertos.add(nivel, new Integer(i));
 				nivel++;
 			} else {
 				if (c == cierra) {					
-					// Cuando se encuentra un ')' se extre la condici√≥n desde el inicial guardado en el array hasta la posici√≥n en la que se cierra el nivel
+					// Cuando se encuentra un ')' se extre la condiciÛn desde el inicial guardado en el array hasta la posiciÛn en la que se cierra el nivel
 					txCondicion = this.condicionCompleta.substring(abiertos.get(nivel-1).intValue(), i + 1);
-					// El texto obtenido puede ser una valor, operaci√≥n ente par√©ntesis, o una condici√≥n. Si es valor, debe ignorarse, si es condici√≥n debe tratarse.
+					// El texto obtenido puede ser una valor, operaci√≥n ente parÈntesis, o una condiciÛn. Si es valor, debe ignorarse, si es condiciÛn debe tratarse.
 					if (esCondicion(txCondicion, operadorAnterior(this.condicionCompleta, abiertos.get(nivel-1).intValue() ))) {
 						multiple = new CondicionMultiple();
 						multiple.setIdCondicion(indCondicion);
@@ -206,7 +252,7 @@ public class Evaluador {
 	}
 	
 	private void infoCondicionMultiple(Integer indCond) {
-	// Se completa la informaci√≥n de la condici√≥n reci√©n creada, creando sus condiciones hijas y relacion√°ndolas con ellas
+	// Se completa la informaciÛn de la condiciÛn reciÈn creada, creando sus condiciones hijas y relacion·ndolas con ellas
 		CondicionMultiple madre;
 		CondicionMultiple hija;
 		ArrayList<String> simples = new ArrayList<String>();
@@ -218,7 +264,7 @@ public class Evaluador {
 		madre = evaluacion.get(indCond);
 		System.out.println("infoCondicionMultiple Entrada: " + madre.getTexto());
 		int nivel = madre.getNivel();
-		// Las condiciones del nivel superior que no tengan madre ser√°n hijas de esta condici√≥n 
+		// Las condiciones del nivel superior que no tengan madre ser·n hijas de esta condiciÛn 
 		for (int i = 0; i<evaluacion.size();i++) {
 			hija = evaluacion.get(i);			
 			if (hija.getMadre() == null && hija.getNivel() == (madre.getNivel() + 1) && hija.getIdCondicion() != madre.getIdCondicion()) {
@@ -226,12 +272,12 @@ public class Evaluador {
 				evaluacion.set(i,  hija);
 			}			
 		}
-		// Las partes del texto de la condici√≥n que est√©n entre par√©ntesis se eliminan del texto de la condici√≥n pues, por ser de un nivel superior, ya se habr√°n tratado.
+		// Las partes del texto de la condiciÛn que est·n entre parÈntesis se eliminan del texto de la condiciÛn pues, por ser de un nivel superior, ya se habr·n tratado.
 		texto = eliminarCondicionesInteriores(madre.getTexto());
-		// Se obtienen el n√∫mero de operadores AND y OR que tiene la condici√≥n.
+		// Se obtienen el n˙mero de operadores AND y OR que tiene la condiciÛn.
 		iAnd = contarCaracter(texto, opLogicos[0]);
 		iOr = contarCaracter(texto, opLogicos[1]);
-		// Si la condici√≥n contiene operadores de un s√≥lo tipo, se le asigna el tipo. Si contiene los dos operadores, se tratar√° aparte		
+		// Si la condiciÛn contiene operadores de un s√≥lo tipo, se le asigna el tipo. Si contiene los dos operadores, se tratar√° aparte		
 		if (iAnd > 0 && iOr > 0) {
 			analizarCondicion(indCond);			
 		} else{
@@ -247,8 +293,8 @@ public class Evaluador {
 				}	
 			}
 		}
-	// Para obtener las condiciones simples de la condici√≥n. Si no tiene ninguno de los dos operadores, ser√° una condici√≥n simple. Si tiene varios operadores, se utilizar√° el 
-		// operador l√≥gico para separar cada una de las condiciones simples.
+	// Para obtener las condiciones simples de la condiciÛn. Si no tiene ninguno de los dos operadores, serÌa una condiciÛn simple. Si tiene varios operadores, se utilizar· el 
+		// operador lÛgico para separar cada una de las condiciones simples.
 		if ((iAnd > 0 && iOr == 0) || (iAnd == 0 && iOr > 0)) {
 			simples = condicionesSimples(texto, litOperador);
 		}
@@ -274,6 +320,7 @@ public class Evaluador {
 	}
 	
 	private ArrayList<String>  condicionesSimples(String compuesta, String operador ) {
+	// Obtiene las condiciones simples que forman una compuesta eliminando los parÈntesis sin abrir o cerrar que pueda contener la compuesta .
 		ArrayList<String> simples = new ArrayList<String>();
 		String condicion;
 		int indice = 0;
@@ -320,8 +367,8 @@ public class Evaluador {
 	}
 	
 	private void analizarCondicion(Integer indCond) {
-	// La condici√≥n compuesta contiene condiciones simples entre las que hay relaciones AND y OR. Al estar al mismo nivel de agrupaci√≥n, en este caso, se da prioridad a la relaci√≥n OR,
-	// creando una relaci√≥n OR entre las condiciones que est√©n as√≠ relacionadas entre ellas, que se relacionar√° como AND con el resto de condiciones.
+	// La condiciÛn compuesta contiene condiciones simples entre las que hay relaciones AND y OR. Al estar al mismo nivel de agrupaciÛn, en este caso, se da prioridad a la relaciÛn OR,
+	// creando una relaciÛn OR entre las condiciones que est·n asÌ relacionadas entre ellas, que se relacionar·n como AND con el resto de condiciones.
 		
 		CondicionMultiple madre;
 		CondicionMultiple hija;
@@ -338,9 +385,9 @@ public class Evaluador {
 		madre = evaluacion.get(indCond);
 		madre.setTipo(opLogicos[0].trim());
 		evaluacion.set(indCond, madre);		
-		// Las partes del texto de la condici√≥n que est√©n entre par√©ntesis se eliminan del texto de la condici√≥n pues, por ser de un nivel superior, ya se habr√°n tratado.
+		// Las partes del texto de la condiciÛn que est·n entre parÈntesis se eliminan del texto de la condiciÛn pues, por ser de un nivel superior, ya se habr·n tratado.
 		texto = eliminarCondicionesInteriores(madre.getTexto());
-		// La condici√≥n se decompone en condiciones o grupos de condiciones que tendr√°n una relaci√≥n AND.
+		// La condiciÛn se decompone en condiciones o grupos de condiciones que tendr·n una relaciÛn AND.
 //		partes = texto.split(opLogicos[0]);
 		partes = condicionesSimples(texto, opLogicos[0]);	
 		for (int i = 0; i< partes.size(); i++) {
@@ -353,7 +400,7 @@ public class Evaluador {
 			hija.setTexto(formatoCondicion(parte));		
 			hija.setMadre(madre.getIdCondicion());			
 		
-			// Si la condici√≥n contiene un OR, se descompone en las condiciones que la forman para relacionarlas con OR
+			// Si la condiciÛn contiene un OR, se descompone en las condiciones que la forman para relacionarlas con OR
 			if (parte.indexOf(opLogicos[1]) >= 0) {
 				hija.setTipo("OR");
 //				simples = parte.split(opLogicos[1]);
@@ -377,12 +424,12 @@ public class Evaluador {
 	}
 	
 	private Condicion operadoresCondicion(String txCondicion) {
-	// A partir de un texto que contiene una condici√≥n simple, obtiene los operandos y operador de y crea el objeto Condici√≥n que devuelve como resultado
+	// A partir de un texto que contiene una condiciÛn simple, obtiene los operandos y operador y crea el objeto condiciÛn que devuelve como resultado
 		Condicion nuevaCond = null;
 		
 		int i = 0;
 		String operador = "";
-		// Obtiene el operador utilizado en la condici√≥n
+		// Obtiene el operador utilizado en la condiciÛn
 		i = 0;
 		while (i < operadores.length) {
 			if (txCondicion.indexOf(operadores[i]) >= 0) {
@@ -391,7 +438,7 @@ public class Evaluador {
 			}
 			i++;
 		}		
-		// Si se ha encontrado el operador, divide la condici√≥n en tres partes: operando1, operador y operando2.
+		// Si se ha encontrado el operador, divide la condiciÛn en tres partes: operando1, operador y operando2.
 		if (operador != "") {
 			String[] minimas = txCondicion.split(operador);			
 				nuevaCond = new Condicion();	
@@ -402,7 +449,7 @@ public class Evaluador {
 					nuevaCond.setOperando2(oper2);			
 				}			
 				nuevaCond.setOperador(operador);
-			//	nuevoError ("La condici√≥n es err√≥nea. Falta un operador: " + txCondicion); 
+			//	nuevoError ("La condiciÛn es err√≥nea. Falta un operador: " + txCondicion); 
 								
 		} else {
 			nuevaCond = new Condicion();				
@@ -411,30 +458,30 @@ public class Evaluador {
 			Operando oper2 = nuevoOperando("true");
 			nuevaCond.setOperador("=");
 			nuevaCond.setOperando2(oper2);
-		//	nuevoError ("La condici√≥n es err√≥nea. No se ha definido ning√∫n operador: " + txCondicion); 
+		//	nuevoError ("La condiciÛn es err√≥nea. No se ha definido ning√∫n operador: " + txCondicion); 
 		}
 		return nuevaCond;
 	}
 	
 	private boolean validarCondicion() {
-		// Comprueba la sintaxis de la condici√≥n
+		// Comprueba la sintaxis de la condiciÛn
 		boolean result = new Boolean(true);
 		
 		if (this.condicionCompleta.length() == 0 || this.condicionCompleta == null) {
-			nuevoError("No se ha definido la condici√≥n");
+			nuevoError("No se ha definido la condiciÛn");
 			result = false;
 		} else {
 			this.condicionCompleta = formatoCondicion(this.condicionCompleta);	
 			int iAbre = contarCaracter(this.condicionCompleta, "(");
 			int iCierra = contarCaracter(this.condicionCompleta, ")");			
 		
-			// En la condici√≥n, el n√∫mero de "(" debe ser igual al de ")".
+			// En la condiciÛn, el n˙mero de "(" debe ser igual al de ")".
 			if (iAbre != iCierra) 	{
 				result = false;	
 				if (iAbre > iCierra) {
-					nuevoError("Falta par√©ntesis )");
+					nuevoError("Falta parÈntesis )");
 				} else {
-					nuevoError("Falta par√©ntesis (");
+					nuevoError("Falta parÈntesis (");
 				}					
 			}		
 		}
@@ -444,7 +491,7 @@ public class Evaluador {
 	private String formatoCondicion(String cadena) {
 		String cadenaFormato;		
 		cadenaFormato = cadena.trim();
-		// La condici√≥n completa debe estar entre par√©ntesis, as√≠ se asegura que el nivel m√≠nimo tenga una sola condici√≥n, que es la completa.. 
+		// La condiciÛn completa debe estar entre parÈntesis, asÌ se asegura que el nivel mÌnimo tenga una sola condiciÛn, que es la completa.. 
 		if (!entreParentesis(cadena) ) {
 			cadenaFormato = "(" + cadenaFormato + ")";
 		}
@@ -465,7 +512,7 @@ public class Evaluador {
 		// Convierte a may√∫sculas todos los operadores AND y OR
 		for (int i = 0; i< opLogicos.length;i++) {
 			cadenaFormato = cadenaFormato.replaceAll(opLogicos[i].toLowerCase(), opLogicos[i]);
-		}
+		}		
 		cadenaFormato = cadenaFormato.replaceAll(" not ", " NOT ");
 		cadenaFormato = cadenaFormato.replaceAll("\\(not\\(", "\\( NOT \\(");
 		cadenaFormato = cadenaFormato.replaceAll("\\(NOT\\(", "\\( NOT \\(");
@@ -484,22 +531,24 @@ public class Evaluador {
 	}
 	
 	private boolean entreParentesis(String cadena) {
-	// Comprueba si la conrici√≥n completa contenida en el par√°metro cadena est√° indicada entre par√©ntesis. 
-	// Estar√° entre par√©ntesis si la primera y √∫ltima posici√≥n de la cadena contienen, respectivamente '(' y ')' y el par√©ntesis de la √∫ltima posici√≥n cierra el de la primera
+	// Comprueba si la condiciÛn completa contenida en el par·metro cadena est· indicada entre parÈntesis. 
+	// Estar· entre parÈntesis si la primera y ˙ltima posiciÛn de la cadena contienen, respectivamente '(' y ')' y el parÈntesis de la ˙ltima posiciÛn cierra el de la primera
 		boolean entre = false;
 		int nivel = 0;
 	
-		ArrayList<Integer> abiertos = new ArrayList<Integer>(); // Almacena las posiciones en el texto en la que se encuntra el '(' que abre la condici√≥n actual. El √≠ndice se corresponder√° con el nivel
+		ArrayList<Integer> abiertos = new ArrayList<Integer>(); // Almacena las posiciones en el texto en la que se encuntra el '(' que abre la condiciÛn actual. El Ìndice se corresponder· con el nivel
 		cadena = cadena.trim();
 		char c;
 		for (int i = 0;i<this.condicionCompleta.length();i++) {
 			c = this.condicionCompleta.charAt(i);
 			if (c == abre) {
-				// Por cada '(' se guarda en el array la posici√≥n en la que se encuentra en el nivel actual
+				// Por cada '(' se guarda en el array la posiciÛn en la que se encuentra en el nivel actual
 				abiertos.add(nivel, new Integer(i));
 				nivel++;
 			} else {
 				if (c == cierra) {		
+					// Comprueba si ese ')' cerrar· el nivel 0, si la condiciÛn empieza por '(' y el nivel que se va a cerrar se abriÛ con un '(' en la primera posiciÛn 
+					// y si la posiciÛn del ')' es la ˙ltima de la cadena
 					if ((nivel - 1) == 0 && cadena.startsWith("(")  && (abiertos.get(nivel - 1) == 0) && (i == (cadena.length() - 1))) {
 						entre = true;
 					}
@@ -512,6 +561,7 @@ public class Evaluador {
 	}
 	
 	private static int contarCaracter(String cadena, String car) {
+	// Cuenta el n˙mero de veces que el car·cter aparece en la cadena
         int pos = 0;
         int cont = 0;
         pos = cadena.indexOf(car);
@@ -523,6 +573,7 @@ public class Evaluador {
 	}
 
 	private String aislarOperando(String operando) {
+	// Elimina los parÈntesis al inicio y al final de la cadena
 		String oper = operando;
 		
 		int abiertos = contarCaracter(oper, "(");
@@ -545,7 +596,7 @@ public class Evaluador {
 	}
 	
 	private String eliminarCondicionesInteriores(String texto) {
-	// Elimina del texto de entrada las partes de texto contenidas entre par√©ntesis, manteniendo los par√©ntesis de inicio y fin del texto.
+	// Elimina del texto de entrada las partes de texto contenidas entre parÈntesis, manteniendo los parÈntesis de inicio y fin del texto. Esas condiciones interiores se habr·n definido en niveles superiores
 		String textoFinal;
 		textoFinal = texto;
 		int iAbre = 0;
@@ -584,6 +635,7 @@ public class Evaluador {
 	}	 
 	
 	private String operadorAnterior(String texto, int pos) {
+	// Devuelve el texto anterior entre espacios en un texto situado delante de la posiciÛn indicada.
 		String opAnt = " ";
 		char c;
 		int i = pos - 1;
@@ -604,13 +656,13 @@ public class Evaluador {
 			}
 			i--;
 		}
-		//System.out.println("operadorAnterior. Entrada: " + texto + " Pos: " + pos + " . Salida: " + opAnt.trim());
-		
+				
 		return opAnt.trim();
 	}
+	
 	private String limpiaCondicion (String texto) {
 		String textoLimpio = texto;
-		// Se corrige la repetici√≥n de operadores l√≥gicos resultante de le eliminaci√≥n del texto entre par√©ntesis que hab√≠a entre ellos. 
+		// Se corrige la repetici√≥n de operadores l√≥gicos resultante de le eliminaci√≥n del texto entre parÈntesis que hab√≠a entre ellos. 
 		
 		textoLimpio = remplazarCadena(textoLimpio, "  ", " ");	
 		textoLimpio = remplazarCadena(textoLimpio, " AND AND ", " AND ");
@@ -627,12 +679,14 @@ public class Evaluador {
 		textoLimpio = remplazarCadena(textoLimpio, "  ", " ");	
 		
 		if (textoLimpio.indexOf(" AND OR ") > 0 || textoLimpio.indexOf(" OR AND ") > 0) {
-			nuevoError("La relaci√≥n l√≥gica en la condici√≥n no es correcta: " + textoLimpio);
+			nuevoError("La relaciÛn l√≥gica en la condiciÛn no es correcta: " + textoLimpio);
 		}		
 		return textoLimpio;
 	}
 	
 	private String remplazarCadena(String cadena, String busca, String cambia) {
+	// Sustituye en una cadena la cadena de b˙squeda por la que que se cambia.
+	// Utiliza un bucle con replaceAll para, por ejemplo, los casos en los que se quiere cambiar una serie de espacios seguidos por un solo.
 		String remplazo = cadena;
 		while (remplazo.indexOf(busca) > 0) {		
 			remplazo = remplazo.replaceAll(busca, cambia);
@@ -642,8 +696,7 @@ public class Evaluador {
 	}
 	
 	private boolean esCondicion(String texto, String previo) {
-	// Identifica si es una condici√≥n o un valor, para saber c√≥mo debe tratarse. Si el texto contiene alg√∫n operador, ser√° una condici√≥n.
-	//	System.out.println ("Par√°metros: " + texto + " ->" + previo + "<-") ;
+	// Identifica si es una condiciÛn o un valor, para saber cÛmo debe tratarse. Si el texto contiene alg˙n operador, ser· una condiciÛn.
 		boolean esCond = true;
 		
 		for (int i = 0; i < operadores.length; i++) {
@@ -663,20 +716,20 @@ public class Evaluador {
 	}
 	
 	private String cambiarCaracter (String cadena, int pos, char car) {
-	// Sustituye en una cadena el car√°cter situado en una posici√≥n por el indicado.
+	// Sustituye en una cadena el car·cter situado en una posiciÛn por el indicado.
 		String cambiada;
 		cambiada = cadena.substring(0, pos) + car + cadena.substring(pos+1);
 		return cambiada;		
 	}	
 	
 	private void nuevoError(String txError) {
-	// A√±ade el nuevo error detectado a la lista de errores de la evaluaci√≥n		
+	// AÒade el nuevo error detectado a la lista de errores de la evaluaci√≥n		
 		int i = errores.size();
 		errores.add(i, txError);  ;
 	}
 	
 	private boolean comprobarCondiciones() {
-	// Recorre la lista de condiciones encontradas en la consulta completa para determinar si la informaci√≥n obtenida es correcta y se puede evaluar la condici√≥n compleja
+	// Recorre la lista de condiciones encontradas en la consulta completa para determinar si la informaci√≥n obtenida es correcta y se puede evaluar la condiciÛn compleja
 		boolean result = true;		
 		CondicionMultiple multiple;		
 		
@@ -717,7 +770,7 @@ public class Evaluador {
 	}
 	
 	private int esIndicador (String operando) {
-	// Comprueba si la cadena recibida como par√°metro corresponde a alguno de los indicadores definidios en el an√°lisis. Devuelve  -1, si es err√≥neo, 0 si no lo es, y 1 si es indicador.
+	// Comprueba si la cadena recibida como par√°metro corresponde a alguno de los indicadores definidios en el an√°lisis. Devuelve  -1, si es errÛneo, 0 si no lo es, y 1 si es indicador.
 		int esIndica = constantes.tpNoIndicador;
 		
 		if (operando.startsWith(constantes.tpMarcaIndicador))
@@ -727,9 +780,9 @@ public class Evaluador {
 			String[] tramos = new String [] {};
 			tramos = operando.split("\\.");
 			
-			for (int i = 0; i < indicadores.size(); i++) 
+			for (int i = 0; i < analisis.getIndicadores().size(); i++) 
 			{	
-				if (indicadores.get(i).getIndicador().getNombre().equals(tramos[0].substring(1))) 
+				if (analisis.getIndicadores().get(i).getIndicador().getNombre().equals(tramos[0].substring(1))) 
 				{
 					esIndica = constantes.tpIndicador;
 					break;
@@ -743,7 +796,7 @@ public class Evaluador {
 	}	
 
 	private int esValor(String operando) {
-	// Comprueba si la cadena recibida como p√°rametro corresponde a un valor: Los valores pueden ser l√≥gicos, de cadena, num√©ricos o de fecha.
+	// Comprueba si la cadena recibida como par·metro corresponde a un valor: Los valores pueden ser lÛgicos, de cadena, numÈricos o de fecha.
 		int valor = constantes.tpVlNoTipo;
 		String oper = operando; 
 		
@@ -773,7 +826,7 @@ public class Evaluador {
 	}
 		
 	private Operando nuevoOperando(String nombre) {
-	// Crea el operando de una condici√≥n simple. 
+	// Crea el operando de una condiciÛn simple. 
 		int tipo;		
 		Operando oper = new Operando();			
 		// El operando puede ser de tres tipos: Indicador, valor o f√≥rmula. √âste √∫ltimo a√∫n no se ha codificado, por lo que se identifica como err√≥neo.	
@@ -787,12 +840,12 @@ public class Evaluador {
 			String[] tramos = new String [] {};
 			tramos = oper.getNombre().split("\\.");
 			
-			for (int i = 0; i < indicadores.size(); i++) 
+			for (int i = 0; i < analisis.getIndicadores().size(); i++) 
 			{	
-				if (indicadores.get(i).getIndicador().getNombre().equals(tramos[0].substring(1))) 
+				if (analisis.getIndicadores().get(i).getIndicador().getNombre().equals(tramos[0].substring(1))) 
 				{
-					oper.setIndicador(indicadores.get(i));
-					parametrosIndicador(indicadores.get(i));
+					oper.setIndicador(analisis.getIndicadores().get(i));
+					parametrosIndicador(analisis.getIndicadores().get(i));
 					break;
 				}
 			}
@@ -869,18 +922,18 @@ public class Evaluador {
 				String[] tramos = new String [] {};
 				tramos = indOper.getIndicador().getParametros().get(p).getValor().split("\\.");
 				
-				for (int i = 0; i < indicadores.size(); i++) 
+				for (int i = 0; i < analisis.getIndicadores().size(); i++) 
 				{	
-					if (indicadores.get(i).getIndicador().getNombre().equals(tramos[0].substring(1))) 
+					if (analisis.getIndicadores().get(i).getIndicador().getNombre().equals(tramos[0].substring(1))) 
 					{
-						parametrosIndicador(indicadores.get(i));
-						if (indicadores.get(i).ejecutar() == 0 && (indicadores.get(i).getResultadoEjecucion()!=null) && indicadores.get(i).getResultadoEjecucion().size()>0) {					
+						parametrosIndicador(analisis.getIndicadores().get(i));
+						if (analisis.getIndicadores().get(i).ejecutar() == 0 && (analisis.getIndicadores().get(i).getResultadoEjecucion()!=null) && analisis.getIndicadores().get(i).getResultadoEjecucion().size()>0) {					
 							String columna = tramos[1];
 							Object valParam = new Object();
-							Object[] linea = indicadores.get(i).getResultadoEjecucion().elementAt(0);
+							Object[] linea = analisis.getIndicadores().get(i).getResultadoEjecucion().elementAt(0);
 							int c = 0;
-							while (c < indicadores.get(i).getIndicador().getResultado().length ) {
-								if (columna.equals(indicadores.get(i).getIndicador().getResultado()[c])) {
+							while (c < analisis.getIndicadores().get(i).getIndicador().getResultado().length ) {
+								if (columna.equals(analisis.getIndicadores().get(i).getIndicador().getResultado()[c])) {
 									valParam = linea[c];
 									break;
 								}
@@ -894,13 +947,120 @@ public class Evaluador {
 		}
 	}
 	
-	public void eventosCriterio () {
+	public boolean evaluaCondicionMultiple (CondicionMultiple condicion) {
+		boolean result = true;
+		CondicionMultiple hija;
 		
-		for (int e = 0; e < this.eventos.size(); e++) {
-			parametrosEvento(this.eventos.get(e));
-			this.eventos.get(e).generarEvento();
+		if (condicion.getEvaluada()) {	return condicion.getResultado();		}	
+		if (condicion.getTipo().equalsIgnoreCase("AND"))			{	result = true;		}
+		else if (condicion.getTipo().equalsIgnoreCase("OR")) 		{	result = false;		}
+		
+		if (condicion.getCondicion() == null) {
+			for (int i = 0; i < evaluacion.size(); i++) { 
+				hija = evaluacion.get(i);
+				if (hija.getMadre() == condicion.getIdCondicion())	{					
+					if (condicion.getTipo().equalsIgnoreCase("AND") && !hija.getResultado() ) {
+						result = false;
+					}
+					if (condicion.getTipo().equalsIgnoreCase("OR") && hija.getResultado()) {
+						result = true;
+					}					
+				}			
+			}			
+		} else {
+			result = evaluaCondicionSimple(condicion.getCondicion());
+		}		
+		if (condicion.getNegacion()) {
+			result = !result;
 		}
+		condicion.setResultado(result);
+		condicion.setEvaluada(true);		
+		return result;	
+	}		
+	
+	public boolean evaluaCondicionSimple(Condicion simple) {
+	boolean result = false;	
+	String oper1;
+	String oper2;
+	int iOper1 = 0;
+	int iOper2 = 0;
+	boolean numerica;
+	int compara;
+	
+		if (simple.getEvaluada()) {return simple.getResultado();  } 
+		else {
+			// Recupera los resultados de cada uno de los operandos de la condiciÛn.
+			oper1 = simple.getOperando1().getResultado().toString().trim();
+			oper2 = simple.getOperando2().getResultado().toString().trim();			
+			// Convierte ambos resultados a int para decidir si la comparaciÛn ser·° numÈrica o alfabÈtica.
+			numerica = true;
+			try {
+				iOper1 = Integer.parseInt(oper1);				
+			} catch (NumberFormatException e3) {				
+				numerica = false;
+			}	
+			try {
+				iOper2 = Integer.parseInt(oper2);				
+			} catch (NumberFormatException e3) {				
+				numerica = false;
+			}
+			// Si ha podido convertir a int ambos resultados, los comparar√° num√©ricamente. Si no, har√° comparaci√≥n alfab√©ticamente.
+			String operadores [] = new String[] {"=", "<", ">", ">=", "<=", "<>"};
+			int op = 0;
+			for (op = 0; op < operadores.length; op++) {
+				if (simple.getOperador().equals(operadores[op])) {
+					break;
+				}
+			}			
+			
+			if (numerica) {			
+				switch (op) {
+				case 0:
+					if (iOper1 == iOper2) 	{	result = true;break;		}
+				case 1:
+					if (iOper1 < iOper2) 	{	result = true;break;		}
+				case 2:
+					if (iOper1 > iOper2)	{	result = true;break;		}
+				case 3:
+					if (iOper1 >= iOper2) 	{	result = true;break;		}
+				case 4:
+					if (iOper1 <= iOper2) 	{	result = true;break;		}
+				case 5:	
+					if (iOper1 != iOper2) 	{	result = true;break;		}
+				}		
+			} else {
+				compara = oper1.compareToIgnoreCase(oper2);
+				if (compara < 0 && (simple.getOperador().equals("<") || simple.getOperador().equals("<=") || simple.getOperador().equals("<>"))) {
+					result = true; 
+				} else {
+					if (compara == 0 && (simple.getOperador().equals("=") || simple.getOperador().equals("<=") || simple.getOperador().equals(">="))) {
+						result = true;
+					} else {
+						if (compara > 0 && (simple.getOperador().equals(">") || simple.getOperador().equals(">=") || simple.getOperador().equals("<>"))) {
+							result = true;
+						}
+					}
+				}					
+			}			
+			simple.setEvaluada(true);
+		}
+		if (simple.getNegacion()) 	{result = !result;	}
+		simple.setResultado(result);
+		return result;
+	}
 
+	
+	
+	public void eventosCriterio (CriterioProxy criProxy) {
+	// Recorre la lista de nombres de eventos del criterio para identificar y generar los eventos definidos en el an·lisis.
+		for (int e = 0; e < analisis.getEventos().size(); e++) {
+			for (int ec = 0; ec < criProxy.getCriterio().getEventos().length; ec++) {
+				if ( analisis.getEventos().get(e).getEvento().getNombre().equalsIgnoreCase(criProxy.getCriterio().getEventos()[ec])) {
+					parametrosEvento(analisis.getEventos().get(e));
+					analisis.getEventos().get(e).generarEvento();
+				}
+			}
+		}
 	}
 	
 	private void parametrosEvento(EventoProxy eventoPrx) {
@@ -911,22 +1071,21 @@ public class Evaluador {
 				String[] tramos = new String [] {};
 				tramos = eventoPrx.getEvento().getParametros().get(p).getValor().split("\\.");
 				
-				for (int i = 0; i < indicadores.size(); i++) 
+				for (int i = 0; i < analisis.getIndicadores().size(); i++) 
 				{	
-					if (indicadores.get(i).getIndicador().getNombre().equals(tramos[0].substring(1))) 
+					if (analisis.getIndicadores().get(i).getIndicador().getNombre().equals(tramos[0].substring(1))) 
 					{
-						if ((indicadores.get(i).getResultadoEjecucion()!=null) && indicadores.get(i).getResultadoEjecucion().size()>0) {					
+						if ((analisis.getIndicadores().get(i).getResultadoEjecucion()!=null) && analisis.getIndicadores().get(i).getResultadoEjecucion().size()>0) {					
 							String columna = tramos[1];
 							Object valParam = new Object();
-							Object[] linea = indicadores.get(i).getResultadoEjecucion().elementAt(0);
+							Object[] linea = analisis.getIndicadores().get(i).getResultadoEjecucion().elementAt(0);
 							int c = 0;
-							while (c < indicadores.get(i).getIndicador().getResultado().length ) {
-								if (columna.equals(indicadores.get(i).getIndicador().getResultado()[c])) {
+							while (c < analisis.getIndicadores().get(i).getIndicador().getResultado().length ) {
+								if (columna.equals(analisis.getIndicadores().get(i).getIndicador().getResultado()[c])) {
 									valParam = linea[c];
 									break;
 								}
-								c++;
-							}
+								c++;							}
 							eventoPrx.getEvento().getParametros().get(p).setValor(valParam.toString());					
 						}
 					}

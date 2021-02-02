@@ -1,17 +1,20 @@
-package com.atalaya;
+package main.java.com.atalaya;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.RequestContextListener;
 
-import com.atalaya.evaluador.Evaluador;
-import com.modelodatos.Analisis;
-import com.modelodatos.Criterio;
+import main.java.com.atalaya.evaluador.Evaluador;
+import main.java.com.atalaya.evaluador.AnalisisProxy;
+import main.java.com.modelodatos.Criterio;
+import main.java.com.atalaya.evaluador.Comunes;
 
 @SpringBootApplication
 @RestController
@@ -28,26 +31,45 @@ public class AtalayaApplication {
 	public String quiensoy() {
 		
 		return String.format(" %s!", "Soy un atalaya cualquiera");
-	}
-	
-	
+	}	
+			
 	@GetMapping("/ejecutaranalisis")
-	public String consultaranalisis(@RequestParam(value = "nombre", defaultValue = "prueba") String nombre) {
+//	public String consultaranalisis(@RequestParam(value = "nombre", defaultValue = "prueba") String nombre) {
+	public String consultaranalisis(@RequestParam Map<String, String> params) {
+		ArrayList<ParametroProxy> anaParams = new ArrayList<Parametro>(); 
+		String nombre = "prueba";
 		
+		Iterator itParams = params.keySet().iterator();
+		while (itParams.hasNext()) {
+			String clave = itParams.next();
+			if (clave.equalsIgnoreCase("nombre")) {
+				nombre = params.get(clave);
+			} else {
+				ParametroProxy param = new ParametroProxy(clave, "String", clave);
+				anaParams.add(param);
+			}
+		}	
+		RequestContextListener listener;
+		
+		Object.
 		System.out.print("nombre:"+nombre);
 		int cumplido = -1;
-		Analisis analisis = analisisrepo.findByNombre(nombre);
+//		Analisis analisis = analisisrepo.findByNombre(nombre);
+		AnalisisProxy analisis = new AnalisisProxy(analisisrepo.findByNombre(nombre), anaParams) ;
+		
 		if (analisis!=null)
 		{	
-			//ArrayList<String> mensaje = new ArrayList<String>();
+			Evaluador evalAnalisis = new Evaluador (analisis);
+			StringBuffer mensaje = evalAnalisis.evaluarAnalisis();
+/*			//ArrayList<String> mensaje = new ArrayList<String>();
 			StringBuffer mensaje = new StringBuffer();
 			int iError = 0;
 			
-			mensaje.append("</br>Ejecutado el analisis: <b>"+ analisis.getNombre() + "</b></br>");
+			mensaje.append("</br>Ejecutado el analisis: <b>"+ analisis.getAnalisis().getNombre() + "</b></br>");
 			
-			for (int c = 0; c < analisis.getCriterios().size(); c++) {								
-				Criterio criAnaliza = analisis.getCriterios().get(c);					
-				Evaluador criEvalua = new Evaluador (criAnaliza, analisis.getIndicadores(), analisis.getEventos());					
+			for (int c = 0; c < analisis.getAnalisis().getCriterios().size(); c++) {								
+				Criterio criAnaliza = analisis.getAnalisis().getCriterios().get(c);					
+				Evaluador criEvalua = new Evaluador (criAnaliza, analisis.getAnalisis().getIndicadores(), analisis.getAnalisis().getEventos());					
 				cumplido = criEvalua.evaluar();	
 				
 				switch (cumplido) {
@@ -82,8 +104,8 @@ public class AtalayaApplication {
 					
 					iError++;
 					break;
-				}
-			}
+				} 
+			} */
 			
 			String resultado = mensaje.toString();
 			
@@ -92,8 +114,8 @@ public class AtalayaApplication {
 		
 		else
 			return String.format(" %s!", "NO Recuperado el analisis con nombre: "+ nombre);
-	}
-	
+	}		
+		
 	/*@GetMapping("/publicar")
 	public String publicar(@RequestParam(value = "nombre", defaultValue = "prueba") String nombre,@RequestParam(value = "descripcion", defaultValue = "descripcion") String descripcion,@RequestParam(value = "departamento", defaultValue = "departamento") String departamento, @RequestParam(value = "valor", defaultValue = "valor") String valor) {
 		

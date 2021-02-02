@@ -1,12 +1,12 @@
-package com.atalaya.evaluador;
+package main.java.com.atalaya.evaluador;
 
 import java.util.Vector;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Arrays;
 
-import com.modelodatos.Indicador;
-import com.modelodatos.Parametro;
+import main.java.com.modelodatos.Indicador;
+import main.java.com.modelodatos.Parametro;
 
 public class Operando {
 	private String nombre;
@@ -91,50 +91,36 @@ public class Operando {
 	}	
 	
 	private void ejecutar() {
-	// Ejecuta el operando. Si es un indicador, ejecutará el indicador. Si no, convertirá el valor al tipo correspondiente.	
+	// Ejecuta el operando. Si es un indicador, ejecutarÃ¡ el indicador. Si no, convertirÃ¡ el valor al tipo correspondiente.	
 		if (!this.ejecutado)
 		{
 			if (this.tipo == constantes.tpIndicador) 
-			{
+			{				
 				if (!this.getIndicador().isFlag()) {
 					//parametrosIndicador();
 					if (this.getIndicador().ejecutar() == 0) {
-						String[] tramos = new String [] {};
-						tramos = this.getNombre().split("\\.");
-						Object valParam = new Object();
-						Object[] linea = this.getIndicador().getResultadoEjecucion().elementAt(0);
-						int c = 0;
-						while (c < this.getIndicador().getIndicador().getResultado().length) {
-							if (tramos[1].equals(this.getIndicador().getIndicador().getResultado()[c])) {
-								valParam = linea[c];
-								break;
-							}
-							c++;
-						}
-						this.resultado = valParam;	
-						
-						if (this.nombre.toUpperCase().endsWith("ROWCOUNT")) {
-							this.resultado = this.indicador.getResultadoEjecucion().size();
-						}
+						valorResultadoFila(0);
+						this.ejecutado = true;
 					} else {
 						this.resultado = null;
 					}
 				}
-				else
+				if (!(this.resultado == null))
 				{
-					String[] tramos = new String [] {};
-					tramos = this.getNombre().split("\\.");
-					Object valParam = new Object();
-					Object[] linea = this.getIndicador().getResultadoEjecucion().elementAt(0);
-					int c = 0;
-					while (c < this.getIndicador().getIndicador().getResultado().length) {
-						if (tramos[1].equals(this.getIndicador().getIndicador().getResultado()[c])) {
-							valParam = linea[c];
-							break;
-						}
-						c++;
+					if (this.getIndicador().getResultadoEjecucion().size() > 1) {
+						EventoProxy evento = new EventoProxy();
+						evento.getEvento().setTipo("WS");			
+						evento.getEvento().setComando(""); // URL para llamar al Web Service 
+						for (int f = 0; f < this.getIndicador().getResultadoEjecucion().size(); f++) {
+							for (int c = 0; c < this.getIndicador().getIndicador().getResultado().length; c++) {								
+								String valor = valorResultadoFilaColumna(f,   this.getIndicador().getIndicador().getResultado()[c]).toString();
+								evento.nuevoParametro(this.getIndicador().getIndicador().getResultado()[c], "String", valor);
+							}
+							evento.generarEvento();
+						}						
+					} else {
+						valorResultadoFila(0);
 					}
-					this.resultado = valParam;	
 					
 					if (this.nombre.toUpperCase().endsWith("ROWCOUNT")) {
 						this.resultado = this.indicador.getResultadoEjecucion().size();
@@ -159,13 +145,58 @@ public class Operando {
 				}				
 			}
 		}
+		
 		if (this.resultado != null) {
 			this.ejecutado = true;
 		}
 	}
 	
+	public void valorResultadoFila(int fila) {
+	// Cuando el resultado del indicador tiene más de un registro, actualiza el resultado del objeto con el valor de la columna de resultado de la fila indicada
+		if (this.nombre.toUpperCase().endsWith("ROWCOUNT")) {
+			// Si lo que se pide como resultado es el número de registros, se actualiza la propoiedad resultado del objeto con ese número.
+			this.resultado = this.indicador.getResultadoEjecucion().size();
+		} else {
+			String[] tramos = new String [] {};
+			tramos = this.getNombre().split("\\.");
+				
+			Object[] linea = this.getIndicador().getResultadoEjecucion().elementAt(fila);
+			int c = 0;
+			while (c < this.getIndicador().getIndicador().getResultado().length) {
+				if (tramos[1].equalsIgnoreCase(this.getIndicador().getIndicador().getResultado()[c])) {
+					this.resultado = linea[c];
+					break;
+				}
+				c++;
+			}	
+			if ( c >= this.getIndicador().getIndicador().getResultado().length) {
+				// Si en el nombre del indicador no se ha indicado el nombre de un campo, se devolveremos como resultado el número de registros de salida.
+				this.resultado = this.indicador.getResultadoEjecucion().size();
+			}
+		}
+	}
+	
+	public Object valorResultadoFilaColumna(int fila, String columna) {
+	Object objRes = null;
+	// Cuando el resultado del indicador tiene m᳠de un registro, actualiza el resultado del objeto con el valor de la columna de resultado de la fila indicada
+		if (this.nombre.toUpperCase().endsWith("ROWCOUNT")) {
+			this.resultado = this.indicador.getResultadoEjecucion().size();
+		} else {
+					
+			Object[] linea = this.getIndicador().getResultadoEjecucion().elementAt(fila);
+			int c = 0;
+			while (c < this.getIndicador().getIndicador().getResultado().length) {
+				if (columna.equalsIgnoreCase(this.getIndicador().getIndicador().getResultado()[c])) {
+					objRes= linea[c];
+					break;
+				}
+				c++;
+			}			
+		}
+		return objRes;
+	}		
 /*	private void parametrosIndicador() {
-		// Recorre los parámetros del indicador para asignar los valores que tengan referencias a otros indicadores. 
+		// Recorre los parÃ¡metros del indicador para asignar los valores que tengan referencias a otros indicadores. 
 		IndicadorProxy indOper = this.indicador;			
 	
 		for (int p = 0; p < indOper.getIndicador().getParametros().size(); p++) {			
@@ -192,11 +223,11 @@ public class Operando {
 	}
 	
 	private Object calcularValorParametro(Parametro param) {
-	// Si el valor de un parámetro, extrae del resultado de la ejecución de ese indicador el valor que debe asignar al parámetro 
+	// Si el valor de un parÃ¡metro, extrae del resultado de la ejecuciÃ³n de ese indicador el valor que debe asignar al parÃ¡metro 
 		Object valParam = new Object();
 		Indicador indParam = param.getIndicador();		
 
-	// Recupera la primera fila del resultado de ejecución
+	// Recupera la primera fila del resultado de ejecuciÃ³n
 		Object[] linea = param.getIndicador().getResultadoEjecucion().elementAt(0);
 		
 	// Del nombre del indicador obtiene el nombre de la columna cuyo valor debe sacar. 

@@ -1,4 +1,4 @@
-package com.atalaya.evaluador;
+package main.java.com.atalaya.evaluador;
 
 import java.util.ArrayList;
 // Clase para representar cada una de las condiciones compuestas que forman parte de una condición compleja
@@ -11,7 +11,7 @@ public class CondicionMultiple {
 	private Integer nivel;				// Nivel de la condición. Las condiciones más simples tendrás los valores más de nivel.
 	private Condicion condicion;		// Elementos de la condición. Si la condición es simple, tendrá contenido, si se trata de una condición compuesta, estará a null
 	private boolean negacion;			// Indica que la condición es negada. En este caso, el resultado de la condición será el inverso del obtenido en su evaluación.
-	private boolean evaluado;			// Flaga que indica si la condición se ha evaluado ya o no. Es un campo intero, no tiene métodos get y set
+	private boolean evaluada;			// Flaga que indica si la condición se ha evaluado ya o no. Es un campo intero, no tiene métodos get y set
 	
 	public String getTipo() {
 		return tipo;
@@ -61,6 +61,12 @@ public class CondicionMultiple {
 	public void setNegacion(boolean negacion) {
 		this.negacion = negacion;
 	}	
+	public boolean getEvaluada() {
+		return evaluada;
+	}
+	public void setEvaluada(boolean evaluada) {
+		this.evaluada = evaluada;
+	}		
 	public CondicionMultiple () {
 		this.madre = null;
 		this.condicion = null;
@@ -73,7 +79,7 @@ public class CondicionMultiple {
 		boolean result = true;
 		CondicionMultiple multiple;
 		
-		if (evaluado) {	return resultado;		}	
+		if (evaluada) {	return resultado;		}	
 		if (tipo == "AND")		{	resultado = true;		}
 		else if (tipo == "OR") 	{	resultado = false;		}
 		
@@ -95,7 +101,7 @@ public class CondicionMultiple {
 		if (negacion) {
 			result = !result;
 		}
-		evaluado = true;
+		evaluada = true;
 		
 		return result;	
 	}		

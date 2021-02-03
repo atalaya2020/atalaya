@@ -2,6 +2,7 @@ package main.java.com.atalaya;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Iterator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -13,7 +14,9 @@ import org.springframework.web.context.request.RequestContextListener;
 
 import main.java.com.atalaya.evaluador.Evaluador;
 import main.java.com.atalaya.evaluador.AnalisisProxy;
+import main.java.com.atalaya.evaluador.ParametroProxy;
 import main.java.com.modelodatos.Criterio;
+import main.java.com.modelodatos.Parametro;
 import main.java.com.atalaya.evaluador.Comunes;
 
 @SpringBootApplication
@@ -36,23 +39,27 @@ public class AtalayaApplication {
 	@GetMapping("/ejecutaranalisis")
 //	public String consultaranalisis(@RequestParam(value = "nombre", defaultValue = "prueba") String nombre) {
 	public String consultaranalisis(@RequestParam Map<String, String> params) {
-		ArrayList<ParametroProxy> anaParams = new ArrayList<Parametro>(); 
+		ArrayList<ParametroProxy> anaParams = new ArrayList<ParametroProxy>(); 
 		String nombre = "prueba";
 		
 		Iterator itParams = params.keySet().iterator();
 		while (itParams.hasNext()) {
-			String clave = itParams.next();
+			String clave = itParams.next().toString();
 			if (clave.equalsIgnoreCase("nombre")) {
 				nombre = params.get(clave);
 			} else {
-				ParametroProxy param = new ParametroProxy(clave, "String", clave);
-				anaParams.add(param);
+				Parametro param = new Parametro();
+				param.setNombre(clave);
+				param.setTipo("String");
+				param.setValor(params.get(clave));
+				ParametroProxy paramProxy = new ParametroProxy();
+				paramProxy.setParametro(param);
+				anaParams.add(paramProxy);
 			}
 		}	
 		RequestContextListener listener;
 		
-		Object.
-		System.out.print("nombre:"+nombre);
+		System.out.println("nombre: "+nombre);
 		int cumplido = -1;
 //		Analisis analisis = analisisrepo.findByNombre(nombre);
 		AnalisisProxy analisis = new AnalisisProxy(analisisrepo.findByNombre(nombre), anaParams) ;

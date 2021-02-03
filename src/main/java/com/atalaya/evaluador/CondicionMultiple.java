@@ -73,38 +73,6 @@ public class CondicionMultiple {
 		this.tipo = null;
 		this.tipo = null;
 		this.negacion = false;
-	}
-	
-	public boolean evalua (ArrayList<CondicionMultiple> evaluacion) {
-		boolean result = true;
-		CondicionMultiple multiple;
-		
-		if (evaluada) {	return resultado;		}	
-		if (tipo == "AND")		{	resultado = true;		}
-		else if (tipo == "OR") 	{	resultado = false;		}
-		
-		if (condicion == null) {
-			for (int i = 0; i < evaluacion.size(); i++) { 
-				multiple = evaluacion.get(i);
-				if (multiple.getMadre() == idCondicion)	{					
-					if (tipo == "AND" && !multiple.getResultado() ) {
-						resultado = false;
-					}
-					if (tipo == "OR" && multiple.getResultado()) {
-						resultado = true;
-					}					
-				}			
-			}			
-		} else {
-			resultado = condicion.evalua();
-		}		
-		if (negacion) {
-			result = !result;
-		}
-		evaluada = true;
-		
-		return result;	
 	}		
-		
 
 }

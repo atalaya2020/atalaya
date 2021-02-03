@@ -6,7 +6,10 @@ public class Parametro {
 	private String tipo;
 	private String valor;
 	
-	
+	public Parametro() {
+		super();
+
+	}	
 	
 	public Parametro(String nombre, String tipo, String valor) {
 		super();

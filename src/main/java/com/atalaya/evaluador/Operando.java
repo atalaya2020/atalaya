@@ -109,11 +109,11 @@ public class Operando {
 				{
 					if (this.getIndicador().getResultadoEjecucion().size() > 1) {
 						EventoProxy evento = new EventoProxy();
-						evento.getEvento().setTipo("WS");			
+						evento.getEvento().setTipo("URL");			
 						evento.getEvento().setComando(""); // URL para llamar al Web Service 
 						for (int f = 0; f < this.getIndicador().getResultadoEjecucion().size(); f++) {
 							for (int c = 0; c < this.getIndicador().getIndicador().getResultado().length; c++) {								
-								String valor = valorResultadoFilaColumna(f,   this.getIndicador().getIndicador().getResultado()[c]).toString();
+								String valor = valorResultadoFilaColumna(f, this.getIndicador().getIndicador().getResultado()[c]).toString();
 								evento.nuevoParametro(this.getIndicador().getIndicador().getResultado()[c], "String", valor);
 							}
 							evento.generarEvento();

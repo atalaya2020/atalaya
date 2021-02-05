@@ -1,4 +1,4 @@
-package main.java.com.atalaya.evaluador;
+package com.atalaya.evaluador;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

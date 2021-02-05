@@ -10,11 +10,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import main.java.com.modelodatos.Analisis;
-import main.java.com.modelodatos.Criterio;
-import main.java.com.modelodatos.Indicador;
-import main.java.com.modelodatos.Parametro;
-import main.java.com.modelodatos.Evento;
+import com.modelodatos.Analisis;
+import com.modelodatos.Criterio;
+import com.modelodatos.Indicador;
+import com.modelodatos.Parametro;
+import com.modelodatos.Evento;
 
 public class JsonReader {
 

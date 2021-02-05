@@ -1,9 +1,9 @@
-package main.java.com.atalaya.evaluador;
+package com.atalaya.evaluador;
 
 import java.util.ArrayList;
-import main.java.com.modelodatos.Analisis;
-import main.java.com.modelodatos.Criterio;
-import main.java.com.modelodatos.Parametro;
+import com.modelodatos.Analisis;
+import com.modelodatos.Criterio;
+import com.modelodatos.Parametro;
 
 
 public class AnalisisProxy {

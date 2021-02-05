@@ -1,4 +1,4 @@
-package main.java.com.modelodatos;
+package com.modelodatos;
 
 public class Parametro {
 	

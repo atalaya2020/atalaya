@@ -1,6 +1,6 @@
-package main.java.com.atalaya.evaluador;
+package com.atalaya.evaluador;
 
-import main.java.com.modelodatos.Parametro;
+import com.modelodatos.Parametro;
 
 public class ParametroProxy {
 

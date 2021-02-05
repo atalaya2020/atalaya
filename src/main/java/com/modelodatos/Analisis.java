@@ -1,4 +1,4 @@
-package main.java.com.modelodatos;
+package com.modelodatos;
 
 import java.util.ArrayList;
 import org.springframework.data.mongodb.core.mapping.Document;

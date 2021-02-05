@@ -1,9 +1,9 @@
-package main.java.com.atalaya.evaluador;
+package com.atalaya.evaluador;
 
 import org.springframework.web.client.RestTemplate;
 
-import main.java.com.modelodatos.Evento;
-import main.java.com.modelodatos.Parametro;
+import com.modelodatos.Evento;
+import com.modelodatos.Parametro;
 
 
 public class EventoProxy {

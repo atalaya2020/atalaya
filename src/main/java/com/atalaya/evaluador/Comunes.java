@@ -1,4 +1,4 @@
-package main.java.com.atalaya.evaluador;
+package com.atalaya.evaluador;
 
 public class Comunes {
 	public final int tpIndErroneo = -1;

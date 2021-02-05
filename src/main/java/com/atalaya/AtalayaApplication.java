@@ -1,4 +1,4 @@
-package main.java.com.atalaya;
+package com.atalaya;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestContextListener;
 
-import main.java.com.atalaya.evaluador.Evaluador;
-import main.java.com.atalaya.evaluador.AnalisisProxy;
-import main.java.com.atalaya.evaluador.ParametroProxy;
-import main.java.com.modelodatos.Criterio;
-import main.java.com.modelodatos.Parametro;
-import main.java.com.atalaya.evaluador.Comunes;
+import com.atalaya.evaluador.Evaluador;
+import com.atalaya.evaluador.AnalisisProxy;
+import com.atalaya.evaluador.ParametroProxy;
+import com.modelodatos.Criterio;
+import com.modelodatos.Parametro;
+import com.atalaya.evaluador.Comunes;
 
 @SpringBootApplication
 @RestController

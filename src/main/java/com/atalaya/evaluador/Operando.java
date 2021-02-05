@@ -1,12 +1,12 @@
-package main.java.com.atalaya.evaluador;
+package com.atalaya.evaluador;
 
 import java.util.Vector;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Arrays;
 
-import main.java.com.modelodatos.Indicador;
-import main.java.com.modelodatos.Parametro;
+import com.modelodatos.Indicador;
+import com.modelodatos.Parametro;
 
 public class Operando {
 	private String nombre;

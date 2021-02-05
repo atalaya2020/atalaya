@@ -1,6 +1,6 @@
-package main.java.com.atalaya.evaluador;
+package com.atalaya.evaluador;
 
-import main.java.com.modelodatos.Criterio;
+import com.modelodatos.Criterio;
 
 public class CriterioProxy {
 

@@ -6,7 +6,14 @@ public class Parametro {
 	private String tipo;
 	private String valor;
 	
+<<<<<<< HEAD
 	
+=======
+	public Parametro() {
+		super();
+
+	}	
+>>>>>>> refs/remotes/origin/main
 	
 	public Parametro(String nombre, String tipo, String valor) {
 		super();

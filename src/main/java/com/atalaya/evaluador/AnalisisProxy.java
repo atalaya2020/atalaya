@@ -1,42 +1,25 @@
 package com.atalaya.evaluador;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
+
 import com.modelodatos.Analisis;
-import com.modelodatos.Criterio;
 import com.modelodatos.Parametro;
 
 
 public class AnalisisProxy {
 
-	private String nombre;
-	private String descripcion;
-	private ArrayList<IndicadorProxy> indicadores;
+	
+	private Analisis analisis;
+	
+	private Hashtable<String,IndicadorProxy> indicadores;
+	
 	private ArrayList<CriterioProxy> criterios;
 	private ArrayList<EventoProxy> eventos;
-	private ArrayList<ParametroProxy> parametros;
+	private ArrayList<Parametro> parametros;
 
-	public String getNombre() {
-		return nombre;
-	}
-	
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-	
-	public String getDescripcion() {
-		return descripcion;
-	}
-	
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}	
-	
-	public ArrayList<IndicadorProxy> getIndicadores() {
+	public Hashtable<String,IndicadorProxy> getIndicadores() {
 		return indicadores;
-	}
-	
-	public void setIndicadores(ArrayList<IndicadorProxy> indicadores) {
-		this.indicadores = indicadores;
 	}
 	
 	public ArrayList<CriterioProxy> getCriterios() {
@@ -55,34 +38,58 @@ public class AnalisisProxy {
 		this.eventos = eventos;
 	}	
 	
-	public ArrayList<ParametroProxy> getParametros() {
+	public ArrayList<Parametro> getParametros() {
 		return parametros;
 	}
-	public void setParametros(ArrayList<ParametroProxy> parametros) {
+	public void setParametros(ArrayList<Parametro> parametros) {
 		this.parametros = parametros;
-	}	
+	}
+	
+	public Analisis getAnalisis() {
+		return analisis;
+	}
 	
 	public AnalisisProxy (Analisis analisis) {			
-		this.parametros = new ArrayList<ParametroProxy>();
+		this.parametros = new ArrayList<Parametro>();
 		cargarAnalisisProxy(analisis);
 	}
 	
-	public AnalisisProxy (Analisis analisis, ArrayList<ParametroProxy> parametros) {
+	public AnalisisProxy (Analisis analisis, ArrayList<Parametro> parametros) {
 		this.parametros = parametros;
+		this.analisis = analisis;
 		cargarAnalisisProxy(analisis);
 	}
 	
-	private void cargarAnalisisProxy(Analisis analisis ) {
+	//Este metodo tendria mas sentido si le metemos la validacion de cada uno de los elementos del analisis
+	private void cargarAnalisisProxy(Analisis analisis) {
 		
-		this.nombre = analisis.getNombre();
-		this.descripcion = analisis.getDescripcion();
-		this.indicadores = new ArrayList<IndicadorProxy>();
+		indicadores = new Hashtable<String,IndicadorProxy>();
 		this.eventos = new ArrayList<EventoProxy>();
 		this.criterios = new ArrayList<CriterioProxy>();	
 		
 		for (int i = 0; i < analisis.getIndicadores().size(); i++) {
 			IndicadorProxy indProxy = new IndicadorProxy(analisis.getIndicadores().get(i));
-			this.indicadores.add(i, indProxy);
+			
+			//Recorro los parametros del indicador para identificar aquellos que hacen referencia a un parametro de entrada #PARAM.NOMBRE_PARAMETRO
+			ArrayList<Parametro> parametros = indProxy.getIndicador().getParametros();
+			for(int j=0;j<parametros.size();j++)
+			{
+				//Si el parametro es del tipo #PARAM debo darle el valor recibido como parametro
+				if (parametros.get(j).getValor().startsWith("#PARAM"))
+				{
+					String[] arValor = parametros.get(j).getValor().split("\\.");
+					if (this.parametros!=null)
+					{
+						for (int k=0;k<this.parametros.size();k++)
+						{
+							if (this.parametros.get(k).getNombre().equals(arValor[1]))
+								parametros.get(j).setValor(this.parametros.get(k).getValor());
+						}
+					}
+				}
+			}
+			
+			indicadores.put(analisis.getIndicadores().get(i).getNombre(), indProxy);
 		}
 		
 		for (int i = 0; i < analisis.getCriterios().size(); i++) {

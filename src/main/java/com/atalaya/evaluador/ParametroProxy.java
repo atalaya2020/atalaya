@@ -14,11 +14,7 @@ public class ParametroProxy {
 		return this.parametro;
 	}
 	
-	public void ParametroProxy(Parametro parametro) {
+	public ParametroProxy(Parametro parametro) {
 		this.parametro = parametro;		
-	}
-	
-	public void ParametroProxi(String nombre, String tipo, String valor) {
-		Parametro parametro = new Parametro(nombre, tipo, valor);
 	}
 }

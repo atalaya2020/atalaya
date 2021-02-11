@@ -1,16 +1,7 @@
 package com.modelodatos;
 
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.sql.Types;
+
 import java.util.ArrayList;
-import java.util.Vector;
 
 public class Indicador {
 
@@ -26,9 +17,6 @@ public class Indicador {
 	private String comando;
 	private ArrayList<Parametro> parametros;
 	private String[] resultado;
-	//private Vector<Object[]> resultadoEjecucion;
-	//private boolean flag;
-
 
 	public Indicador(String nombre, String descripcion, String fuente, String tipo, String comando,
 			ArrayList<Parametro> parametros, String[] resultado) {

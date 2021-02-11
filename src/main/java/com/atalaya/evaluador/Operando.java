@@ -15,9 +15,10 @@ public class Operando {
 	private boolean negado;
 	private Object resultado;
 	private boolean ejecutado;
-	private IndicadorProxy indicador;
+	private String indicador;
 	
-	private Comunes constantes;	
+	
+	
 	
 	public String getNombre() {		
 		return nombre;
@@ -57,18 +58,18 @@ public class Operando {
 	}
 	
 	public Object getResultado() {		
-		ejecutar();
 		return resultado;
 	}
 	public void setResultado(Object resultado) {
 		this.resultado = resultado;			
-	}	
-	
-	public IndicadorProxy getIndicador() {
-		return indicador;
 	}
-	public void setIndicador(IndicadorProxy indicador) {
-		this.indicador = indicador;
+	
+	public void setIndicador(String nombreIndicador) {
+		this.indicador = nombreIndicador;
+	}
+	
+	public String getIndicador() {
+		return indicador;
 	}
 	
 	public void Operando () {	
@@ -90,37 +91,51 @@ public class Operando {
 		return negado;
 	}	
 	
+/*
 	private void ejecutar() {
-	// Ejecuta el operando. Si es un indicador, ejecutarÃ¡ el indicador. Si no, convertirÃ¡ el valor al tipo correspondiente.	
 		if (!this.ejecutado)
 		{
 			if (this.tipo == constantes.tpIndicador) 
-			{				
+			{
 				if (!this.getIndicador().isFlag()) {
 					//parametrosIndicador();
 					if (this.getIndicador().ejecutar() == 0) {
-						valorResultadoFila(0);
-						this.ejecutado = true;
+						String[] tramos = new String [] {};
+						tramos = this.getNombre().split("\\.");
+						Object valParam = new Object();
+						Object[] linea = this.getIndicador().getResultadoEjecucion().elementAt(0);
+						int c = 0;
+						while (c < this.getIndicador().getIndicador().getResultado().length) {
+							if (tramos[1].equals(this.getIndicador().getIndicador().getResultado()[c])) {
+								valParam = linea[c];
+								break;
+							}
+							c++;
+						}
+						this.resultado = valParam;	
+						
+						if (this.nombre.toUpperCase().endsWith("ROWCOUNT")) {
+							this.resultado = this.indicador.getResultadoEjecucion().size();
+						}
 					} else {
 						this.resultado = null;
 					}
 				}
-				if (!(this.resultado == null))
+				else
 				{
-					if (this.getIndicador().getResultadoEjecucion().size() > 1) {
-						EventoProxy evento = new EventoProxy();
-						evento.getEvento().setTipo("URL");			
-						evento.getEvento().setComando(""); // URL para llamar al Web Service 
-						for (int f = 0; f < this.getIndicador().getResultadoEjecucion().size(); f++) {
-							for (int c = 0; c < this.getIndicador().getIndicador().getResultado().length; c++) {								
-								String valor = valorResultadoFilaColumna(f, this.getIndicador().getIndicador().getResultado()[c]).toString();
-								evento.nuevoParametro(this.getIndicador().getIndicador().getResultado()[c], "String", valor);
-							}
-							evento.generarEvento();
-						}						
-					} else {
-						valorResultadoFila(0);
+					String[] tramos = new String [] {};
+					tramos = this.getNombre().split("\\.");
+					Object valParam = new Object();
+					Object[] linea = this.getIndicador().getResultadoEjecucion().elementAt(0);
+					int c = 0;
+					while (c < this.getIndicador().getIndicador().getResultado().length) {
+						if (tramos[1].equals(this.getIndicador().getIndicador().getResultado()[c])) {
+							valParam = linea[c];
+							break;
+						}
+						c++;
 					}
+					this.resultado = valParam;	
 					
 					if (this.nombre.toUpperCase().endsWith("ROWCOUNT")) {
 						this.resultado = this.indicador.getResultadoEjecucion().size();
@@ -145,7 +160,6 @@ public class Operando {
 				}				
 			}
 		}
-		
 		if (this.resultado != null) {
 			this.ejecutado = true;
 		}
@@ -245,5 +259,6 @@ public class Operando {
 		}		
 		return valParam;
 	}*/
+
 	
 }

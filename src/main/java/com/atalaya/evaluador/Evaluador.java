@@ -4,6 +4,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 
 // Clase que evalua una condicion compleja. Puede devolver tres posibles resultados:
 //1. Se ha evaluado la condicion y se cumple (true)
@@ -19,9 +24,9 @@ public class Evaluador {
 	private String opLogicos [] = new String [] {" AND ", " OR "};
 	private char abre = '(';
 	private char cierra = ')';
-	private Integer indCondicion = 0;
-	
-	private Comunes constantes; 
+	private int indCondicion = 0;
+
+	private int num_threads_max = 5;
 	
 	public ArrayList<String> getErrores() {
 		return errores;
@@ -39,14 +44,6 @@ public class Evaluador {
 		this.analisis = analisis;		
 			
 	}
-		
-	/*public int evaluar (String condicion, ArrayList<Indicador> indicadores)  {
-		int result = 0;
-		this.condicionCompleta = condicion;		
-		this.indicadores = indicadores;
-		result = this.evaluar();
-		return result;
-	}*/
 	
 	public StringBuffer evaluarAnalisis() {
 		StringBuffer mensaje = new StringBuffer();
@@ -54,7 +51,7 @@ public class Evaluador {
 		int cumplido = 0;
 		boolean encontrado = false;
 
-		mensaje.append("</br>Ejecutado el analisis: <b>"+ analisis.getNombre() + "</b></br>");
+		mensaje.append("</br>Ejecutado el analisis: <b>"+ analisis.getAnalisis().getNombre() + "</b></br>");
 		
 		for (int c = 0; c < analisis.getCriterios().size(); c++) {	
 			cumplido = 0;
@@ -63,12 +60,12 @@ public class Evaluador {
 			for (int ec = 0; ec < criEvalua.getCriterio().getEventos().length; ec++) {
 				encontrado = false;
 				for (int e = 0; e < analisis.getEventos().size(); e++) {
-					if (!criEvalua.getCriterio().getEventos()[ec].equalsIgnoreCase(analisis.getEventos().get(e).getEvento().getNombre())) {
+					if (criEvalua.getCriterio().getEventos()[ec].equalsIgnoreCase(analisis.getEventos().get(e).getEvento().getNombre())) {
 						encontrado = true;							
 					}
 				}
 				if (!encontrado) {
-					nuevoError("El evento " + criEvalua.getCriterio().getEventos()[ec] + " definido en el criterio " + criEvalua.getCriterio().getNombre() + " no esta definido en el analisis " + analisis.getNombre());
+					nuevoError("El evento " + criEvalua.getCriterio().getEventos()[ec] + " definido en el criterio " + criEvalua.getCriterio().getNombre() + " no esta definido en el analisis " + analisis.getAnalisis().getNombre());
 					cumplido = -1;
 				}
 			}					
@@ -160,7 +157,7 @@ public class Evaluador {
 					} else {
 						System.out.println("Condicion simple: " + simple.getOperando1().getNegado() + " -> " + simple.getOperando1().getNombre() + " -> null -> null -> null");
 					}
-				} 
+				}
 			}
 			
 			//valida que los operandos de las condiciones o evaluaciones sean validos
@@ -522,7 +519,7 @@ public class Evaluador {
 		cadenaFormato = remplazarCadena(cadenaFormato, "  ", " ");	
 		cadenaFormato = cadenaFormato.replaceAll("\\( ", "\\(");
 		cadenaFormato = cadenaFormato.replaceAll(" \\)", "\\)");
-		cadenaFormato = cadenaFormato.replaceAll("\\'", constantes.comillas);
+		cadenaFormato = cadenaFormato.replaceAll("\\'", Comunes.comillas);
 		return cadenaFormato;
 	}
 	
@@ -746,19 +743,19 @@ public class Evaluador {
 	private boolean comprobarOperando(Operando oper) {
 	// Comprueba si la información obtenida para el valor del opernado es completa y coherente.
 		boolean comprobado = true;
-		if (oper.getTipo() == constantes.tpIndErroneo) {
+		if (oper.getTipo() == Comunes.tpIndErroneo) {
 			comprobado = false;
 			nuevoError("No se ha encontrado el indicador " + oper.getNombre());
 		} 
-		if (oper.getTipo() == constantes.tpNoIndicador && oper.getTipoValor() == constantes.tpVlNoTipo) {
+		if (oper.getTipo() == Comunes.tpNoIndicador && oper.getTipoValor() == Comunes.tpVlNoTipo) {
 			comprobado = false;
 			nuevoError("No se ha podido identificar el indicador " + oper.getNombre());
 		}
-		if (oper.getTipo() == constantes.tpIndicador && oper.getTipoValor() != constantes.tpVlIndicador) {
+		if (oper.getTipo() == Comunes.tpIndicador && oper.getTipoValor() != Comunes.tpVlIndicador) {
 			comprobado = false;
 			nuevoError("El tipo de indicador y el tipo del resultado del operando no coinciden: " + oper.getNombre());
 		}
-		if (oper.getTipo() == constantes.tpValor && !(oper.getTipoValor() != constantes.tpVlBoolean || oper.getTipoValor() != constantes.tpVlString || oper.getTipoValor() != constantes.tpVlInt || oper.getTipoValor() != constantes.tpVlDate)) {
+		if (oper.getTipo() == Comunes.tpValor && !(oper.getTipoValor() != Comunes.tpVlBoolean || oper.getTipoValor() != Comunes.tpVlString || oper.getTipoValor() != Comunes.tpVlInt || oper.getTipoValor() != Comunes.tpVlDate)) {
 			comprobado = false;
 			nuevoError("No se ha podido identificado el tipo de resultado del operando: " + oper.getNombre());
 		}		
@@ -767,52 +764,49 @@ public class Evaluador {
 	
 	private int esIndicador (String operando) {
 	// Comprueba si la cadena recibida como parámetro corresponde a alguno de los indicadores definidios en el análisis. Devuelve  -1, si es erroneo, 0 si no lo es, y 1 si es indicador.
-		int esIndica = constantes.tpNoIndicador;
+		int esIndica = Comunes.tpNoIndicador;
 		
-		if (operando.startsWith(constantes.tpMarcaIndicador))
+		if (operando.startsWith(Comunes.tpMarcaIndicador))
 		{	
-			esIndica = constantes.tpIndErroneo;
+			esIndica = Comunes.tpIndErroneo;
 			
 			String[] tramos = new String [] {};
 			tramos = operando.split("\\.");
+			String nombreIndicador = tramos[0].substring(1);
 			
-			for (int i = 0; i < analisis.getIndicadores().size(); i++) 
-			{	
-				if (analisis.getIndicadores().get(i).getIndicador().getNombre().equals(tramos[0].substring(1))) 
-				{
-					esIndica = constantes.tpIndicador;
-					break;
-				}
+			if (analisis.getIndicadores().containsKey(nombreIndicador))
+			{
+				esIndica = Comunes.tpIndicador;
 			}	
 		}
 		else
-			esIndica = constantes.tpNoIndicador;
+			esIndica = Comunes.tpNoIndicador;
 		
 		return esIndica;		
 	}	
 
 	private int esValor(String operando) {
 	// Comprueba si la cadena recibida como parametro corresponde a un valor: Los valores pueden ser logicos, de cadena, numericos o de fecha.
-		int valor = constantes.tpVlNoTipo;
+		int valor = Comunes.tpVlNoTipo;
 		String oper = operando; 
 		
-		if (operando.toUpperCase().equals(constantes.verdadero) || operando.toUpperCase().equals(constantes.falso)) {
-			valor = constantes.tpVlBoolean;
+		if (operando.toUpperCase().equals(Comunes.verdadero) || operando.toUpperCase().equals(Comunes.falso)) {
+			valor = Comunes.tpVlBoolean;
 		} else {
-			if (operando.startsWith(constantes.comillas) && operando.endsWith(constantes.comillas) && contarCaracter(operando, constantes.comillas) == 2) {
+			if (operando.startsWith(Comunes.comillas) && operando.endsWith(Comunes.comillas) && contarCaracter(operando, Comunes.comillas) == 2) {
 				if (esFecha(operando)) {
-					valor = constantes.tpVlDate;
+					valor = Comunes.tpVlDate;
 				} else {
-					valor = constantes.tpVlString;
+					valor = Comunes.tpVlString;
 				}
 			} else {
-				if (contarCaracter(operando, constantes.comillas) == 0) {
+				if (contarCaracter(operando, Comunes.comillas) == 0) {
 					oper = oper.replaceAll("\\,", "\\.");
 					try {
 						Integer.parseInt(oper);
-						valor = constantes.tpVlInt;
+						valor = Comunes.tpVlInt;
 					} catch (NumberFormatException e3) {
-						valor = constantes.tpVlNoTipo;
+						valor = Comunes.tpVlNoTipo;
 						nuevoError("El operando contiene un valor numérico erróneo: " + operando);
 					}					
 				}
@@ -828,34 +822,21 @@ public class Evaluador {
 		// El operando puede ser de tres tipos: Indicador, valor o fórmula. Éste último aún no se ha codificado, por lo que se identifica como erróneo.	
 		oper.setNombre(nombre);		
 		tipo = esIndicador(oper.getNombre());
-		if (tipo == constantes.tpIndicador) 
+		if (tipo == Comunes.tpIndicador) 
 		{
-			oper.setTipo(constantes.tpIndicador);
-			oper.setTipoValor(constantes.tpVlIndicador);
-			
-			String[] tramos = new String [] {};
-			tramos = oper.getNombre().split("\\.");
-			
-			for (int i = 0; i < analisis.getIndicadores().size(); i++) 
-			{	
-				if (analisis.getIndicadores().get(i).getIndicador().getNombre().equals(tramos[0].substring(1))) 
-				{
-					oper.setIndicador(analisis.getIndicadores().get(i));
-					parametrosIndicador(analisis.getIndicadores().get(i));
-					break;
-				}
-			}
+			oper.setTipo(Comunes.tpIndicador);
+			oper.setTipoValor(Comunes.tpVlIndicador);
 		} 
 		else 
 		{
-			if (tipo == constantes.tpIndErroneo) {
-				oper.setTipo(constantes.tpIndErroneo);
-				oper.setTipoValor(constantes.tpVlNoTipo);				
+			if (tipo == Comunes.tpIndErroneo) {
+				oper.setTipo(Comunes.tpIndErroneo);
+				oper.setTipoValor(Comunes.tpVlNoTipo);				
 			} else {			
 				tipo = esValor(nombre);
 				// Si es de tipo valor, guarda el tipo de valor que es.
-				if (tipo != constantes.tpVlNoTipo) {
-					oper.setTipo(constantes.tpValor);
+				if (tipo != Comunes.tpVlNoTipo) {
+					oper.setTipo(Comunes.tpValor);
 					oper.setTipoValor(tipo);				
 				} 
 			}
@@ -868,7 +849,7 @@ public class Evaluador {
 		boolean vale = false;
 		String formatosFecha [] = new String [] {"dd/MM/yyyy","dd-MM-yyyy", "MM/dd/yyyy", "MM-dd-yyyy", "yyyy/MM/dd", "yyyy-MM-dd", "dd/MM/yy","dd-MM-yy", "MM/dd/yy", "MM-dd-yy", "yy/MM/dd", "yy-MM-dd"};
 		String formatosHora [] = new String [] {"hh:mm:ss","hh:mm", "HH:mm:ss", "HH:mm"};
-		String txFecha = fecha.replaceAll(constantes.comillas, "");
+		String txFecha = fecha.replaceAll(Comunes.comillas, "");
 		Date fecParse;
 		SimpleDateFormat formato;
 		String txFormato;
@@ -913,43 +894,42 @@ public class Evaluador {
 	private void parametrosIndicador(IndicadorProxy indOper) {
 		
 		for (int p = 0; p < indOper.getIndicador().getParametros().size(); p++) {			
-			if (indOper.getIndicador().getParametros().get(p).getValor().startsWith(constantes.tpMarcaIndicador)) {
+			if (indOper.getIndicador().getParametros().get(p).getValor().startsWith(Comunes.tpMarcaIndicador)) {
 				
 				String[] tramos = new String [] {};
 				tramos = indOper.getIndicador().getParametros().get(p).getValor().split("\\.");
+				String nombreIndicador = tramos[0].substring(1);
 				
-				for (int i = 0; i < analisis.getIndicadores().size(); i++) 
-				{	
-					if (analisis.getIndicadores().get(i).getIndicador().getNombre().equals(tramos[0].substring(1))) 
-					{
-						parametrosIndicador(analisis.getIndicadores().get(i));
-						if (analisis.getIndicadores().get(i).ejecutar() == 0 && (analisis.getIndicadores().get(i).getResultadoEjecucion()!=null) && analisis.getIndicadores().get(i).getResultadoEjecucion().size()>0) {					
-							String columna = tramos[1];
-							Object valParam = new Object();
-							Object[] linea = analisis.getIndicadores().get(i).getResultadoEjecucion().elementAt(0);
-							int c = 0;
-							while (c < analisis.getIndicadores().get(i).getIndicador().getResultado().length ) {
-								if (columna.equals(analisis.getIndicadores().get(i).getIndicador().getResultado()[c])) {
-									valParam = linea[c];
-									break;
-								}
-								c++;
+				if (analisis.getIndicadores().containsKey(nombreIndicador)) 
+				{
+					parametrosIndicador(analisis.getIndicadores().get(nombreIndicador));
+					if (analisis.getIndicadores().get(nombreIndicador).ejecutar() && (analisis.getIndicadores().get(nombreIndicador).getResultadoEjecucion()!=null) && analisis.getIndicadores().get(nombreIndicador).getResultadoEjecucion().size()>0) 
+					{					
+						String columna = tramos[1];
+						Object valParam = new Object();
+						Object[] linea = analisis.getIndicadores().get(nombreIndicador).getResultadoEjecucion().elementAt(0);
+						int c = 0;
+						while (c < analisis.getIndicadores().get(nombreIndicador).getIndicador().getResultado().length ) {
+							if (columna.equals(analisis.getIndicadores().get(nombreIndicador).getIndicador().getResultado()[c])) {
+								valParam = linea[c];
+								break;
 							}
-							indOper.getIndicador().getParametros().get(p).setValor(valParam.toString());					
+							c++;
 						}
+						indOper.getIndicador().getParametros().get(p).setValor(valParam.toString());					
 					}
 				}
 			}
 		}
 	}
 	
-	public boolean evaluaCondicionMultiple (CondicionMultiple condicion) {
+/* version antigua	public boolean evaluaCondicionMultiple (CondicionMultiple condicion) {
 		boolean result = true;
 		CondicionMultiple hija;
 		
 		if (condicion.getEvaluada()) {	return condicion.getResultado();		}	
-		if (condicion.getTipo().equalsIgnoreCase("AND"))			{	result = true;		}
-		else if (condicion.getTipo().equalsIgnoreCase("OR")) 		{	result = false;		}
+		if (condicion.getTipo() != null && condicion.getTipo().equalsIgnoreCase("AND"))			{	result = true;		}
+		else if (condicion.getTipo() != null && condicion.getTipo().equalsIgnoreCase("OR")) 		{	result = false;		}
 		
 		if (condicion.getCondicion() == null) {
 			for (int i = 0; i < evaluacion.size(); i++) { 
@@ -972,7 +952,44 @@ public class Evaluador {
 		condicion.setResultado(result);
 		condicion.setEvaluada(true);		
 		return result;	
-	}		
+	}*/		
+
+	public boolean evaluaCondicionMultiple (CondicionMultiple condicion) {
+		boolean result = true;
+		CondicionMultiple hija;
+		
+		if (condicion.getEvaluada()) {	return condicion.getResultado();		}	
+		if (condicion.getTipo() != null ) {
+			if (condicion.getTipo().equalsIgnoreCase("AND"))			{	result = true;		}
+			else if (condicion.getTipo().equalsIgnoreCase("OR")) 		{	result = false;		}
+		}
+		
+		if (condicion.getCondicion() == null) {
+			if (condicion.getTipo() != null ) {
+				for (int i = 0; i < evaluacion.size(); i++) { 
+					hija = evaluacion.get(i);
+					if (hija.getMadre() == condicion.getIdCondicion())	{					
+						if (condicion.getTipo().equalsIgnoreCase("AND") && !hija.getResultado() ) {
+							result = false;
+						}
+						if (condicion.getTipo().equalsIgnoreCase("OR") && hija.getResultado()) {
+							result = true;
+						}					
+					}			
+				}		
+			} else {
+				result = evaluaCondicionSimple(condicion.getCondicion());
+			}
+		} else {
+			result = evaluaCondicionSimple(condicion.getCondicion());
+		}		
+		if (condicion.getNegacion()) {
+			result = !result;
+		}
+		condicion.setResultado(result);
+		condicion.setEvaluada(true);		
+		return result;	
+	}
 	
 	public boolean evaluaCondicionSimple(Condicion simple) {
 	boolean result = false;	
@@ -985,66 +1002,76 @@ public class Evaluador {
 	
 		if (simple.getEvaluada()) {return simple.getResultado();  } 
 		else {
-			// Recupera los resultados de cada uno de los operandos de la condicion.
-			oper1 = simple.getOperando1().getResultado().toString().trim();
-			oper2 = simple.getOperando2().getResultado().toString().trim();			
-			// Convierte ambos resultados a int para decidir si la comparacion sera numerica o alfabetica.
-			numerica = true;
-			try {
-				iOper1 = Integer.parseInt(oper1);				
-			} catch (NumberFormatException e3) {				
-				numerica = false;
-			}	
-			try {
-				iOper2 = Integer.parseInt(oper2);				
-			} catch (NumberFormatException e3) {				
-				numerica = false;
-			}
-			// Si ha podido convertir a int ambos resultados, los comparará numéricamente. Si no, hará comparación alfabéticamente.
-			String operadores [] = new String[] {"=", "<", ">", ">=", "<=", "<>"};
-			int op = 0;
-			for (op = 0; op < operadores.length; op++) {
-				if (simple.getOperador().equals(operadores[op])) {
-					break;
-				}
-			}			
 			
-			if (numerica) {			
-				switch (op) {
-				case 0:
-					if (iOper1 == iOper2) 	{	result = true;break;		}
-				case 1:
-					if (iOper1 < iOper2) 	{	result = true;break;		}
-				case 2:
-					if (iOper1 > iOper2)	{	result = true;break;		}
-				case 3:
-					if (iOper1 >= iOper2) 	{	result = true;break;		}
-				case 4:
-					if (iOper1 <= iOper2) 	{	result = true;break;		}
-				case 5:	
-					if (iOper1 != iOper2) 	{	result = true;break;		}
-				}		
-			} else {
-				compara = oper1.compareToIgnoreCase(oper2);
-				if (compara < 0 && (simple.getOperador().equals("<") || simple.getOperador().equals("<=") || simple.getOperador().equals("<>"))) {
-					result = true; 
-				} else {
-					if (compara == 0 && (simple.getOperador().equals("=") || simple.getOperador().equals("<=") || simple.getOperador().equals(">="))) {
-						result = true;
-					} else {
-						if (compara > 0 && (simple.getOperador().equals(">") || simple.getOperador().equals(">=") || simple.getOperador().equals("<>"))) {
-							result = true;
-						}
+			// Recupera los resultados de cada uno de los operandos de la condicion.
+			//oper1 = simple.getOperando1().getResultado().toString().trim();
+			boolean interpretarOp1 = interpretarOperando(simple.getOperando1());
+			boolean interpretarOp2 = interpretarOperando(simple.getOperando2());
+			
+			if (interpretarOp1 && interpretarOp2)
+			{			
+				oper1 = simple.getOperando1().getResultado().toString().trim();
+				oper2 = simple.getOperando2().getResultado().toString().trim();
+				// Convierte ambos resultados a int para decidir si la comparacion sera numerica o alfabetica.
+				numerica = true;
+				try {
+					iOper1 = Integer.parseInt(oper1);				
+				} catch (NumberFormatException e3) {				
+					numerica = false;
+				}	
+				try {
+					iOper2 = Integer.parseInt(oper2);				
+				} catch (NumberFormatException e3) {				
+					numerica = false;
+				}
+				// Si ha podido convertir a int ambos resultados, los comparará numéricamente. Si no, hará comparación alfabéticamente.
+				String operadores [] = new String[] {"=", "<", ">", ">=", "<=", "<>"};
+				int op = 0;
+				for (op = 0; op < operadores.length; op++) {
+					if (simple.getOperador().equals(operadores[op])) {
+						break;
 					}
-				}					
-			}			
-			simple.setEvaluada(true);
+				}			
+				
+				if (numerica) {			
+					switch (op) {
+					case 0:
+						if (iOper1 == iOper2) 	{	result = true;break;		}
+					case 1:
+						if (iOper1 < iOper2) 	{	result = true;break;		}
+					case 2:
+						if (iOper1 > iOper2)	{	result = true;break;		}
+					case 3:
+						if (iOper1 >= iOper2) 	{	result = true;break;		}
+					case 4:
+						if (iOper1 <= iOper2) 	{	result = true;break;		}
+					case 5:	
+						if (iOper1 != iOper2) 	{	result = true;break;		}
+					}		
+				} else {
+					
+					compara = oper1.compareToIgnoreCase(oper2);
+					if (compara < 0 && (simple.getOperador().equals("<") || simple.getOperador().equals("<=") || simple.getOperador().equals("<>"))) {
+						result = true; 
+					} else {
+						if (compara == 0 && (simple.getOperador().equals("=") || simple.getOperador().equals("<=") || simple.getOperador().equals(">="))) {
+							result = true;
+						} else {
+							if (compara > 0 && (simple.getOperador().equals(">") || simple.getOperador().equals(">=") || simple.getOperador().equals("<>"))) {
+								result = true;
+							}
+						}
+					}					
+				}			
+				simple.setEvaluada(true);
+			}
+			else
+				simple.setEvaluada(false);
 		}
 		if (simple.getNegacion()) 	{result = !result;	}
 		simple.setResultado(result);
 		return result;
 	}
-
 	
 	
 	public void eventosCriterio (CriterioProxy criProxy) {
@@ -1052,8 +1079,16 @@ public class Evaluador {
 		for (int e = 0; e < analisis.getEventos().size(); e++) {
 			for (int ec = 0; ec < criProxy.getCriterio().getEventos().length; ec++) {
 				if ( analisis.getEventos().get(e).getEvento().getNombre().equalsIgnoreCase(criProxy.getCriterio().getEventos()[ec])) {
-					parametrosEvento(analisis.getEventos().get(e));
-					analisis.getEventos().get(e).generarEvento();
+					if (analisis.getEventos().get(e).getEvento().getTipo().equals("VolcadoIndicador"))
+					{
+						String[] tramos = analisis.getEventos().get(e).getEvento().getComando().split(" ");
+						analisis.getEventos().get(e).setResultadoEjecucion(analisis.getIndicadores().get(tramos[1].substring(1)).volcado("html"));
+					}
+					else
+					{
+						parametrosEvento(analisis.getEventos().get(e));
+						analisis.getEventos().get(e).generarEvento();
+					}
 				}
 			}
 		}
@@ -1062,32 +1097,254 @@ public class Evaluador {
 	private void parametrosEvento(EventoProxy eventoPrx) {
 		
 		for (int p = 0; p < eventoPrx.getEvento().getParametros().size(); p++) {			
-			if (eventoPrx.getEvento().getParametros().get(p).getValor().startsWith(constantes.tpMarcaIndicador)) {
+			if (eventoPrx.getEvento().getParametros().get(p).getValor().startsWith(Comunes.tpMarcaIndicador)) {
 				
 				String[] tramos = new String [] {};
 				tramos = eventoPrx.getEvento().getParametros().get(p).getValor().split("\\.");
+				String nombreIndicador = tramos[0].substring(1);
 				
-				for (int i = 0; i < analisis.getIndicadores().size(); i++) 
-				{	
-					if (analisis.getIndicadores().get(i).getIndicador().getNombre().equals(tramos[0].substring(1))) 
-					{
-						if ((analisis.getIndicadores().get(i).getResultadoEjecucion()!=null) && analisis.getIndicadores().get(i).getResultadoEjecucion().size()>0) {					
-							String columna = tramos[1];
-							Object valParam = new Object();
-							Object[] linea = analisis.getIndicadores().get(i).getResultadoEjecucion().elementAt(0);
-							int c = 0;
-							while (c < analisis.getIndicadores().get(i).getIndicador().getResultado().length ) {
-								if (columna.equals(analisis.getIndicadores().get(i).getIndicador().getResultado()[c])) {
-									valParam = linea[c];
-									break;
-								}
-								c++;							}
-							eventoPrx.getEvento().getParametros().get(p).setValor(valParam.toString());					
+				if (analisis.getIndicadores().containsKey(nombreIndicador))
+				{
+					if ((analisis.getIndicadores().get(nombreIndicador).getResultadoEjecucion()!=null) && analisis.getIndicadores().get(nombreIndicador).getResultadoEjecucion().size()>0) 
+					{					
+						String columna = tramos[1];
+						Object valParam = new Object();
+						Object[] linea = analisis.getIndicadores().get(nombreIndicador).getResultadoEjecucion().elementAt(0);
+						int c = 0;
+						while (c < analisis.getIndicadores().get(nombreIndicador).getIndicador().getResultado().length ) {
+							if (columna.equals(analisis.getIndicadores().get(nombreIndicador).getIndicador().getResultado()[c])) {
+								valParam = linea[c];
+								break;
+							}
+							c++;							
 						}
+						eventoPrx.getEvento().getParametros().get(p).setValor(valParam.toString());					
 					}
 				}
 			}
 		}
 	}
 	
+	private boolean interpretarOperando(Operando op)
+	{
+		boolean interpretado = false;
+		
+		//Ejecuta el operando. Si es un indicador, ejecutarÃ¡ el indicador. Si no, convertirÃ¡ el valor al tipo correspondiente.	
+		if (!op.getEjecutado())
+		{
+			if (op.getTipo() == Comunes.tpIndicador) 
+			{
+				
+				//meter este grupo de sentencias en un metodo
+				String[] tramos = new String [] {};
+				tramos = op.getNombre().split("\\.");
+				String nombreIndicador = tramos[0].substring(1);
+				
+				IndicadorProxy indicador = analisis.getIndicadores().get(nombreIndicador); 
+							
+				//Lista para almacenar los indicadores linkados al indicador origen
+				List<String> listaIndicadoreAsociado = null;
+				
+				//List<Thread> threads = new ArrayList<Thread>();
+				Thread[] threads = new Thread[num_threads_max];
+				
+				//Si el indicador no ha sido interpretado
+				if (indicador.noejecutado()) 
+				{
+					
+					//Recupero la lista de Indicadores linkados al indicador origen
+					listaIndicadoreAsociado = indicador.ObtenerIndicadorAsociado(null);
+					listaIndicadoreAsociado.add(indicador.getIndicador().getNombre());
+					IndicadorProxy indicadorAsociado = null;
+					
+					if (listaIndicadoreAsociado!=null && listaIndicadoreAsociado.size()>0)
+					{	
+						//Ejecutar hasta que el indicador origen haya sido interpretado
+						while (!indicador.ejecutado())
+						{					
+							for (int i=0; i<listaIndicadoreAsociado.size(); i++)
+							{
+								String nombreIndicadorAsociado = listaIndicadoreAsociado.get(i);	
+								
+								//Obtenemos los hilos libres
+								int nThreadsOcupados = 0;
+								int nPosicionThreadLibre = 0;
+								
+								if (threads!=null && threads.length>0)
+								{
+									nThreadsOcupados = 0;
+									for(int j=0; j<threads.length;j++)
+									{
+										if (threads[j]!=null && threads[j].isAlive())
+										{
+											nThreadsOcupados++;
+										}
+										else
+											nPosicionThreadLibre = j;
+									}
+								}
+								else
+									nThreadsOcupados = 0;
+								
+								//Si existen hilos libres 
+								if (num_threads_max - nThreadsOcupados>0)
+								{
+									//Recupero el indicador
+									indicadorAsociado = IndicadorProxy.getIndicadoresProxy().get(nombreIndicadorAsociado);
+									
+									nThreadsOcupados = 0;
+									for(int j=0; j<threads.length;j++)
+									{
+										if (threads[j]!=null && threads[j].isAlive())
+										{
+											nThreadsOcupados++;
+											System.out.println("Threads ocupados antes: "+ nThreadsOcupados);
+										}
+									}
+									
+									if (indicadorAsociado!=null && !indicadorAsociado.ejecutado() && !indicadorAsociado.ejecutando() && !indicadorAsociado.esDependiente())
+									{ 
+										indicadorAsociado.parametrosIndicador();
+										//Ejecuto el indicador
+										if (num_threads_max<=1)
+											indicadorAsociado.ejecutar();
+										else
+										{
+											Thread th = new Thread(indicadorAsociado);
+											th.start();
+											threads[nPosicionThreadLibre] = th;
+											
+											try {
+												Thread.sleep(100);
+											} catch (InterruptedException e) {
+												// TODO Auto-generated catch block
+												e.printStackTrace();
+											}
+										}
+										System.out.println("Arranco nuevo hilo para el indicador " + indicadorAsociado.getIndicador().getNombre() + " | " + indicadorAsociado.getEstado() + " | " + indicadorAsociado.toString() + " | en la posicion " + nPosicionThreadLibre);
+									}
+									else if (indicadorAsociado!=null && indicadorAsociado.ejecutado() && indicadorAsociado.getResultadoEjecucion()!=null && indicadorAsociado.getResultadoEjecucion().size()==0)
+									{
+										indicador.setEstado(IIndicadorProxy.ESTADO_EJECUTADO);
+										nThreadsOcupados = 0;
+										for(int j=0; j<threads.length;j++)
+										{
+											if (threads[j]!=null && threads[j].isAlive())
+												nThreadsOcupados++;
+										}
+										System.out.println("Threads ocupados antes de la notificacion de EJECUTADO: "+nThreadsOcupados);
+									}
+									
+									nThreadsOcupados = 0;
+									for(int j=0; j<threads.length;j++)
+									{
+										if (threads[j]!=null && threads[j].isAlive())
+											nThreadsOcupados++;
+									}
+									System.out.println("Threads ocupados despues: "+ nThreadsOcupados);
+									
+								}
+								else
+								{
+									try {
+										Thread.sleep(5000);
+									} catch (InterruptedException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
+							}
+						}
+						
+						int nThreadsOcupados = 0;
+						for(int j=0; j<threads.length;j++)
+						{
+							if (threads[j]!=null && threads[j].isAlive())
+							{
+								nThreadsOcupados++;
+							}
+						}
+						System.out.println("Threads ocupados despues de salir del bucle: "+ nThreadsOcupados);
+						
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					
+					Object valParam = new Object();
+					if (tramos[1].equals("ROWCOUNT"))
+						valParam = indicador.getResultadoEjecucion()==null?-1:indicador.getResultadoEjecucion().size();
+					else
+					{
+						if (indicador.getResultadoEjecucion()!=null && indicador.getResultadoEjecucion().size()>0)
+						{
+							Object[] linea = indicador.getResultadoEjecucion().elementAt(0);
+							int c = 0;
+							while (c < indicador.getIndicador().getResultado().length) {
+								if (tramos[1].equals(indicador.getIndicador().getResultado()[c])) {
+									valParam = linea[c];
+									break;
+								}
+								c++;
+							}
+						}
+					}
+					op.setResultado(valParam);
+					interpretado = true;
+				}
+				else
+				{
+					Object valParam = new Object();
+					if (tramos[1].equals("ROWCOUNT"))
+						valParam = indicador.getResultadoEjecucion()==null?0:indicador.getResultadoEjecucion().size();
+					else
+					{
+						if (indicador.getResultadoEjecucion()!=null && indicador.getResultadoEjecucion().size()>0)
+						{
+							Object[] linea = indicador.getResultadoEjecucion().elementAt(0);
+							int c = 0;
+							while (c < indicador.getIndicador().getResultado().length) {
+								if (tramos[1].equals(indicador.getIndicador().getResultado()[c])) {
+									valParam = linea[c];
+									break;
+								}
+								c++;
+							}
+						}
+					}
+					op.setResultado(valParam);
+					interpretado = true;
+				}
+				
+				if (indicador.getResultadoEjecucion()==null || indicador.getResultadoEjecucion().size()==0)
+					interpretado = false;
+				
+			} 
+			else 
+			{
+				if (op.getTipo() == Comunes.tpValor) {
+					if (op.getTipoValor() == Comunes.tpVlBoolean) {
+						op.setResultado(Boolean.parseBoolean(op.getNombre()));
+						interpretado = true;
+					} else {
+						if (op.getTipoValor() == Comunes.tpVlString) {
+							op.setResultado(op.getNombre());
+							interpretado = true;
+						} else {
+							if (op.getTipoValor() == Comunes.tpVlInt) {
+								op.setResultado(Integer.parseInt(op.getNombre()));
+								interpretado = true;
+							} 
+						}
+					}
+					
+				}				
+			}
+		}
+		
+		return interpretado;
+	}	
 }

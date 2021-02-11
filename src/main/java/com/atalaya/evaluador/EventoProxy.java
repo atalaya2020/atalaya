@@ -1,5 +1,7 @@
 package com.atalaya.evaluador;
 
+import java.util.Vector;
+
 import org.springframework.web.client.RestTemplate;
 
 import com.modelodatos.Evento;
@@ -10,7 +12,7 @@ public class EventoProxy {
 
 	private Evento evento;
 	private String resultadoEjecucion;
-	
+
 	public Evento getEvento() {
 		return evento;
 	}
@@ -28,12 +30,12 @@ public class EventoProxy {
 		evento = new Evento();
 		// TODO Auto-generated constructor stub	
 	}
-	
+		
 	public void generarEvento () {
 		
 		if (this.evento.getTipo().equals("WS")) {							// Llamada a un Web Service
 			llamaWebService();
-		}			
+		}
 	}
 	
 	public String getResultadoEjecucion() {
@@ -42,7 +44,7 @@ public class EventoProxy {
 	public void setResultadoEjecucion(String resultadoEjecucion) {
 		this.resultadoEjecucion = resultadoEjecucion;
 	}
-
+	
 	private boolean llamaWebService() {
 		
 		boolean llamada = false;
@@ -53,12 +55,15 @@ public class EventoProxy {
 			sComando = sComando.replaceFirst("-param-", this.evento.getParametros().get(i).getValor());
 		}
 		
-		String sUrl = "http://wsValoracion:8080/"+sComando;
+		System.out.println("comando:"+sComando);
+		
+		//String sUrl = "http://wsValoracion:8080/"+sComando;
+		//String sUrl = "http://localhost:8081/"+sComando;
 		String sResultado = "";
 		
 		try
 		{
-			sResultado=  new RestTemplate().getForObject(sUrl, String.class);
+			sResultado=  new RestTemplate().getForObject(sComando, String.class);
 			llamada = true;
 		}
 		catch (Exception e)
@@ -66,9 +71,11 @@ public class EventoProxy {
 			e.printStackTrace();
 		}
 		
+		System.out.println("resultado:"+sResultado);
+		
 		try
 		{
-			this.setResultadoEjecucion(new RestTemplate().getForObject(sUrl, String.class));
+			this.setResultadoEjecucion(new RestTemplate().getForObject(sComando, String.class));
 			llamada = true;
 		}
 		catch (Exception e)

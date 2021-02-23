@@ -11,70 +11,52 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.modelodatos.Indicador;
-import com.modelodatos.Parametro;
 
 
-public class IndicadorProxy implements IIndicadorProxy, Runnable  {
-	
-	private static Logger log = null;
-	
-	private Vector<Object[]> resultadoEjecucion;
-	private volatile String estado;	//Almacena el estado en el que se encuentra el indicador
-	private long crono;
-	private int indice;
-
-	private boolean autoGenerado = false;
+public class IndicadorProxy extends Ejecutable implements Runnable  {
 	
 	private Indicador indicador;
-	public static Hashtable<String,IndicadorProxy> indicadoresProxy;
+	
+	private int indice; 							//Exclusivo de indicadores bucle, define con que posicion del indicador padre está relacionado
+	private volatile int countEjecutado;			//Exclusivo de indicadores bucle, define cuantos de los indicadores bucle pasado a estado EJECUTADO 
+
+	private boolean autoGenerado = false;
 	private String nombreIndicadorPadre = null; //nombre del indicador donde queremos alamcenar el resultado de este indicador, solo utilizado por los indicadores autogenerados
+	
+	public final String TIPO_QUERY = "Query"; 	//Este tipo de indicador define una query con bind variables que pueden tomar valores fijos o dinamicos
+	public final String TIPO_BUCLE = "Bucle";	//Este tipo de alias define una relacion entre alias tipo para cada elemento del alias "a" aplica el alias "b" 
+	public final String TIPO_WS = "WS"; 		//Este tipo de indicador define un recurso tipo WebService
+	
+	String cabeceralog;
 
 	public IndicadorProxy(Indicador ind)
 	{
-		log = LoggerFactory.getLogger(IndicadorProxy.class);
-		
-		resultadoEjecucion = new Vector<Object[]>();
-		estado = IIndicadorProxy.ESTADO_NOEJEUCTADO;
-		crono = Calendar.getInstance().getTimeInMillis();
-		indice = -1;
-		
+		setEstado(ESTADO_NOEJEUCTADO);
+
+		countEjecutado = 0;
 		indicador = ind;
-		if (indicadoresProxy==null)
-			indicadoresProxy = new Hashtable<String,IndicadorProxy>();
 		
-		indicadoresProxy.put(ind.getNombre(), this);
+		setHashCode(hashCode());
+		cabeceralog = "Indicador " + ind.getNombre() + "|" + this.getHashCode() + ":";
 	}
 	
 	//Este constructor crea objetos IndicadorProxy no almacenados en el atributo de clase indicadoresProxy, no son visibles por el resto de indicadores
 	public IndicadorProxy(Indicador ind, boolean autoGenerado, String nombreIndicadorPadre)
 	{
-		log = LoggerFactory.getLogger(IndicadorProxy.class);
+		setEstado(ESTADO_NOEJEUCTADO);
 		
-		resultadoEjecucion = new Vector<Object[]>();
-		estado = IIndicadorProxy.ESTADO_NOEJEUCTADO;
-		crono = Calendar.getInstance().getTimeInMillis();
 		indice = 0;
-		
 		indicador = ind;
 		
 		this.autoGenerado = autoGenerado;
 		this.nombreIndicadorPadre = nombreIndicadorPadre;
-	}
-	
-	public Vector<Object[]> getResultadoEjecucion() {
-		return resultadoEjecucion;
-	}
-	public void setResultadoEjecucion(Vector<Object[]> resultadoEjecucion) {
-		this.resultadoEjecucion = resultadoEjecucion;
+
+		setHashCode(hashCode());
+		cabeceralog = "Indicador auto " + ind.getNombre() + "|" + this.getHashCode() + ":";
 	}
 	
 	public Indicador getIndicador() {
@@ -84,49 +66,13 @@ public class IndicadorProxy implements IIndicadorProxy, Runnable  {
 	public void setIndicador(Indicador indicador) {
 		this.indicador = indicador;
 	}
-	
-	public synchronized String getEstado() {
-		return this.estado;
-	}
-
-	public synchronized void setEstado(String estado) {
-		this.estado = estado;
-	}
-	
-	public static Hashtable<String, IndicadorProxy> getIndicadoresProxy() {
-		return indicadoresProxy;
-	}
-	
+		
 	public void setIndice(int indice) {
 		this.indice = indice;
 	}
 	
 	public int getIndice() {
 		return this.indice;
-	}
-	
-	public boolean noejecutado() {
-		boolean noejecutado = false;
-		if (this.getEstado().equals(IIndicadorProxy.ESTADO_NOEJEUCTADO))
-			noejecutado=true;
-		
-		return noejecutado;
-	}
-	
-	public boolean ejecutado() {
-		boolean ejecutado = false;
-		if (this.getEstado().equals(IIndicadorProxy.ESTADO_EJECUTADO))
-			ejecutado=true;
-		
-		return ejecutado;
-	}
-	
-	public boolean ejecutando() {
-		boolean ejecutando = false;
-		if (this.getEstado().equals(IIndicadorProxy.ESTADO_EJECUTANDO))
-			ejecutando=true;
-		
-		return ejecutando;
 	}
 	
 	public boolean isAutoGenerado() {
@@ -145,6 +91,14 @@ public class IndicadorProxy implements IIndicadorProxy, Runnable  {
 		this.nombreIndicadorPadre = nombreIndicadorPadre;
 	}
 	
+	public synchronized int getCountEjecutado() {
+		return this.countEjecutado;
+	}
+
+	public synchronized void setCountEjecutado() {
+		this.countEjecutado++;
+	}
+	
 	public void run()
 	{
 		ejecutar();
@@ -152,249 +106,268 @@ public class IndicadorProxy implements IIndicadorProxy, Runnable  {
 	
 	public boolean ejecutar() {
 		
+		
 		if (this.noejecutado())
 		{
-			this.setEstado(IIndicadorProxy.ESTADO_EJECUTANDO);
-			
-			if (this.getIndicador().getTipo().equals(IIndicadorProxyType.tipo_bucle)
-				|| this.getIndicador().getTipo().equals(IIndicadorProxyType.tipo_ws))
-			{
-				IIndicadorProxyType indicadorProxyType = null;
-				
-				try 
-				{
-					indicadorProxyType = IndicadorProxyType.getInstanceByAliasType(this.getIndicador().getTipo());
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				try 
-				{
-					indicadorProxyType.ejecutar(this);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-			}
-			else
-			{
-				ResultSet rs = null;
+			this.setEstado(ESTADO_EJECUTANDO);
+			setCrono(Calendar.getInstance().getTimeInMillis());
+			log.info(cabeceralog + "Ejecutando indicador...");
+			log.info(cabeceralog + this.getIndicador().getDescripcion());
 		
-				if (this.indicador.getTipo().equalsIgnoreCase("Query")) 
+			//Mientras no haya finalizado su ejecucion debo controlar su interrupcion
+			while (!this.ejecutado())
+			{
+				if (this.getIndicador().getTipo().equals(IIndicadorProxyType.tipo_bucle)
+					|| this.getIndicador().getTipo().equals(IIndicadorProxyType.tipo_ws))
 				{
-					Connection conexion = null;
+					IIndicadorProxyType indicadorProxyType = null;
 					
-					try {
-		
-						conexion = DriverManager.getConnection(
-								"jdbc:mysql://localhost:3306/alumnadodb?useServerPrepStmts=true&useSSL=false&allowPublicKeyRetrieval=true",
-								//"jdbc:mysql://alumnadodb:3306/alumnadodb?useServerPrepStmts=true&useSSL=false&allowPublicKeyRetrieval=true",
-								"root", "atalaya"); 
-		 
-						PreparedStatement pstmt = conexion.prepareStatement(this.indicador.getComando());
-						for(int i = 0; i< this.indicador.getParametros().size(); i++) {
-							if(this.indicador.getParametros().get(i).getTipo().equalsIgnoreCase("String")) {
-								pstmt.setString(i+1, this.indicador.getParametros().get(i).getValor());
-							}
-							else if(this.indicador.getParametros().get(i).getTipo().equalsIgnoreCase("Entero")) {
-								pstmt.setInt(i+1,Integer.parseInt(this.indicador.getParametros().get(i).getValor()));
-							}
-							else if(this.indicador.getParametros().get(i).getTipo().equalsIgnoreCase("BigDecimal")) {
-								pstmt.setBigDecimal(i+1,new BigDecimal(this.indicador.getParametros().get(i).getValor()));
-							}
-							else if(this.indicador.getParametros().get(i).getTipo().equalsIgnoreCase("Date")) {						
-								pstmt.setString(i+1, this.indicador.getParametros().get(i).getValor());
-							}
-							else {
-								System.out.println("Introduce un tipo válido");
-							}
-						}
-		
-						rs = pstmt.executeQuery();
-		
-						ResultSetMetaData metadata=null;
-		
-						try
-						{
-							metadata = rs.getMetaData();
-		
-		
-						} catch (SQLException e)
-						{
-							return false;
-						}
-		
-						int num_columnas_extraccion;
-		
-						boolean vacio = false;
-		
-						int num_columnas = metadata.getColumnCount();
-		
-						if (this.indicador.getResultado() == null ||  this.indicador.getResultado().length == 0)
-						{
-							num_columnas_extraccion = num_columnas;
-							this.indicador.setResultado(new String[num_columnas]);
-							vacio = true;
-						}
-						else
-						{
-							num_columnas_extraccion = this.indicador.getResultado().length;
-						}
-		
-						int[] column_types = new int[num_columnas];
-						
-						for(int i=0; i<num_columnas_extraccion; i++)
-						{
-							if(vacio) {
-								try
-								{
-									String column_name = metadata.getColumnName(i+1);
-									this.indicador.getResultado()[i]=column_name;
-									column_types[i] = metadata.getColumnType(i+1);
-								}
-								catch(SQLException e)
-								{
-								}
-							}
-							else {
-		
-								boolean encontrado = false;
-								for (int j=0;j<num_columnas;j++)
-								{
-									String column_name = metadata.getColumnName(j+1);
-									int coltype = metadata.getColumnType(j+1);
-									if (column_name.equalsIgnoreCase(this.indicador.getResultado()[i]))
-									{
-										column_types[i] = coltype;
-										encontrado = true;
-										break;
-									}
-								}
-							}
-						}
-						while(rs.next())
-						{
-							Object[] row = new Object[num_columnas_extraccion];
-							for(int i=0;i<num_columnas_extraccion;i++)
-							{
-								Object value = new Object();
-								if (this.indicador.getResultado()[i] == null)
-								{
-									value=null;
-									continue;
-								}
-								
-								if (column_types[i] == Types.TIMESTAMP)
-								{
-									try
-									{
-										value = new Timestamp(rs.getTimestamp(this.indicador.getResultado()[i]).getTime());
-									}
-									catch (NullPointerException e)
-									{
-										value = null;
-										
-									} catch (SQLException e)
-									{
-										value = null;
-										return false;
-									}
-								}
-								
-								else if (column_types[i] == Types.INTEGER)
-								{
-									try
-									{
-										value  = rs.getInt(this.indicador.getResultado()[i]);
-		
-									}
-									catch (NullPointerException e)
-									{
-										value = null;
-									} catch (SQLException e) {
-		
-										value = null;
-										return false;
-									}
-								}
-		
-		
-								else if (column_types[i] == Types.VARCHAR) {
-		
-									try
-									{
-										value  = rs.getString(this.indicador.getResultado()[i]);
-		
-									}
-									catch (NullPointerException e)
-									{
-										value = null;
-									} catch (SQLException e) {
-		
-										value = null;
-										return false;
-									}
-		
-								}
-								else {
-									try
-									{
-										value = rs.getObject(this.indicador.getResultado()[i]);
-									} catch (SQLException e)
-									{
-		
-										value = null;
-									}
-								}
-								row[i] = value;
-							}
-							this.resultadoEjecucion.add(row);
-						}
-						
-						this.setEstado(IIndicadorProxy.ESTADO_EJECUTADO);
-		
-					} catch (Exception e) {
-						e.printStackTrace();
-						this.setEstado(IIndicadorProxy.ESTADO_EJECUTADO);
-					}
-					finally
+					try 
 					{
-						try {
-							conexion.close();
-						} catch (SQLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						indicadorProxyType = IndicadorProxyType.getInstanceByAliasType(this.getIndicador().getTipo());
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					}
-				}
-			}
-			
-			//Si se trata de un indice autogenerado, por un bucle, tenemos que incorporar a cada uno de los resultados obtenidos del indicador_a el resultado del indicador_b
-			if (this.autoGenerado && this.getIndice()>-1)
-			{
-				Object[] linea = null;
-				Object[] linea_a = IndicadorProxy.getIndicadoresProxy().get(this.getNombreIndicadorPadre()).getResultadoEjecucion().elementAt(this.getIndice());
-				
-				if (this.getResultadoEjecucion()!=null && this.getResultadoEjecucion().size()>0)
-				{
-					Object[] linea_b = this.getResultadoEjecucion().elementAt(0);
-						
-					linea = new Object[linea_a.length+linea_b.length];
-					for (int i=0;i<linea_a.length;i++)
-						linea[i] = linea_a[i];
-						
-					for (int i=0;i<linea_b.length;i++)
-						linea[linea_a.length+i] = linea_b[i];
+					
+					try 
+					{
+						indicadorProxyType.ejecutar(this);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
 				}
 				else
-					//AGUJERO se deberia crear un objeto con la longitud de campos correspondiente al numero de elementos que el atributo resultado del indicador_b
-					linea = linea_a;
-				
-				IndicadorProxy.getIndicadoresProxy().get(this.getNombreIndicadorPadre()).getResultadoEjecucion().setElementAt(linea, this.getIndice());
-			}
+				{
+					ResultSet rs = null;
 			
+					if (this.indicador.getTipo().equalsIgnoreCase("Query")) 
+					{
+						Connection conexion = null;
+						
+						try {
+			
+							conexion = DriverManager.getConnection(
+									"jdbc:mysql://localhost:3306/alumnadodb?useServerPrepStmts=true&useSSL=false&allowPublicKeyRetrieval=true",
+									//"jdbc:mysql://alumnadodb:3306/alumnadodb?useServerPrepStmts=true&useSSL=false&allowPublicKeyRetrieval=true",
+									"root", "atalaya"); 
+			 
+							PreparedStatement pstmt = conexion.prepareStatement(this.indicador.getComando());
+							for(int i = 0; i< this.indicador.getParametros().size(); i++) {
+								if(this.indicador.getParametros().get(i).getTipo().equalsIgnoreCase("String")) {
+									pstmt.setString(i+1, this.indicador.getParametros().get(i).getValor());
+								}
+								else if(this.indicador.getParametros().get(i).getTipo().equalsIgnoreCase("Entero")) {
+									pstmt.setInt(i+1,Integer.parseInt(this.indicador.getParametros().get(i).getValor()));
+								}
+								else if(this.indicador.getParametros().get(i).getTipo().equalsIgnoreCase("BigDecimal")) {
+									pstmt.setBigDecimal(i+1,new BigDecimal(this.indicador.getParametros().get(i).getValor()));
+								}
+								else if(this.indicador.getParametros().get(i).getTipo().equalsIgnoreCase("Date")) {						
+									pstmt.setString(i+1, this.indicador.getParametros().get(i).getValor());
+								}
+								else {
+									System.out.println("Introduce un tipo válido");
+								}
+							}
+			
+							rs = pstmt.executeQuery();
+			
+							ResultSetMetaData metadata=null;
+			
+							try
+							{
+								metadata = rs.getMetaData();
+			
+			
+							} catch (SQLException e)
+							{
+								return false;
+							}
+			
+							int num_columnas_extraccion;
+			
+							boolean vacio = false;
+			
+							int num_columnas = metadata.getColumnCount();
+			
+							if (this.indicador.getResultado() == null ||  this.indicador.getResultado().length == 0)
+							{
+								num_columnas_extraccion = num_columnas;
+								this.indicador.setResultado(new String[num_columnas]);
+								vacio = true;
+							}
+							else
+							{
+								num_columnas_extraccion = this.indicador.getResultado().length;
+							}
+			
+							int[] column_types = new int[num_columnas];
+							
+							for(int i=0; i<num_columnas_extraccion; i++)
+							{
+								if(vacio) {
+									try
+									{
+										String column_name = metadata.getColumnName(i+1);
+										this.indicador.getResultado()[i]=column_name;
+										column_types[i] = metadata.getColumnType(i+1);
+									}
+									catch(SQLException e)
+									{
+									}
+								}
+								else {
+			
+									boolean encontrado = false;
+									for (int j=0;j<num_columnas;j++)
+									{
+										String column_name = metadata.getColumnName(j+1);
+										int coltype = metadata.getColumnType(j+1);
+										if (column_name.equalsIgnoreCase(this.indicador.getResultado()[i]))
+										{
+											column_types[i] = coltype;
+											encontrado = true;
+											break;
+										}
+									}
+								}
+							}
+							while(rs.next())
+							{
+								Object[] row = new Object[num_columnas_extraccion];
+								for(int i=0;i<num_columnas_extraccion;i++)
+								{
+									Object value = new Object();
+									if (this.indicador.getResultado()[i] == null)
+									{
+										value=null;
+										continue;
+									}
+									
+									if (column_types[i] == Types.TIMESTAMP)
+									{
+										try
+										{
+											value = new Timestamp(rs.getTimestamp(this.indicador.getResultado()[i]).getTime());
+										}
+										catch (NullPointerException e)
+										{
+											value = null;
+											
+										} catch (SQLException e)
+										{
+											value = null;
+											return false;
+										}
+									}
+									
+									else if (column_types[i] == Types.INTEGER)
+									{
+										try
+										{
+											value  = rs.getInt(this.indicador.getResultado()[i]);
+			
+										}
+										catch (NullPointerException e)
+										{
+											value = null;
+										} catch (SQLException e) {
+			
+											value = null;
+											return false;
+										}
+									}
+			
+			
+									else if (column_types[i] == Types.VARCHAR) {
+			
+										try
+										{
+											value  = rs.getString(this.indicador.getResultado()[i]);
+			
+										}
+										catch (NullPointerException e)
+										{
+											value = null;
+										} catch (SQLException e) {
+			
+											value = null;
+											return false;
+										}
+			
+									}
+									else {
+										try
+										{
+											value = rs.getObject(this.indicador.getResultado()[i]);
+										} catch (SQLException e)
+										{
+			
+											value = null;
+										}
+									}
+									row[i] = value;
+								}
+								
+								if (this.getResultadoEjecucion()!=null)
+									this.getResultadoEjecucion().add(row);
+								else
+								{
+									this.setResultadoEjecucion(new Vector<Object[]>());
+									this.getResultadoEjecucion().add(row);
+								}
+								
+								this.setDescripcionEstado(FIN_OK);
+							}
+							
+							this.setEstado(ESTADO_EJECUTADO);
+			
+						} catch (Exception e) {
+							e.printStackTrace();
+							this.setEstado(ESTADO_EJECUTADO);
+							this.setDescripcionEstado(FIN_OK_SIN_RESULTADO);
+						}
+						finally
+						{
+							try {
+								conexion.close();
+							} catch (SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+				
+				//Si se trata de un indice autogenerado, por un bucle, tenemos que incorporar a cada uno de los resultados obtenidos del indicador_a el resultado del indicador_b
+				if (this.autoGenerado && this.getIndice()>-1)
+				{
+					Object[] linea = null;
+					Object[] linea_a = getIndicadores().get(this.getNombreIndicadorPadre()).getResultadoEjecucion().elementAt(this.getIndice());
+					
+					if (this.getResultadoEjecucion()!=null && this.getResultadoEjecucion().size()>0)
+					{
+						Object[] linea_b = this.getResultadoEjecucion().elementAt(0);
+							
+						linea = new Object[linea_a.length+linea_b.length];
+						for (int i=0;i<linea_a.length;i++)
+							linea[i] = linea_a[i];
+							
+						for (int i=0;i<linea_b.length;i++)
+							linea[linea_a.length+i] = linea_b[i];
+					}
+					else
+						//AGUJERO se deberia crear un objeto con la longitud de campos correspondiente al numero de elementos que el atributo resultado del indicador_b
+						linea = linea_a;
+					
+					getIndicadores().get(this.getNombreIndicadorPadre()).getResultadoEjecucion().setElementAt(linea, this.getIndice());
+					getIndicadores().get(this.getNombreIndicadorPadre()).setCountEjecutado();
+					this.setDescripcionEstado(FIN_OK);
+				}
+			}
 			this.setEstado(ESTADO_EJECUTADO);
 		}
 		
@@ -411,16 +384,16 @@ public class IndicadorProxy implements IIndicadorProxy, Runnable  {
 				tramos = this.getIndicador().getParametros().get(p).getValor().split("\\.");
 				String nombreIndicador = tramos[0].substring(1);
 				
-				if (indicadoresProxy.containsKey(nombreIndicador)) 
+				if (getIndicadores().containsKey(nombreIndicador)) 
 				{
-					if (indicadoresProxy.get(nombreIndicador).ejecutar() && (indicadoresProxy.get(nombreIndicador).getResultadoEjecucion()!=null) && indicadoresProxy.get(nombreIndicador).getResultadoEjecucion().size()>0) 
+					if (getIndicadores().get(nombreIndicador).ejecutar() && (getIndicadores().get(nombreIndicador).getResultadoEjecucion()!=null) && getIndicadores().get(nombreIndicador).getResultadoEjecucion().size()>0) 
 					{					
 						String columna = tramos[1];
 						Object valParam = new Object();
-						Object[] linea = indicadoresProxy.get(nombreIndicador).getResultadoEjecucion().elementAt(0);
+						Object[] linea = getIndicadores().get(nombreIndicador).getResultadoEjecucion().elementAt(0);
 						int c = 0;
-						while (c < indicadoresProxy.get(nombreIndicador).getIndicador().getResultado().length ) {
-							if (columna.equals(indicadoresProxy.get(nombreIndicador).getIndicador().getResultado()[c])) {
+						while (c < getIndicadores().get(nombreIndicador).getIndicador().getResultado().length ) {
+							if (columna.equals(getIndicadores().get(nombreIndicador).getIndicador().getResultado()[c])) {
 								valParam = linea[c];
 								break;
 							}
@@ -436,13 +409,10 @@ public class IndicadorProxy implements IIndicadorProxy, Runnable  {
 	public boolean esDependiente()
 	{
 		boolean esDependiente = false;
-		System.out.println("Valido si el indicador depende de otro indicador "+ this.getIndicador().getNombre());
 		
 		//Recorro los parametros del indicador para averiguar si todos su parametros estan interpretados o no
 		for (int p = 0; p < this.getIndicador().getParametros().size(); p++) 
 		{			
-			System.out.println("parametro "+ p + ":" + this.getIndicador().getParametros().get(p).getValor());
-			
 			//Identifico aquellos parametros tipo Indicador, comienzan por #
 			if (this.getIndicador().getParametros().get(p).getValor().startsWith(Comunes.tpMarcaIndicador)) 
 			{
@@ -451,16 +421,13 @@ public class IndicadorProxy implements IIndicadorProxy, Runnable  {
 				String nombreIndicador = tramos[0].substring(1);
 				
 				//Busco en la lista de indicadores
-				if (IndicadorProxy.getIndicadoresProxy().containsKey(nombreIndicador))
+				if (getIndicadores().containsKey(nombreIndicador))
 				{
-					if (IndicadorProxy.getIndicadoresProxy().get(nombreIndicador).noejecutado() || IndicadorProxy.getIndicadoresProxy().get(nombreIndicador).ejecutando())
+					if (getIndicadores().get(nombreIndicador).noejecutado() || getIndicadores().get(nombreIndicador).ejecutando())
 					{
 						esDependiente = true;
-						System.out.println("ES DEPENDIENTE . El parametro " + this.getIndicador().getParametros().get(p).getNombre() + " apunta al indicador " + nombreIndicador + " y tiene estado: " + IndicadorProxy.getIndicadoresProxy().get(nombreIndicador).getEstado());
 						break;
 					}
-					else
-						System.out.println("NO ES DEPENDIENTE . El parametro " + this.getIndicador().getParametros().get(p).getNombre() + " apunta al indicador " + nombreIndicador + " y tiene estado: " + IndicadorProxy.getIndicadoresProxy().get(nombreIndicador).getEstado());
 				}
 			}
 		}
@@ -486,54 +453,17 @@ public class IndicadorProxy implements IIndicadorProxy, Runnable  {
 				
 				String nombreIndicador = tramos[0].substring(1);
 				//Busco en la lista de indicadores
-				if ((nombreIndicador.equals("CURSOR") || IndicadorProxy.getIndicadoresProxy().containsKey(nombreIndicador)) && !listaInd.contains(nombreIndicador)) 
+				if ((nombreIndicador.equals("CURSOR") || getIndicadores().containsKey(nombreIndicador)) && !listaInd.contains(nombreIndicador)) 
 				{
 					listaInd.add(nombreIndicador);
+					log.info(cabeceralog+" Añadimos a la lista de indicadores dependientes:"+nombreIndicador);
 					//Llamamos recursivamente a este metodo hasta llegar al nivel de profundidad necesario y almacenando en un lista todos aquellos indicadores que esten asociados al indicador inicial
-					IndicadorProxy.getIndicadoresProxy().get(nombreIndicador).ObtenerIndicadorAsociado(listaInd);
+					getIndicadores().get(nombreIndicador).ObtenerIndicadorAsociado(listaInd);
 				}
 			}
 		}
 		
 		return listaInd;
-	}
-	
-	public String volcado (String modo)
-	{
-		StringBuffer volcado = new StringBuffer();
-		
-		if (this.getResultadoEjecucion()!=null && this.getResultadoEjecucion().size()>0)
-		{
-			if (modo.equals("html"))
-				volcado.append("</br>");
-			
-			Object[] linea = null;
-			for (int i=0;i<this.getResultadoEjecucion().size();i++)
-			{
-				linea = this.getResultadoEjecucion().get(i);
-				
-				if (linea!=null && linea.length>0)
-				{
-					if (modo.equals("html"))
-						volcado.append("<br>");
-					
-					for (int j=0; j<linea.length;j++)
-					{
-						volcado.append(linea[j]);
-						volcado.append("|");
-					}
-					
-					if (modo.equals("html"))
-						volcado.append("</br>");
-					else
-						volcado.append("\\n");
-				}
-			}
-		}
-		else 
-			volcado = volcado.append("");
-		
-		return volcado.toString();
 	}
 
 	public boolean validar() {

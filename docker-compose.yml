@@ -1,0 +1,67 @@
+version: '3'
+
+services:
+
+  atalayadb:   
+    image: mongo:latest
+    ports:
+        - 27017:27017
+    container_name: 'atalayadb'
+    volumes: 
+      - atalayadb:/data/db/:rw
+    networks:
+        - web
+  
+  alumnadodb: 
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: 'atalaya'
+    ports:
+        - 3306:3306
+    volumes: 
+      - mysql-alumnado:/var/lib/alumnado
+    container_name: 'alumnadodb'
+    networks:
+       - web
+  
+  atalaya:
+    image: atalaya:v1
+    depends_on: 
+      - atalayadb 
+    ports: 
+      - 8080:8080
+    environment:
+      - SERVICE_PORTS=8080
+    container_name: 'atalaya'
+    networks: 
+     - web
+
+  wsValoracion: 
+    image: webservice:v1
+    ports:
+        - 8081:8080
+    container_name: 'wsValoracion'
+    networks:
+        - web
+  proxy:
+    image: myhaproxy
+    depends_on:
+      - atalaya
+      - atalayadb
+      - wsValoracion
+      - alumnadodb
+    environment:
+      - BALANCE=leastconn
+    ports:
+      - 80:80
+    container_name: 'proxy'
+    networks:
+      - web
+    
+volumes:
+  mysql-alumnado:
+  atalayadb:
+
+networks:
+  web:
+    #driver: overlay

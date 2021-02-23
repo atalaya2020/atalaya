@@ -10,11 +10,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.context.request.RequestContextListener;
 
-import com.atalaya.evaluador.Evaluador;
 import com.atalaya.evaluador.AnalisisProxy;
-import com.atalaya.evaluador.ParametroProxy;
+import com.atalaya.evaluador.Ejecutable;
+//import com.atalaya.evaluador.ParametroProxy;
 import com.modelodatos.Analisis;
 import com.modelodatos.Parametro;
 
@@ -33,6 +32,8 @@ public class AtalayaApplication {
 	public String quiensoy() {
 		
 		return String.format(" %s!", "Soy un atalaya cualquiera");
+		
+		
 	}	
 			
 	@GetMapping("/ejecutaranalisis")
@@ -41,7 +42,8 @@ public class AtalayaApplication {
 		ArrayList<Parametro> anaParams = new ArrayList<Parametro>(); 
 		String nombreAnalisis = null;
 		
-		Iterator itParams = params.keySet().iterator();
+		//Recuperamos los parametros recibidos en la peticion http
+		Iterator<String> itParams = params.keySet().iterator();
 		while (itParams.hasNext()) {
 			String clave = itParams.next().toString();
 			if (clave.equalsIgnoreCase("nombreAnalisis")) {
@@ -57,18 +59,15 @@ public class AtalayaApplication {
 		
 		if (nombreAnalisis!=null)
 		{
-			System.out.println("nombre: "+nombreAnalisis);
+			//Recuperamos de bbdd el analisis a interpretar
 			Analisis analisis = analisisrepo.findByNombre(nombreAnalisis);
 			
 			if (analisis!=null)
 			{
-				AnalisisProxy analisisproxy = new AnalisisProxy(analisis, anaParams) ;
+				AnalisisProxy analisisproxy = new AnalisisProxy(analisis, anaParams);
+				analisisproxy.ejecutar();
 				
-				Evaluador evalAnalisis = new Evaluador (analisisproxy);
-				StringBuffer mensaje = evalAnalisis.evaluarAnalisis();			
-				String resultado = mensaje.toString();
-				
-				return (resultado);
+				return (analisisproxy.volcadoResultado(Ejecutable.VOLCADO_HTML));
 			}
 			else
 				return String.format(" %s!", "NO Recuperado el analisis con nombre: "+ nombreAnalisis);

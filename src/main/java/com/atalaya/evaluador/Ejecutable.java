@@ -29,8 +29,8 @@ public abstract class Ejecutable {
 	private volatile String descripcion_estado;					//Almacena la descripcion del estado en el que se encuentra el analisis
 	private long crono;											//Almacena el momento en el que comienza la interpretacion un ejecutable
 
-	protected int numHilos = 5;									//Define el numero de hilos definido para la ejecucion
-	protected int tiempo_max = 300000;							//Define el tiempo maximo de ejecucion de un ejecutable
+	protected int numHilos = 5;								//Define el numero de hilos definido para la ejecucion
+	protected int tiempo_max = 600000;							//Define el tiempo maximo de ejecucion de un ejecutable
 	
 	protected static Logger log;								//log
 	private static long count = 0;								//Almacena un contador de instancias para la generacion del codigo hash del objeto
@@ -116,7 +116,7 @@ public abstract class Ejecutable {
 	}
 	
 	public void setIndicadores(Hashtable<String, IndicadorProxy> indicadores) {
-		this.indicadores = indicadores;
+		Ejecutable.indicadores = indicadores;
 	}
 
 	public void setResultadoEjecucion(Vector<Object[]> resultadoEjecucion) {
@@ -132,11 +132,12 @@ public abstract class Ejecutable {
 		
 		try {
 			this.finalize();
-			this.notifyAll();
 		} catch (Throwable e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		
 	}
 	
 	public String volcadoResultado (String modo)
@@ -213,7 +214,6 @@ public abstract class Ejecutable {
 		
 		//Obtenemos los hilos libres
 		int nThreadsOcupados = 0;
-		int nPosicionThreadLibre = 0;
 		
 		nThreadsOcupados = infoHilos("ocupados");
 		

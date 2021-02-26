@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 
 import com.modelodatos.Criterio;
@@ -63,7 +64,6 @@ public class CriterioProxy extends Ejecutable implements Runnable {
 			while(!this.ejecutado())
 			{			
 				CondicionMultiple multiple;
-				Condicion simple;
 		
 				ArrayList<String> errores = new ArrayList<String>();
 				
@@ -82,9 +82,7 @@ public class CriterioProxy extends Ejecutable implements Runnable {
 					multiple = evaluacion.get(i);
 					// Se obtienen los niveles de profundidad minimo y maximo de las condiciones  
 					if (multiple.getNivel() > maxNivel) { maxNivel = multiple.getNivel(); }
-					if (multiple.getNivel() < minNivel) { minNivel = multiple.getNivel(); }
-					
-					simple = multiple.getCondicion(); 
+					if (multiple.getNivel() < minNivel) { minNivel = multiple.getNivel(); }	
 				}
 				
 				// Para obtener el resultado de la condicion, se evalúan las condiciones simples de mayor a menor nivel de profundidad, teniendo en cuenta las relaciones definidas entre ellas 
@@ -124,6 +122,28 @@ public class CriterioProxy extends Ejecutable implements Runnable {
 		}
 		
 		return result;
+	}
+	
+	public void detener()
+	{
+		super.detener();
+		
+		if (indicadores!=null && indicadores.size()>0)
+		{
+			Enumeration<String> enumIndicadores = this.getIndicadores().keys();
+			//Recorremos todos los indicadores lanzados para este Analisis
+			while(enumIndicadores.hasMoreElements())
+			{
+				String nombreIndicador = (String)enumIndicadores.nextElement();
+				//Paramos los indicadores
+				if (this.getIndicadores().get(nombreIndicador).ejecutando())
+				{
+					//Forzamos su parada por haber superado el tiempo maximo de ejeucion
+					this.getIndicadores().get(nombreIndicador).detener();
+					log.info(cabeceralog+"Parado el indicador:" +nombreIndicador+ " por sobrepasar el tiempo maximo de ejecucion el criterio: " + this.getCriterio().getNombre() + tiempo_max);
+				}
+			}
+		}
 	}
 	
 	public boolean validar() {

@@ -1,6 +1,7 @@
 package com.atalaya.evaluador;
 
 public abstract class Comunes {
+	
 	public static final int tpIndErroneo = -1;
 	public static final int tpNoIndicador = 0;
 	public static final int tpIndicador	= 1;
@@ -16,4 +17,5 @@ public abstract class Comunes {
 	public static final String verdadero = "TRUE";
 	public static final String falso = "FALSE";
 	public static final String comillas = "" + (char) 34;
+	public static final String tpSeparador = "\\.";
 }

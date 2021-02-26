@@ -23,13 +23,16 @@ public class IndicadorProxy extends Ejecutable implements Runnable  {
 	
 	private int indice; 							//Exclusivo de indicadores bucle, define con que posicion del indicador padre está relacionado
 	private volatile int countEjecutado;			//Exclusivo de indicadores bucle, define cuantos de los indicadores bucle pasado a estado EJECUTADO 
-
+	protected ArrayList<IndicadorProxy> listaIndicadoresHijos = null; //Exclusivo de indicadores bucle, almacena el listado de indicadores hijos
+	
 	private boolean autoGenerado = false;
 	private String nombreIndicadorPadre = null; //nombre del indicador donde queremos alamcenar el resultado de este indicador, solo utilizado por los indicadores autogenerados
 	
 	public final String TIPO_QUERY = "Query"; 	//Este tipo de indicador define una query con bind variables que pueden tomar valores fijos o dinamicos
 	public final String TIPO_BUCLE = "Bucle";	//Este tipo de alias define una relacion entre alias tipo para cada elemento del alias "a" aplica el alias "b" 
 	public final String TIPO_WS = "WS"; 		//Este tipo de indicador define un recurso tipo WebService
+	
+	
 	
 	String cabeceralog;
 
@@ -139,7 +142,17 @@ public class IndicadorProxy extends Ejecutable implements Runnable  {
 					}
 					
 				}
-				else
+				else if (this.getIndicador().getTipo().equals(IIndicadorProxyType.tipo_volcado))
+				{
+					String comando = this.getIndicador().getComando();
+					String[] palabras = comando.split(" ");
+					
+					String nombreInd = palabras[1].substring(1);
+					IndicadorProxy ind = indicadores.get(nombreInd);
+					
+					ind.volcadoResultado("trazas");
+				}
+				else if (this.getIndicador().getTipo().equals(IIndicadorProxyType.tipo_query))
 				{
 					ResultSet rs = null;
 			
@@ -221,7 +234,6 @@ public class IndicadorProxy extends Ejecutable implements Runnable  {
 								}
 								else {
 			
-									boolean encontrado = false;
 									for (int j=0;j<num_columnas;j++)
 									{
 										String column_name = metadata.getColumnName(j+1);
@@ -229,7 +241,6 @@ public class IndicadorProxy extends Ejecutable implements Runnable  {
 										if (column_name.equalsIgnoreCase(this.indicador.getResultado()[i]))
 										{
 											column_types[i] = coltype;
-											encontrado = true;
 											break;
 										}
 									}
@@ -341,6 +352,7 @@ public class IndicadorProxy extends Ejecutable implements Runnable  {
 						}
 					}
 				}
+
 				
 				//Si se trata de un indice autogenerado, por un bucle, tenemos que incorporar a cada uno de los resultados obtenidos del indicador_a el resultado del indicador_b
 				if (this.autoGenerado && this.getIndice()>-1)
@@ -373,6 +385,22 @@ public class IndicadorProxy extends Ejecutable implements Runnable  {
 		
 		return true;
 
+	}
+	
+	public void detener()
+	{
+		super.detener();
+		
+		if (this.listaIndicadoresHijos!=null && this.listaIndicadoresHijos.size()>0)
+		{
+			for(int i=0;i<this.listaIndicadoresHijos.size();i++)
+			{
+				IndicadorProxy indHijo = this.listaIndicadoresHijos.get(i);
+				//Buscamos los indicadores autogenerados hijos 
+				indHijo.detener();
+				log.info(cabeceralog+"Parado el indicador hijo:" +indHijo.getIndice()+ " por sobrepasar el tiempo maximo de ejecucion "+ tiempo_max);
+			}
+		}
 	}
 	
 	public void parametrosIndicador() {

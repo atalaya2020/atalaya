@@ -21,7 +21,7 @@ public class AnalisisProxy extends Ejecutable implements Runnable {
 	private Analisis analisis;									//Almacena la definicion del analisis recuperado de bbdd
 	
 	private ArrayList<CriterioProxy> criterios;					//Almacena los criterios de un analisis
-	private ArrayList<EventoProxy> eventos;						//Almacena los eventos de un analisis
+	private ArrayList<IndicadorProxy> eventos;					//Almacena los eventos de un analisis
 	private ArrayList<Parametro> parametros;					//Almacena los parametros a utilizar para interpretar un analisis
 	
 	String cabeceralog;
@@ -34,11 +34,11 @@ public class AnalisisProxy extends Ejecutable implements Runnable {
 		this.criterios = criterios;
 	}	
 	
-	public ArrayList<EventoProxy> getEventos() {
+	public ArrayList<IndicadorProxy> getEventos() {
 		return eventos;
 	}
 	
-	public void setEventos(ArrayList<EventoProxy> eventos) {
+	public void setEventos(ArrayList<IndicadorProxy> eventos) {
 		this.eventos = eventos;
 	}	
 	
@@ -117,9 +117,10 @@ public class AnalisisProxy extends Ejecutable implements Runnable {
 			super.getIndicadores().put(analisis.getIndicadores().get(i).getNombre(), indProxy);
 		}
 		
-		this.eventos = new ArrayList<EventoProxy>();
-		for (int i = 0; i < analisis.getEventos().size(); i++) {
-			EventoProxy eveProxy = new EventoProxy(analisis.getEventos().get(i));
+		this.eventos = new ArrayList<IndicadorProxy>();
+		for (int i = 0; i < analisis.getEventos().size(); i++) 
+		{
+			IndicadorProxy eveProxy = new IndicadorProxy(analisis.getEventos().get(i));
 			this.eventos.add(i, eveProxy);
 		}
 		
@@ -152,11 +153,9 @@ public class AnalisisProxy extends Ejecutable implements Runnable {
 					//Paramos aquellos indicadores que han superado el tiempo maximo de ejecucion
 					if (this.getIndicadores().get(nombreIndicador).ejecutando())
 					{
-						IndicadorProxy ind = this.getIndicadores().get(nombreIndicador);
-						long time = ind.getCrono();
 						if ((ahora - this.getIndicadores().get(nombreIndicador).getCrono()) > tiempo_max) //TAREA añadir nuevo parametro de ejecucion a nivel de indicador TIEMPO MAX DE EJECUCION
 						{
-							//Forzamos su parada por haber supero del tiempo maximo de ejeucion
+							//Forzamos su parada por haber superado el tiempo maximo de ejeucion
 							this.getIndicadores().get(nombreIndicador).detener();
 							log.info(cabeceralog+"Parado el indicador:" +nombreIndicador+ " por sobrepasar el tiempo maximo de ejecucion "+ tiempo_max);
 						}
@@ -180,8 +179,7 @@ public class AnalisisProxy extends Ejecutable implements Runnable {
 					{
 						numCriEjecutadosOk++;
 						
-						eventosCriterio(criterio);
-						
+						this.lanzarEventos(criterio);
 					}
 					else if (criterio.getDescripcionEstado()==FIN_FORZADO)
 						numCriEjecutadosFinForzado++;
@@ -249,54 +247,26 @@ public class AnalisisProxy extends Ejecutable implements Runnable {
 		return volcado;
 	}
 	
-	public void eventosCriterio (CriterioProxy criProxy) {
-		// Recorre la lista de nombres de eventos del criterio para identificar y generar los eventos definidos en el analisis.
-			for (int e = 0; e < this.getEventos().size(); e++) {
-				for (int ec = 0; ec < criProxy.getCriterio().getEventos().length; ec++) {
-					if ( this.getEventos().get(e).getEvento().getNombre().equalsIgnoreCase(criProxy.getCriterio().getEventos()[ec])) {
-						if (this.getEventos().get(e).getEvento().getTipo().equals("VolcadoIndicador"))
-						{
-							String[] tramos = this.getEventos().get(e).getEvento().getComando().split(" ");
-							this.getEventos().get(e).setResultadoEjecucion(this.getIndicadores().get(tramos[1].substring(1)).volcadoResultado("plano"));
-						}
-						else
-						{
-							parametrosEvento(this.getEventos().get(e));
-							this.getEventos().get(e).generarEvento();
-						}
-					}
-				}
-			}
-		}
+	public IndicadorProxy lanzarEventos(CriterioProxy criProxy)
+	{
+		IndicadorProxy evento = null;
 		
-		private void parametrosEvento(EventoProxy eventoPrx) {
+		//Recorro la lista de eventos asociados al cumplimento de un criterio
+		for (int le = 0; le < criProxy.getCriterio().getEventos().length; le++) 
+		{
+			String nombreEvento = criProxy.getCriterio().getEventos()[le];
 			
-			for (int p = 0; p < eventoPrx.getEvento().getParametros().size(); p++) {			
-				if (eventoPrx.getEvento().getParametros().get(p).getValor().startsWith(Comunes.tpMarcaIndicador)) {
-					
-					String[] tramos = new String [] {};
-					tramos = eventoPrx.getEvento().getParametros().get(p).getValor().split("\\.");
-					String nombreIndicador = tramos[0].substring(1);
-					
-					if (this.getIndicadores().containsKey(nombreIndicador))
-					{
-						if ((this.getIndicadores().get(nombreIndicador).getResultadoEjecucion()!=null) && this.getIndicadores().get(nombreIndicador).getResultadoEjecucion().size()>0) 
-						{					
-							String columna = tramos[1];
-							Object valParam = new Object();
-							Object[] linea = this.getIndicadores().get(nombreIndicador).getResultadoEjecucion().elementAt(0);
-							int c = 0;
-							while (c < this.getIndicadores().get(nombreIndicador).getIndicador().getResultado().length ) {
-								if (columna.equals(this.getIndicadores().get(nombreIndicador).getIndicador().getResultado()[c])) {
-									valParam = linea[c];
-									break;
-								}
-								c++;							
-							}
-							eventoPrx.getEvento().getParametros().get(p).setValor(valParam.toString());					
-						}
-					}
+			//Recorro la lista de eventos para encontrar el nombre de evento
+			for(int e = 0; e < this.getEventos().size(); e++)
+			{
+				if (this.getEventos().get(e).getIndicador().getNombre().equalsIgnoreCase(nombreEvento))
+				{	
+					evento = this.getEventos().get(e);
+					evento.parametrosIndicador();
+					evento.ejecutar();
 				}
 			}
-		}
+		}	
+		return evento;
+	}
 }

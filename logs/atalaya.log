@@ -1,293 +1,494 @@
-2021-02-19 09:20:43.368  INFO 13816 --- [restartedMain] com.atalaya.AtalayaApplication           : Starting AtalayaApplication using Java 1.8.0_231 on PC1BXD99 with PID 13816 (C:\Users\0011564\git\atalayaFull\target\classes started by 0011564 in C:\Users\0011564\git\atalayaFull)
-2021-02-19 09:20:43.384  INFO 13816 --- [restartedMain] com.atalaya.AtalayaApplication           : No active profile set, falling back to default profiles: default
-2021-02-19 09:20:43.525  INFO 13816 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2021-02-19 09:20:43.525  INFO 13816 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2021-02-19 09:20:44.657  INFO 13816 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
-2021-02-19 09:20:44.727  INFO 13816 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 64 ms. Found 1 MongoDB repository interfaces.
-2021-02-19 09:20:46.059  INFO 13816 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8090 (http)
-2021-02-19 09:20:46.072  INFO 13816 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2021-02-19 09:20:46.072  INFO 13816 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.41]
-2021-02-19 09:20:46.168  INFO 13816 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2021-02-19 09:20:46.168  INFO 13816 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2641 ms
-2021-02-19 09:20:46.414  INFO 13816 --- [restartedMain] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
-2021-02-19 09:20:46.529  INFO 13816 --- [cluster-rtt-ClusterId{value='602f74de5c4aef76ded0e31c', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:2, serverValue:13}] to localhost:27017
-2021-02-19 09:20:46.529  INFO 13816 --- [cluster-ClusterId{value='602f74de5c4aef76ded0e31c', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:1, serverValue:14}] to localhost:27017
-2021-02-19 09:20:46.530  INFO 13816 --- [cluster-ClusterId{value='602f74de5c4aef76ded0e31c', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=34731200}
-2021-02-19 09:20:46.815  INFO 13816 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
-2021-02-19 09:20:47.246  INFO 13816 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2021-02-19 09:20:47.660  INFO 13816 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8090 (http) with context path ''
-2021-02-19 09:20:47.675  INFO 13816 --- [restartedMain] com.atalaya.AtalayaApplication           : Started AtalayaApplication in 4.89 seconds (JVM running for 5.507)
-2021-02-19 09:24:24.643  INFO 13816 --- [http-nio-8090-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2021-02-19 09:24:24.643  INFO 13816 --- [http-nio-8090-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2021-02-19 09:24:24.646  INFO 13816 --- [http-nio-8090-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
-2021-02-19 09:24:24.762  INFO 13816 --- [http-nio-8090-exec-1] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:3, serverValue:15}] to localhost:27017
-2021-02-19 10:05:26.375  INFO 16688 --- [restartedMain] com.atalaya.AtalayaApplication           : Starting AtalayaApplication using Java 1.8.0_231 on PC1BXD99 with PID 16688 (C:\Users\0011564\git\atalayaFull\target\classes started by 0011564 in C:\Users\0011564\git\atalayaFull)
-2021-02-19 10:05:26.379  INFO 16688 --- [restartedMain] com.atalaya.AtalayaApplication           : No active profile set, falling back to default profiles: default
-2021-02-19 10:05:26.469  INFO 16688 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2021-02-19 10:05:26.470  INFO 16688 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2021-02-19 10:05:27.369  INFO 16688 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
-2021-02-19 10:05:27.444  INFO 16688 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 68 ms. Found 1 MongoDB repository interfaces.
-2021-02-19 10:05:28.994  INFO 16688 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8090 (http)
-2021-02-19 10:05:29.009  INFO 16688 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2021-02-19 10:05:29.010  INFO 16688 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.41]
-2021-02-19 10:05:29.118  INFO 16688 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2021-02-19 10:05:29.119  INFO 16688 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2648 ms
-2021-02-19 10:05:29.362  INFO 16688 --- [restartedMain] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
-2021-02-19 10:05:29.480  INFO 16688 --- [cluster-rtt-ClusterId{value='602f7f596f9697213eeac45f', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:1, serverValue:13}] to localhost:27017
-2021-02-19 10:05:29.480  INFO 16688 --- [cluster-ClusterId{value='602f7f596f9697213eeac45f', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:2, serverValue:14}] to localhost:27017
-2021-02-19 10:05:29.489  INFO 16688 --- [cluster-ClusterId{value='602f7f596f9697213eeac45f', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=37171800}
-2021-02-19 10:05:29.781  INFO 16688 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
-2021-02-19 10:05:30.284  INFO 16688 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2021-02-19 10:05:30.658  INFO 16688 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8090 (http) with context path ''
-2021-02-19 10:05:30.671  INFO 16688 --- [restartedMain] com.atalaya.AtalayaApplication           : Started AtalayaApplication in 4.969 seconds (JVM running for 5.721)
-2021-02-19 10:05:41.299  INFO 16688 --- [http-nio-8090-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2021-02-19 10:05:41.300  INFO 16688 --- [http-nio-8090-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2021-02-19 10:05:41.303  INFO 16688 --- [http-nio-8090-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
-2021-02-19 10:05:41.416  INFO 16688 --- [http-nio-8090-exec-1] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:3, serverValue:15}] to localhost:27017
-2021-02-19 10:28:53.191  INFO 8048 --- [main] com.atalaya.AtalayaApplicationTests      : Starting AtalayaApplicationTests using Java 1.8.0_231 on PC1BXD99 with PID 8048 (started by 0011564 in C:\Users\0011564\git\atalayaFull)
-2021-02-19 10:28:53.195  INFO 8048 --- [main] com.atalaya.AtalayaApplicationTests      : No active profile set, falling back to default profiles: default
-2021-02-19 10:28:53.985  INFO 8048 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
-2021-02-19 10:28:54.073  INFO 8048 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 80 ms. Found 1 MongoDB repository interfaces.
-2021-02-19 10:28:55.474  INFO 8048 --- [main] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
-2021-02-19 10:28:55.592  INFO 8048 --- [cluster-ClusterId{value='602f84d76411b71ee045f8bd', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:1, serverValue:16}] to localhost:27017
-2021-02-19 10:28:55.592  INFO 8048 --- [cluster-rtt-ClusterId{value='602f84d76411b71ee045f8bd', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:2, serverValue:17}] to localhost:27017
-2021-02-19 10:28:55.593  INFO 8048 --- [cluster-ClusterId{value='602f84d76411b71ee045f8bd', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=39352100}
-2021-02-19 10:28:56.828  INFO 8048 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2021-02-19 10:28:57.454  INFO 8048 --- [main] com.atalaya.AtalayaApplicationTests      : Started AtalayaApplicationTests in 4.848 seconds (JVM running for 6.502)
-2021-02-19 10:28:58.004  INFO 8048 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2021-02-19 10:36:54.202  INFO 23260 --- [main] com.atalaya.AtalayaApplicationTests      : Starting AtalayaApplicationTests using Java 1.8.0_231 on PC1BXD99 with PID 23260 (started by 0011564 in C:\Users\0011564\git\atalayaFull)
-2021-02-19 10:36:54.207  INFO 23260 --- [main] com.atalaya.AtalayaApplicationTests      : No active profile set, falling back to default profiles: default
-2021-02-19 10:36:55.040  INFO 23260 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
-2021-02-19 10:36:55.127  INFO 23260 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 79 ms. Found 1 MongoDB repository interfaces.
-2021-02-19 10:36:56.515  INFO 23260 --- [main] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
-2021-02-19 10:36:56.618  INFO 23260 --- [cluster-ClusterId{value='602f86b870c9ef1580c3797f', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:1, serverValue:19}] to localhost:27017
-2021-02-19 10:36:56.618  INFO 23260 --- [cluster-rtt-ClusterId{value='602f86b870c9ef1580c3797f', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:2, serverValue:18}] to localhost:27017
-2021-02-19 10:36:56.619  INFO 23260 --- [cluster-ClusterId{value='602f86b870c9ef1580c3797f', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=37736300}
-2021-02-19 10:36:57.825  INFO 23260 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2021-02-19 10:36:58.457  INFO 23260 --- [main] com.atalaya.AtalayaApplicationTests      : Started AtalayaApplicationTests in 4.781 seconds (JVM running for 6.21)
-2021-02-19 10:36:58.920  INFO 23260 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2021-02-19 11:13:05.381  INFO 17752 --- [restartedMain] com.atalaya.AtalayaApplication           : Starting AtalayaApplication using Java 1.8.0_231 on PC1BXD99 with PID 17752 (C:\Users\0011564\git\atalayaFull\target\classes started by 0011564 in C:\Users\0011564\git\atalayaFull)
-2021-02-19 11:13:05.392  INFO 17752 --- [restartedMain] com.atalaya.AtalayaApplication           : No active profile set, falling back to default profiles: default
-2021-02-19 11:13:05.549  INFO 17752 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2021-02-19 11:13:05.549  INFO 17752 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2021-02-19 11:13:07.179  INFO 17752 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
-2021-02-19 11:13:07.293  INFO 17752 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 104 ms. Found 1 MongoDB repository interfaces.
-2021-02-19 11:13:09.562  INFO 17752 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
-2021-02-19 11:13:09.591  INFO 17752 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2021-02-19 11:13:09.592  INFO 17752 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.41]
-2021-02-19 11:13:09.758  INFO 17752 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2021-02-19 11:13:09.759  INFO 17752 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4208 ms
-2021-02-19 11:13:10.249  INFO 17752 --- [restartedMain] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
-2021-02-19 11:13:10.472  INFO 17752 --- [cluster-ClusterId{value='602f8f362b691768a636a52a', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:2, serverValue:13}] to localhost:27017
-2021-02-19 11:13:10.472  INFO 17752 --- [cluster-rtt-ClusterId{value='602f8f362b691768a636a52a', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:1, serverValue:14}] to localhost:27017
-2021-02-19 11:13:10.473  INFO 17752 --- [cluster-ClusterId{value='602f8f362b691768a636a52a', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=62199300}
-2021-02-19 11:13:11.221  INFO 17752 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
-2021-02-19 11:13:11.872  INFO 17752 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2021-02-19 11:13:12.525  INFO 17752 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
-2021-02-19 11:13:12.543  INFO 17752 --- [restartedMain] com.atalaya.AtalayaApplication           : Started AtalayaApplication in 8.361 seconds (JVM running for 10.127)
-2021-02-19 11:13:23.415  INFO 17752 --- [http-nio-8084-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2021-02-19 11:13:23.415  INFO 17752 --- [http-nio-8084-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2021-02-19 11:13:23.417  INFO 17752 --- [http-nio-8084-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
-2021-02-19 11:13:23.577  INFO 17752 --- [http-nio-8084-exec-2] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:3, serverValue:15}] to localhost:27017
-2021-02-19 11:13:23.698  INFO 17752 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : El valor pasado como numero de hilos NO es un valor válido. Se deja como MONOHILO
-2021-02-19 11:13:23.699  INFO 17752 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#AlumnosMalagaNota.ROWCOUNT > 0)
-2021-02-19 11:13:23.701  INFO 17752 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: AlumnosMalagaNota
-2021-02-19 11:13:28.512 ERROR 17752 --- [http-nio-8084-exec-2] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is java.lang.NullPointerException] with root cause
-
-java.lang.NullPointerException: null
-	at com.atalaya.evaluador.IndicadorProxy.ejecutar(IndicadorProxy.java:365) ~[classes/:na]
-	at com.atalaya.evaluador.Evaluador.interpretarOperando(Evaluador.java:1236) ~[classes/:na]
-	at com.atalaya.evaluador.Evaluador.evaluaCondicionSimple(Evaluador.java:1036) ~[classes/:na]
-	at com.atalaya.evaluador.Evaluador.evaluaCondicionMultiple(Evaluador.java:1012) ~[classes/:na]
-	at com.atalaya.evaluador.Evaluador.evaluarCriterio(Evaluador.java:229) ~[classes/:na]
-	at com.atalaya.evaluador.Evaluador.evaluarAnalisis(Evaluador.java:133) ~[classes/:na]
-	at com.atalaya.AtalayaApplication.consultaranalisis(AtalayaApplication.java:68) ~[classes/:na]
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_231]
-	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source) ~[na:1.8.0_231]
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source) ~[na:1.8.0_231]
-	at java.lang.reflect.Method.invoke(Unknown Source) ~[na:1.8.0_231]
-	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:197) ~[spring-web-5.3.2.jar:5.3.2]
-	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:141) ~[spring-web-5.3.2.jar:5.3.2]
-	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:106) ~[spring-webmvc-5.3.2.jar:5.3.2]
-	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:894) ~[spring-webmvc-5.3.2.jar:5.3.2]
-	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:808) ~[spring-webmvc-5.3.2.jar:5.3.2]
-	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-5.3.2.jar:5.3.2]
-	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1061) ~[spring-webmvc-5.3.2.jar:5.3.2]
-	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:961) ~[spring-webmvc-5.3.2.jar:5.3.2]
-	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006) ~[spring-webmvc-5.3.2.jar:5.3.2]
-	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:898) ~[spring-webmvc-5.3.2.jar:5.3.2]
-	at javax.servlet.http.HttpServlet.service(HttpServlet.java:626) ~[tomcat-embed-core-9.0.41.jar:4.0.FR]
-	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883) ~[spring-webmvc-5.3.2.jar:5.3.2]
-	at javax.servlet.http.HttpServlet.service(HttpServlet.java:733) ~[tomcat-embed-core-9.0.41.jar:4.0.FR]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231) ~[tomcat-embed-core-9.0.41.jar:9.0.41]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-9.0.41.jar:9.0.41]
-	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53) ~[tomcat-embed-websocket-9.0.41.jar:9.0.41]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-9.0.41.jar:9.0.41]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-9.0.41.jar:9.0.41]
-	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-5.3.2.jar:5.3.2]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119) ~[spring-web-5.3.2.jar:5.3.2]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-9.0.41.jar:9.0.41]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-9.0.41.jar:9.0.41]
-	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-5.3.2.jar:5.3.2]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119) ~[spring-web-5.3.2.jar:5.3.2]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-9.0.41.jar:9.0.41]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-9.0.41.jar:9.0.41]
-	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-5.3.2.jar:5.3.2]
-	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119) ~[spring-web-5.3.2.jar:5.3.2]
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-9.0.41.jar:9.0.41]
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-9.0.41.jar:9.0.41]
-	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:202) ~[tomcat-embed-core-9.0.41.jar:9.0.41]
-	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97) [tomcat-embed-core-9.0.41.jar:9.0.41]
-	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:542) [tomcat-embed-core-9.0.41.jar:9.0.41]
-	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:143) [tomcat-embed-core-9.0.41.jar:9.0.41]
-	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92) [tomcat-embed-core-9.0.41.jar:9.0.41]
-	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78) [tomcat-embed-core-9.0.41.jar:9.0.41]
-	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343) [tomcat-embed-core-9.0.41.jar:9.0.41]
-	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:374) [tomcat-embed-core-9.0.41.jar:9.0.41]
-	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65) [tomcat-embed-core-9.0.41.jar:9.0.41]
-	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:888) [tomcat-embed-core-9.0.41.jar:9.0.41]
-	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1597) [tomcat-embed-core-9.0.41.jar:9.0.41]
-	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49) [tomcat-embed-core-9.0.41.jar:9.0.41]
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source) [na:1.8.0_231]
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source) [na:1.8.0_231]
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) [tomcat-embed-core-9.0.41.jar:9.0.41]
-	at java.lang.Thread.run(Unknown Source) [na:1.8.0_231]
-
-2021-02-19 11:14:54.958  INFO 12464 --- [restartedMain] com.atalaya.AtalayaApplication           : Starting AtalayaApplication using Java 1.8.0_231 on PC1BXD99 with PID 12464 (C:\Users\0011564\git\atalayaFull\target\classes started by 0011564 in C:\Users\0011564\git\atalayaFull)
-2021-02-19 11:14:54.962  INFO 12464 --- [restartedMain] com.atalaya.AtalayaApplication           : No active profile set, falling back to default profiles: default
-2021-02-19 11:14:55.033  INFO 12464 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2021-02-19 11:14:55.033  INFO 12464 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2021-02-19 11:14:55.988  INFO 12464 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
-2021-02-19 11:14:56.052  INFO 12464 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 58 ms. Found 1 MongoDB repository interfaces.
-2021-02-19 11:14:57.492  INFO 12464 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
-2021-02-19 11:14:57.508  INFO 12464 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2021-02-19 11:14:57.508  INFO 12464 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.41]
-2021-02-19 11:14:57.601  INFO 12464 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2021-02-19 11:14:57.602  INFO 12464 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2568 ms
-2021-02-19 11:14:57.842  INFO 12464 --- [restartedMain] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
-2021-02-19 11:14:57.975  INFO 12464 --- [cluster-ClusterId{value='602f8fa10ee84b382e55a1fe', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:1, serverValue:16}] to localhost:27017
-2021-02-19 11:14:57.975  INFO 12464 --- [cluster-ClusterId{value='602f8fa10ee84b382e55a1fe', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=51195400}
-2021-02-19 11:14:57.975  INFO 12464 --- [cluster-rtt-ClusterId{value='602f8fa10ee84b382e55a1fe', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:2, serverValue:17}] to localhost:27017
-2021-02-19 11:14:58.394  INFO 12464 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
-2021-02-19 11:14:58.877  INFO 12464 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2021-02-19 11:14:59.298  INFO 12464 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
-2021-02-19 11:14:59.321  INFO 12464 --- [restartedMain] com.atalaya.AtalayaApplication           : Started AtalayaApplication in 14.9 seconds (JVM running for 15.608)
-2021-02-19 11:15:09.083  INFO 12464 --- [http-nio-8084-exec-4] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2021-02-19 11:15:09.084  INFO 12464 --- [http-nio-8084-exec-4] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2021-02-19 11:15:09.085  INFO 12464 --- [http-nio-8084-exec-4] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
-2021-02-19 11:15:09.216  INFO 12464 --- [http-nio-8084-exec-4] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:3, serverValue:18}] to localhost:27017
-2021-02-19 11:15:09.298  INFO 12464 --- [http-nio-8084-exec-4] com.atalaya.evaluador.AnalisisProxy      : El valor pasado como numero de hilos NO es un valor válido. Se deja como MONOHILO
-2021-02-19 11:15:09.299  INFO 12464 --- [http-nio-8084-exec-4] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#AlumnosMalagaNota.ROWCOUNT > 0)
-2021-02-19 11:15:09.301  INFO 12464 --- [http-nio-8084-exec-4] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: AlumnosMalagaNota
-2021-02-19 11:15:10.579  INFO 12464 --- [http-nio-8084-exec-4] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador AlumnosMalaga | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@3af23e6a | en la posicion 0
-2021-02-19 11:15:18.981  INFO 12464 --- [http-nio-8084-exec-4] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador AlumnosMalagaNota | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@6bf3be56 | en la posicion 0
-2021-02-19 11:15:18.981  INFO 12464 --- [http-nio-8084-exec-4] com.atalaya.evaluador.AnalisisProxy      : El indicador AlumnosMalagaNota ha finalizado.
-2021-02-19 11:15:18.981  INFO 12464 --- [http-nio-8084-exec-4] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
-2021-02-19 11:20:15.618  INFO 12464 --- [http-nio-8084-exec-10] com.atalaya.evaluador.AnalisisProxy      : El valor pasado como numero de hilos NO es un valor válido. Se deja como MONOHILO
-2021-02-19 11:20:15.619  INFO 12464 --- [http-nio-8084-exec-10] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#AlumnosMalagaNota.ROWCOUNT > 0)
-2021-02-19 11:20:15.619  INFO 12464 --- [http-nio-8084-exec-10] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: AlumnosMalagaNota
-2021-02-19 11:20:15.645  INFO 12464 --- [http-nio-8084-exec-10] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador AlumnosMalaga | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@2da79022 | en la posicion 0
-2021-02-19 11:20:46.217  INFO 12464 --- [http-nio-8084-exec-10] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador AlumnosMalagaNota | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@d9fc3ff | en la posicion 0
-2021-02-19 11:20:46.217  INFO 12464 --- [http-nio-8084-exec-10] com.atalaya.evaluador.AnalisisProxy      : El indicador AlumnosMalagaNota ha finalizado.
-2021-02-19 11:20:46.218  INFO 12464 --- [http-nio-8084-exec-10] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
-2021-02-19 11:21:22.451  INFO 12464 --- [http-nio-8084-exec-9] com.atalaya.evaluador.AnalisisProxy      : El valor pasado como numero de hilos NO es un valor válido. Se deja como MONOHILO
-2021-02-19 11:21:22.451  INFO 12464 --- [http-nio-8084-exec-9] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#AlumnosMalagaNota.ROWCOUNT > 0)
-2021-02-19 11:21:22.452  INFO 12464 --- [http-nio-8084-exec-9] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: AlumnosMalagaNota
-2021-02-19 11:21:22.475  INFO 12464 --- [http-nio-8084-exec-9] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador AlumnosMalaga | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@47e22a56 | en la posicion 0
-2021-02-19 11:24:23.150  INFO 12464 --- [http-nio-8084-exec-9] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador AlumnosMalagaNota | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@23830e7d | en la posicion 0
-2021-02-19 11:24:23.150  INFO 12464 --- [http-nio-8084-exec-9] com.atalaya.evaluador.AnalisisProxy      : El indicador AlumnosMalagaNota ha finalizado.
-2021-02-19 11:24:23.150  INFO 12464 --- [http-nio-8084-exec-9] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
-2021-02-19 11:25:53.859  INFO 12464 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : El valor pasado como numero de hilos NO es un valor válido. Se deja como MONOHILO
-2021-02-19 11:25:53.860  INFO 12464 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#AlumnosMalagaNota.ROWCOUNT > 0)
-2021-02-19 11:25:53.861  INFO 12464 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: AlumnosMalagaNota
-2021-02-19 11:25:53.886  INFO 12464 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador AlumnosMalaga | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@4c006a64 | en la posicion 0
-2021-02-19 11:28:54.556  INFO 12464 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador AlumnosMalagaNota | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@7765bd0f | en la posicion 0
-2021-02-19 11:28:54.556  INFO 12464 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : El indicador AlumnosMalagaNota ha finalizado.
-2021-02-19 11:28:54.556  INFO 12464 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
-2021-02-19 11:30:26.573  INFO 12464 --- [http-nio-8084-exec-8] com.atalaya.evaluador.AnalisisProxy      : Sin información de configuracion de Thread. Ajustamos a MONOHILO
-2021-02-19 11:30:26.574  INFO 12464 --- [http-nio-8084-exec-8] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#AlumnoNota.CALIFICACION > 5)
-2021-02-19 11:30:26.574  INFO 12464 --- [http-nio-8084-exec-8] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: AlumnoNota
-2021-02-19 11:30:26.600  INFO 12464 --- [http-nio-8084-exec-8] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador Alumno | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@444dbabd | en la posicion 0
-2021-02-19 11:30:26.618  INFO 12464 --- [http-nio-8084-exec-8] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador AlumnoNota | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@1de46c8f | en la posicion 0
-2021-02-19 11:30:26.620  INFO 12464 --- [http-nio-8084-exec-8] com.atalaya.evaluador.AnalisisProxy      : El indicador AlumnoNota ha finalizado.
-2021-02-19 11:30:26.620  INFO 12464 --- [http-nio-8084-exec-8] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
-2021-02-19 11:31:15.038  INFO 12464 --- [http-nio-8084-exec-7] com.atalaya.evaluador.AnalisisProxy      : El valor pasado como numero de hilos NO es un valor válido. Se deja como MONOHILO
-2021-02-19 11:31:15.039  INFO 12464 --- [http-nio-8084-exec-7] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#AlumnoNota.CALIFICACION > 5)
-2021-02-19 11:31:15.039  INFO 12464 --- [http-nio-8084-exec-7] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: AlumnoNota
-2021-02-19 11:31:15.066  INFO 12464 --- [http-nio-8084-exec-7] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador Alumno | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@b06cf26 | en la posicion 0
-2021-02-19 11:31:15.088  INFO 12464 --- [http-nio-8084-exec-7] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador AlumnoNota | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@4242f257 | en la posicion 0
-2021-02-19 11:31:15.088  INFO 12464 --- [http-nio-8084-exec-7] com.atalaya.evaluador.AnalisisProxy      : El indicador AlumnoNota ha finalizado.
-2021-02-19 11:31:15.089  INFO 12464 --- [http-nio-8084-exec-7] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
-2021-02-19 11:33:58.978  INFO 12464 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : ESTAMOS EN MODO MULTIHILO CON  10  HILOS EN DISPOSICION....
-2021-02-19 11:33:58.979  INFO 12464 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#AlumnosMalagaNota.ROWCOUNT > 0)
-2021-02-19 11:33:58.979  INFO 12464 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: AlumnosMalagaNota
-2021-02-19 11:33:59.081  INFO 12464 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador AlumnosMalaga | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@71af694d | en la posicion 9
-2021-02-19 11:33:59.181  INFO 12464 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador AlumnosMalagaNota | EJECUTANDO | com.atalaya.evaluador.IndicadorProxy@7f688908 | en la posicion 9
-2021-02-19 11:36:14.951  INFO 12464 --- [http-nio-8084-exec-5] com.atalaya.evaluador.AnalisisProxy      : Sin información de configuracion de Thread. Ajustamos a MONOHILO
-2021-02-19 11:36:14.952  INFO 12464 --- [http-nio-8084-exec-5] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#AlumnosMalagaNota.ROWCOUNT > 0)
-2021-02-19 11:36:14.953  INFO 12464 --- [http-nio-8084-exec-5] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: AlumnosMalagaNota
-2021-02-19 11:36:15.052  INFO 12464 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador AlumnosMalaga | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@7b57023d | en la posicion 8
-2021-02-19 11:36:59.740  INFO 12464 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : El indicador AlumnosMalagaNota ha finalizado.
-2021-02-19 11:36:59.740  INFO 12464 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
-2021-02-19 11:39:15.613  INFO 12464 --- [http-nio-8084-exec-5] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador AlumnosMalagaNota | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@4cea423b | en la posicion 0
-2021-02-19 11:39:15.613  INFO 12464 --- [http-nio-8084-exec-5] com.atalaya.evaluador.AnalisisProxy      : El indicador AlumnosMalagaNota ha finalizado.
-2021-02-19 11:39:15.613  INFO 12464 --- [http-nio-8084-exec-5] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
-2021-02-19 11:39:37.445  INFO 12464 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : Sin información de configuracion de Thread. Ajustamos a MONOHILO
-2021-02-19 11:39:37.446  INFO 12464 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#AlumnosMalagaNota.ROWCOUNT > 0)
-2021-02-19 11:39:37.446  INFO 12464 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: AlumnosMalagaNota
-2021-02-19 11:39:37.470  INFO 12464 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador AlumnosMalaga | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@76547853 | en la posicion 0
-2021-02-19 11:42:06.137  INFO 12464 --- [http-nio-8084-exec-8] com.atalaya.evaluador.AnalisisProxy      : Sin información de configuracion de Thread. Ajustamos a MONOHILO
-2021-02-19 11:42:06.138  INFO 12464 --- [http-nio-8084-exec-8] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#AlumnosMalagaNota.ROWCOUNT > 0)
-2021-02-19 11:42:06.138  INFO 12464 --- [http-nio-8084-exec-8] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: AlumnosMalagaNota
-2021-02-19 11:42:06.160  INFO 12464 --- [http-nio-8084-exec-8] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador AlumnosMalaga | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@48387e | en la posicion 0
-2021-02-19 11:42:07.604  INFO 12464 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador AlumnosMalagaNota | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@2bcbeced | en la posicion 0
-2021-02-19 11:42:07.604  INFO 12464 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : El indicador AlumnosMalagaNota ha finalizado.
-2021-02-19 11:42:07.605  INFO 12464 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
-2021-02-19 11:42:29.684  INFO 12464 --- [http-nio-8084-exec-8] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador AlumnosMalagaNota | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@1129042c | en la posicion 0
-2021-02-19 11:42:29.685  INFO 12464 --- [http-nio-8084-exec-8] com.atalaya.evaluador.AnalisisProxy      : El indicador AlumnosMalagaNota ha finalizado.
-2021-02-19 11:42:29.685  INFO 12464 --- [http-nio-8084-exec-8] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
-2021-02-19 11:43:29.265  INFO 12464 --- [http-nio-8084-exec-10] com.atalaya.evaluador.AnalisisProxy      : Sin información de configuracion de Thread. Ajustamos a MONOHILO
-2021-02-19 11:43:29.265  INFO 12464 --- [http-nio-8084-exec-10] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#AlumnosMalagaNota.ROWCOUNT > 0)
-2021-02-19 11:43:29.266  INFO 12464 --- [http-nio-8084-exec-10] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: AlumnosMalagaNota
-2021-02-19 11:43:29.293  INFO 12464 --- [http-nio-8084-exec-10] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador AlumnosMalaga | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@36f22f57 | en la posicion 0
-2021-02-19 11:44:30.170  INFO 12464 --- [http-nio-8084-exec-10] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador AlumnosMalagaNota | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@7590413d | en la posicion 0
-2021-02-19 11:44:30.170  INFO 12464 --- [http-nio-8084-exec-10] com.atalaya.evaluador.AnalisisProxy      : El indicador AlumnosMalagaNota ha finalizado.
-2021-02-19 11:44:30.170  INFO 12464 --- [http-nio-8084-exec-10] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
-2021-02-19 11:52:33.471  INFO 21560 --- [main] com.atalaya.AtalayaApplicationTests      : Starting AtalayaApplicationTests using Java 1.8.0_231 on PC1BXD99 with PID 21560 (started by 0011564 in C:\Users\0011564\git\atalayaFull)
-2021-02-19 11:52:33.477  INFO 21560 --- [main] com.atalaya.AtalayaApplicationTests      : No active profile set, falling back to default profiles: default
-2021-02-19 11:52:34.493  INFO 21560 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
-2021-02-19 11:52:34.594  INFO 21560 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 93 ms. Found 1 MongoDB repository interfaces.
-2021-02-19 11:52:36.181  INFO 21560 --- [main] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
-2021-02-19 11:52:37.757  INFO 21560 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2021-02-19 11:52:38.278  INFO 21560 --- [cluster-ClusterId{value='602f98749fe967799a00ebf5', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Exception in monitor thread while connecting to server localhost:27017
-
-com.mongodb.MongoSocketOpenException: Exception opening socket
-	at com.mongodb.internal.connection.SocketStream.open(SocketStream.java:70) ~[mongodb-driver-core-4.1.1.jar:na]
-	at com.mongodb.internal.connection.InternalStreamConnection.open(InternalStreamConnection.java:143) ~[mongodb-driver-core-4.1.1.jar:na]
-	at com.mongodb.internal.connection.DefaultServerMonitor$ServerMonitorRunnable.lookupServerDescription(DefaultServerMonitor.java:188) ~[mongodb-driver-core-4.1.1.jar:na]
-	at com.mongodb.internal.connection.DefaultServerMonitor$ServerMonitorRunnable.run(DefaultServerMonitor.java:144) ~[mongodb-driver-core-4.1.1.jar:na]
-	at java.lang.Thread.run(Unknown Source) [na:1.8.0_231]
-Caused by: java.net.ConnectException: Connection refused: connect
-	at java.net.DualStackPlainSocketImpl.waitForConnect(Native Method) ~[na:1.8.0_231]
-	at java.net.DualStackPlainSocketImpl.socketConnect(Unknown Source) ~[na:1.8.0_231]
-	at java.net.AbstractPlainSocketImpl.doConnect(Unknown Source) ~[na:1.8.0_231]
-	at java.net.AbstractPlainSocketImpl.connectToAddress(Unknown Source) ~[na:1.8.0_231]
-	at java.net.AbstractPlainSocketImpl.connect(Unknown Source) ~[na:1.8.0_231]
-	at java.net.PlainSocketImpl.connect(Unknown Source) ~[na:1.8.0_231]
-	at java.net.SocksSocketImpl.connect(Unknown Source) ~[na:1.8.0_231]
-	at java.net.Socket.connect(Unknown Source) ~[na:1.8.0_231]
-	at com.mongodb.internal.connection.SocketStreamHelper.initialize(SocketStreamHelper.java:78) ~[mongodb-driver-core-4.1.1.jar:na]
-	at com.mongodb.internal.connection.SocketStream.initializeSocket(SocketStream.java:79) ~[mongodb-driver-core-4.1.1.jar:na]
-	at com.mongodb.internal.connection.SocketStream.open(SocketStream.java:65) ~[mongodb-driver-core-4.1.1.jar:na]
-	... 4 common frames omitted
-
-2021-02-19 11:52:38.486  INFO 21560 --- [main] com.atalaya.AtalayaApplicationTests      : Started AtalayaApplicationTests in 5.702 seconds (JVM running for 7.28)
-2021-02-19 11:52:39.213  INFO 21560 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2021-02-19 11:55:23.905  INFO 22944 --- [main] com.atalaya.AtalayaApplicationTests      : Starting AtalayaApplicationTests using Java 1.8.0_231 on PC1BXD99 with PID 22944 (started by 0011564 in C:\Users\0011564\git\atalayaFull)
-2021-02-19 11:55:23.913  INFO 22944 --- [main] com.atalaya.AtalayaApplicationTests      : No active profile set, falling back to default profiles: default
-2021-02-19 11:55:24.970  INFO 22944 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
-2021-02-19 11:55:25.097  INFO 22944 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 114 ms. Found 1 MongoDB repository interfaces.
-2021-02-19 11:55:27.017  INFO 22944 --- [main] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[atalayadb:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
-2021-02-19 11:55:29.080  INFO 22944 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2021-02-19 11:55:30.104  INFO 22944 --- [main] com.atalaya.AtalayaApplicationTests      : Started AtalayaApplicationTests in 7.008 seconds (JVM running for 8.635)
-2021-02-19 11:55:30.675  INFO 22944 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2021-02-26 09:02:11.688  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : Starting AtalayaApplication using Java 1.8.0_231 on PC1BXD99 with PID 11284 (C:\Users\0011564\git\atalayaFull\target\classes started by 0011564 in C:\Users\0011564\git\atalayaFull)
+2021-02-26 09:02:11.704  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : No active profile set, falling back to default profiles: default
+2021-02-26 09:02:11.804  INFO 11284 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2021-02-26 09:02:11.805  INFO 11284 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2021-02-26 09:02:12.737  INFO 11284 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2021-02-26 09:02:12.804  INFO 11284 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 61 ms. Found 1 MongoDB repository interfaces.
+2021-02-26 09:02:13.930  INFO 11284 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
+2021-02-26 09:02:13.947  INFO 11284 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-02-26 09:02:13.948  INFO 11284 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.41]
+2021-02-26 09:02:14.055  INFO 11284 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-02-26 09:02:14.055  INFO 11284 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2249 ms
+2021-02-26 09:02:14.305  INFO 11284 --- [restartedMain] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
+2021-02-26 09:02:14.439  INFO 11284 --- [cluster-rtt-ClusterId{value='6038ab063ca424693f07c274', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:2, serverValue:16}] to localhost:27017
+2021-02-26 09:02:14.439  INFO 11284 --- [cluster-ClusterId{value='6038ab063ca424693f07c274', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:1, serverValue:15}] to localhost:27017
+2021-02-26 09:02:14.440  INFO 11284 --- [cluster-ClusterId{value='6038ab063ca424693f07c274', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=38364800}
+2021-02-26 09:02:14.956  INFO 11284 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2021-02-26 09:02:15.430  INFO 11284 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-02-26 09:02:15.874  INFO 11284 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
+2021-02-26 09:02:15.891  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : Started AtalayaApplication in 4.834 seconds (JVM running for 5.87)
+2021-02-26 09:06:38.111  INFO 11284 --- [http-nio-8084-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-02-26 09:06:38.112  INFO 11284 --- [http-nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-02-26 09:06:38.114  INFO 11284 --- [http-nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2021-02-26 09:06:48.599  INFO 11284 --- [http-nio-8084-exec-3] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:3, serverValue:17}] to localhost:27017
+2021-02-26 09:06:48.688  INFO 11284 --- [http-nio-8084-exec-3] com.atalaya.evaluador.AnalisisProxy      : Sin información de configuracion de Thread. Ajustamos a MONOHILO
+2021-02-26 09:06:48.689  INFO 11284 --- [http-nio-8084-exec-3] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#AlumnoNota.CALIFICACION > 5)
+2021-02-26 09:06:48.691  INFO 11284 --- [http-nio-8084-exec-3] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: AlumnoNota
+2021-02-26 09:06:49.358  INFO 11284 --- [http-nio-8084-exec-3] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador Alumno | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@d6f139f | en la posicion 0
+2021-02-26 09:06:49.371  INFO 11284 --- [http-nio-8084-exec-3] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador AlumnoNota | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@5e2c1352 | en la posicion 0
+2021-02-26 09:06:49.371  INFO 11284 --- [http-nio-8084-exec-3] com.atalaya.evaluador.AnalisisProxy      : El indicador AlumnoNota ha finalizado.
+2021-02-26 09:06:49.372  INFO 11284 --- [http-nio-8084-exec-3] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
+2021-02-26 09:07:29.372  INFO 11284 --- [http-nio-8084-exec-4] com.atalaya.evaluador.AnalisisProxy      : ESTAMOS EN MODO MULTIHILO CON  10  HILOS EN DISPOSICION....
+2021-02-26 09:07:29.372  INFO 11284 --- [http-nio-8084-exec-4] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#EscrituraFichero.ROWCOUNT > 0)
+2021-02-26 09:07:29.373  INFO 11284 --- [http-nio-8084-exec-4] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: EscrituraFichero
+2021-02-26 09:07:29.474  INFO 11284 --- [http-nio-8084-exec-4] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador Alumnos | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@4a1cf0fb | en la posicion 9
+2021-02-26 09:07:29.574  INFO 11284 --- [http-nio-8084-exec-4] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador EscrituraFichero | EJECUTANDO | com.atalaya.evaluador.IndicadorProxy@3798eb8 | en la posicion 9
+2021-02-26 09:07:32.293  INFO 11284 --- [http-nio-8084-exec-4] com.atalaya.evaluador.AnalisisProxy      : El indicador asociado EscrituraFichero ha finalizado.
+2021-02-26 09:07:32.293  INFO 11284 --- [http-nio-8084-exec-4] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
+2021-02-26 09:07:32.293  INFO 11284 --- [http-nio-8084-exec-4] com.atalaya.evaluador.AnalisisProxy      : El indicador EscrituraFichero ha finalizado.
+2021-02-26 09:07:32.294  INFO 11284 --- [http-nio-8084-exec-4] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
+2021-02-26 09:11:37.367  INFO 11284 --- [Thread-5] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2021-02-26 09:11:37.375  INFO 11284 --- [Thread-5] org.mongodb.driver.connection            : Closed connection [connectionId{localValue:3, serverValue:17}] to localhost:27017 because the pool has been closed.
+2021-02-26 09:11:37.565  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : Starting AtalayaApplication using Java 1.8.0_231 on PC1BXD99 with PID 11284 (C:\Users\0011564\git\atalayaFull\target\classes started by 0011564 in C:\Users\0011564\git\atalayaFull)
+2021-02-26 09:11:37.566  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : No active profile set, falling back to default profiles: default
+2021-02-26 09:11:37.807  INFO 11284 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2021-02-26 09:11:37.826  INFO 11284 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 19 ms. Found 1 MongoDB repository interfaces.
+2021-02-26 09:11:37.954  INFO 11284 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
+2021-02-26 09:11:37.955  INFO 11284 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-02-26 09:11:37.955  INFO 11284 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.41]
+2021-02-26 09:11:37.971  INFO 11284 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-02-26 09:11:37.971  INFO 11284 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 398 ms
+2021-02-26 09:11:37.993  INFO 11284 --- [restartedMain] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
+2021-02-26 09:11:38.020  INFO 11284 --- [cluster-ClusterId{value='6038ad393ca424693f07c275', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:4, serverValue:19}] to localhost:27017
+2021-02-26 09:11:38.020  INFO 11284 --- [cluster-rtt-ClusterId{value='6038ad393ca424693f07c275', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:5, serverValue:18}] to localhost:27017
+2021-02-26 09:11:38.021  INFO 11284 --- [cluster-ClusterId{value='6038ad393ca424693f07c275', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=5415800}
+2021-02-26 09:11:38.042  INFO 11284 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2021-02-26 09:11:38.132  INFO 11284 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-02-26 09:11:38.217  INFO 11284 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
+2021-02-26 09:11:38.223  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : Started AtalayaApplication in 0.711 seconds (JVM running for 568.202)
+2021-02-26 09:11:38.226  INFO 11284 --- [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2021-02-26 09:16:09.374  INFO 11284 --- [http-nio-8084-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-02-26 09:16:09.374  INFO 11284 --- [http-nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-02-26 09:16:09.375  INFO 11284 --- [http-nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2021-02-26 09:16:09.388  INFO 11284 --- [http-nio-8084-exec-1] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:6, serverValue:20}] to localhost:27017
+2021-02-26 09:16:09.426  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : ESTAMOS EN MODO MULTIHILO CON  10  HILOS EN DISPOSICION....
+2021-02-26 09:16:09.427  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#LecturaFichero.ROWCOUNT = 10)
+2021-02-26 09:16:09.429  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: LecturaFichero
+2021-02-26 09:16:09.530  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador LecturaFichero | EJECUTANDO | com.atalaya.evaluador.IndicadorProxy@14f674e8 | en la posicion 9
+2021-02-26 09:16:14.186  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador LecturaFichero | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@14f674e8 | en la posicion 8
+2021-02-26 09:16:14.189  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : El indicador LecturaFichero ha finalizado.
+2021-02-26 09:16:14.189  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
+2021-02-26 09:17:17.895  INFO 11284 --- [http-nio-8084-exec-5] com.atalaya.evaluador.AnalisisProxy      : ESTAMOS EN MODO MULTIHILO CON  10  HILOS EN DISPOSICION....
+2021-02-26 09:17:17.895  INFO 11284 --- [http-nio-8084-exec-5] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#LecturaFichero.ROWCOUNT = 10)
+2021-02-26 09:17:17.895  INFO 11284 --- [http-nio-8084-exec-5] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: LecturaFichero
+2021-02-26 09:17:17.996  INFO 11284 --- [http-nio-8084-exec-5] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador LecturaFichero | EJECUTANDO | com.atalaya.evaluador.IndicadorProxy@413de5ee | en la posicion 9
+2021-02-26 09:17:55.400  INFO 11284 --- [http-nio-8084-exec-5] com.atalaya.evaluador.AnalisisProxy      : El indicador LecturaFichero ha finalizado.
+2021-02-26 09:17:55.401  INFO 11284 --- [http-nio-8084-exec-5] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
+2021-02-26 09:20:30.101  INFO 11284 --- [Thread-11] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2021-02-26 09:20:30.106  INFO 11284 --- [Thread-11] org.mongodb.driver.connection            : Closed connection [connectionId{localValue:6, serverValue:20}] to localhost:27017 because the pool has been closed.
+2021-02-26 09:20:30.296  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : Starting AtalayaApplication using Java 1.8.0_231 on PC1BXD99 with PID 11284 (C:\Users\0011564\git\atalayaFull\target\classes started by 0011564 in C:\Users\0011564\git\atalayaFull)
+2021-02-26 09:20:30.296  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : No active profile set, falling back to default profiles: default
+2021-02-26 09:20:30.537  INFO 11284 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2021-02-26 09:20:30.554  INFO 11284 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 16 ms. Found 1 MongoDB repository interfaces.
+2021-02-26 09:20:30.653  INFO 11284 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
+2021-02-26 09:20:30.653  INFO 11284 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-02-26 09:20:30.654  INFO 11284 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.41]
+2021-02-26 09:20:30.667  INFO 11284 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-02-26 09:20:30.667  INFO 11284 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 365 ms
+2021-02-26 09:20:30.691  INFO 11284 --- [restartedMain] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
+2021-02-26 09:20:30.711  INFO 11284 --- [cluster-rtt-ClusterId{value='6038af4e3ca424693f07c276', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:8, serverValue:22}] to localhost:27017
+2021-02-26 09:20:30.711  INFO 11284 --- [cluster-ClusterId{value='6038af4e3ca424693f07c276', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:7, serverValue:21}] to localhost:27017
+2021-02-26 09:20:30.713  INFO 11284 --- [cluster-ClusterId{value='6038af4e3ca424693f07c276', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=4812000}
+2021-02-26 09:20:30.737  INFO 11284 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2021-02-26 09:20:30.823  INFO 11284 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-02-26 09:20:30.903  INFO 11284 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
+2021-02-26 09:20:30.907  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : Started AtalayaApplication in 0.66 seconds (JVM running for 1100.877)
+2021-02-26 09:20:30.909  INFO 11284 --- [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2021-02-26 09:20:38.570  INFO 11284 --- [http-nio-8084-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-02-26 09:20:38.571  INFO 11284 --- [http-nio-8084-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-02-26 09:20:38.572  INFO 11284 --- [http-nio-8084-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2021-02-26 09:20:38.579  INFO 11284 --- [http-nio-8084-exec-2] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:9, serverValue:23}] to localhost:27017
+2021-02-26 09:20:38.612  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : ESTAMOS EN MODO MULTIHILO CON  10  HILOS EN DISPOSICION....
+2021-02-26 09:20:38.612  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#LecturaFichero.ROWCOUNT = 10)
+2021-02-26 09:20:38.614  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: LecturaFichero
+2021-02-26 09:20:38.715  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador LecturaFichero | EJECUTANDO | com.atalaya.evaluador.IndicadorProxy@65c51983 | en la posicion 9
+2021-02-26 09:20:42.616  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador LecturaFichero | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@65c51983 | en la posicion 8
+2021-02-26 09:20:42.616  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : El indicador LecturaFichero ha finalizado.
+2021-02-26 09:20:42.616  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
+2021-02-26 09:22:30.703  INFO 11284 --- [Thread-19] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2021-02-26 09:22:30.707  INFO 11284 --- [Thread-19] org.mongodb.driver.connection            : Closed connection [connectionId{localValue:9, serverValue:23}] to localhost:27017 because the pool has been closed.
+2021-02-26 09:22:30.892  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : Starting AtalayaApplication using Java 1.8.0_231 on PC1BXD99 with PID 11284 (C:\Users\0011564\git\atalayaFull\target\classes started by 0011564 in C:\Users\0011564\git\atalayaFull)
+2021-02-26 09:22:30.892  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : No active profile set, falling back to default profiles: default
+2021-02-26 09:22:31.119  INFO 11284 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2021-02-26 09:22:31.132  INFO 11284 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 12 ms. Found 1 MongoDB repository interfaces.
+2021-02-26 09:22:31.227  INFO 11284 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
+2021-02-26 09:22:31.228  INFO 11284 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-02-26 09:22:31.228  INFO 11284 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.41]
+2021-02-26 09:22:31.250  INFO 11284 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-02-26 09:22:31.250  INFO 11284 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 350 ms
+2021-02-26 09:22:31.271  INFO 11284 --- [restartedMain] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
+2021-02-26 09:22:31.299  INFO 11284 --- [cluster-rtt-ClusterId{value='6038afc73ca424693f07c277', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:10, serverValue:24}] to localhost:27017
+2021-02-26 09:22:31.301  INFO 11284 --- [cluster-ClusterId{value='6038afc73ca424693f07c277', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:11, serverValue:25}] to localhost:27017
+2021-02-26 09:22:31.302  INFO 11284 --- [cluster-ClusterId{value='6038afc73ca424693f07c277', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=7454400}
+2021-02-26 09:22:31.325  INFO 11284 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2021-02-26 09:22:31.399  INFO 11284 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-02-26 09:22:31.462  INFO 11284 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
+2021-02-26 09:22:31.466  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : Started AtalayaApplication in 0.618 seconds (JVM running for 1221.435)
+2021-02-26 09:22:31.468  INFO 11284 --- [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2021-02-26 09:22:40.582  INFO 11284 --- [http-nio-8084-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-02-26 09:22:40.582  INFO 11284 --- [http-nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-02-26 09:22:40.583  INFO 11284 --- [http-nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2021-02-26 09:22:40.592  INFO 11284 --- [http-nio-8084-exec-1] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:12, serverValue:26}] to localhost:27017
+2021-02-26 09:22:40.623  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : ESTAMOS EN MODO MULTIHILO CON  10  HILOS EN DISPOSICION....
+2021-02-26 09:22:40.624  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#LecturaFichero.ROWCOUNT = 10)
+2021-02-26 09:22:40.625  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: LecturaFichero
+2021-02-26 09:22:40.726  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador LecturaFichero | EJECUTANDO | com.atalaya.evaluador.IndicadorProxy@5aa1cffb | en la posicion 9
+2021-02-26 09:22:43.699  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : El indicador LecturaFichero ha finalizado.
+2021-02-26 09:22:43.699  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
+2021-02-26 09:24:04.909  INFO 11284 --- [Thread-26] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2021-02-26 09:24:04.913  INFO 11284 --- [Thread-26] org.mongodb.driver.connection            : Closed connection [connectionId{localValue:12, serverValue:26}] to localhost:27017 because the pool has been closed.
+2021-02-26 09:24:05.088  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : Starting AtalayaApplication using Java 1.8.0_231 on PC1BXD99 with PID 11284 (C:\Users\0011564\git\atalayaFull\target\classes started by 0011564 in C:\Users\0011564\git\atalayaFull)
+2021-02-26 09:24:05.089  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : No active profile set, falling back to default profiles: default
+2021-02-26 09:24:05.312  INFO 11284 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2021-02-26 09:24:05.326  INFO 11284 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 14 ms. Found 1 MongoDB repository interfaces.
+2021-02-26 09:24:05.414  INFO 11284 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
+2021-02-26 09:24:05.415  INFO 11284 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-02-26 09:24:05.415  INFO 11284 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.41]
+2021-02-26 09:24:05.427  INFO 11284 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-02-26 09:24:05.427  INFO 11284 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 332 ms
+2021-02-26 09:24:05.449  INFO 11284 --- [restartedMain] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
+2021-02-26 09:24:05.469  INFO 11284 --- [cluster-ClusterId{value='6038b0253ca424693f07c278', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:13, serverValue:28}] to localhost:27017
+2021-02-26 09:24:05.469  INFO 11284 --- [cluster-rtt-ClusterId{value='6038b0253ca424693f07c278', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:14, serverValue:27}] to localhost:27017
+2021-02-26 09:24:05.471  INFO 11284 --- [cluster-ClusterId{value='6038b0253ca424693f07c278', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=5883700}
+2021-02-26 09:24:05.494  INFO 11284 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2021-02-26 09:24:05.588  INFO 11284 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-02-26 09:24:05.677  INFO 11284 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
+2021-02-26 09:24:05.682  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : Started AtalayaApplication in 0.641 seconds (JVM running for 1315.651)
+2021-02-26 09:24:05.685  INFO 11284 --- [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2021-02-26 09:24:13.837  INFO 11284 --- [http-nio-8084-exec-6] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-02-26 09:24:13.837  INFO 11284 --- [http-nio-8084-exec-6] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-02-26 09:24:13.839  INFO 11284 --- [http-nio-8084-exec-6] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2021-02-26 09:24:13.847  INFO 11284 --- [http-nio-8084-exec-6] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:15, serverValue:29}] to localhost:27017
+2021-02-26 09:24:13.872  INFO 11284 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : ESTAMOS EN MODO MULTIHILO CON  10  HILOS EN DISPOSICION....
+2021-02-26 09:24:13.872  INFO 11284 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#LecturaFichero.ROWCOUNT = 10)
+2021-02-26 09:24:13.873  INFO 11284 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: LecturaFichero
+2021-02-26 09:24:13.974  INFO 11284 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador LecturaFichero | EJECUTANDO | com.atalaya.evaluador.IndicadorProxy@36c5d078 | en la posicion 9
+2021-02-26 09:24:16.866  INFO 11284 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : El indicador LecturaFichero ha finalizado.
+2021-02-26 09:24:16.867  INFO 11284 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
+2021-02-26 09:28:24.570  INFO 11284 --- [Thread-32] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2021-02-26 09:28:24.574  INFO 11284 --- [Thread-32] org.mongodb.driver.connection            : Closed connection [connectionId{localValue:15, serverValue:29}] to localhost:27017 because the pool has been closed.
+2021-02-26 09:28:24.731  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : Starting AtalayaApplication using Java 1.8.0_231 on PC1BXD99 with PID 11284 (C:\Users\0011564\git\atalayaFull\target\classes started by 0011564 in C:\Users\0011564\git\atalayaFull)
+2021-02-26 09:28:24.731  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : No active profile set, falling back to default profiles: default
+2021-02-26 09:28:24.972  INFO 11284 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2021-02-26 09:28:24.985  INFO 11284 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 12 ms. Found 1 MongoDB repository interfaces.
+2021-02-26 09:28:25.072  INFO 11284 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
+2021-02-26 09:28:25.073  INFO 11284 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-02-26 09:28:25.073  INFO 11284 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.41]
+2021-02-26 09:28:25.086  INFO 11284 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-02-26 09:28:25.086  INFO 11284 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 349 ms
+2021-02-26 09:28:25.102  INFO 11284 --- [restartedMain] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
+2021-02-26 09:28:25.125  INFO 11284 --- [cluster-ClusterId{value='6038b1293ca424693f07c279', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:17, serverValue:30}] to localhost:27017
+2021-02-26 09:28:25.125  INFO 11284 --- [cluster-rtt-ClusterId{value='6038b1293ca424693f07c279', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:16, serverValue:31}] to localhost:27017
+2021-02-26 09:28:25.127  INFO 11284 --- [cluster-ClusterId{value='6038b1293ca424693f07c279', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=5559700}
+2021-02-26 09:28:25.149  INFO 11284 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2021-02-26 09:28:25.276  INFO 11284 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-02-26 09:28:25.371  INFO 11284 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
+2021-02-26 09:28:25.376  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : Started AtalayaApplication in 0.699 seconds (JVM running for 1575.343)
+2021-02-26 09:28:25.377  INFO 11284 --- [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2021-02-26 09:29:02.637  INFO 11284 --- [Thread-38] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2021-02-26 09:29:02.801  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : Starting AtalayaApplication using Java 1.8.0_231 on PC1BXD99 with PID 11284 (C:\Users\0011564\git\atalayaFull\target\classes started by 0011564 in C:\Users\0011564\git\atalayaFull)
+2021-02-26 09:29:02.801  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : No active profile set, falling back to default profiles: default
+2021-02-26 09:29:02.992  INFO 11284 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2021-02-26 09:29:03.009  INFO 11284 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 16 ms. Found 1 MongoDB repository interfaces.
+2021-02-26 09:29:03.097  INFO 11284 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
+2021-02-26 09:29:03.097  INFO 11284 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-02-26 09:29:03.098  INFO 11284 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.41]
+2021-02-26 09:29:03.111  INFO 11284 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-02-26 09:29:03.111  INFO 11284 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 304 ms
+2021-02-26 09:29:03.131  INFO 11284 --- [restartedMain] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
+2021-02-26 09:29:03.161  INFO 11284 --- [cluster-ClusterId{value='6038b14f3ca424693f07c27a', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:18, serverValue:33}] to localhost:27017
+2021-02-26 09:29:03.161  INFO 11284 --- [cluster-rtt-ClusterId{value='6038b14f3ca424693f07c27a', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:19, serverValue:32}] to localhost:27017
+2021-02-26 09:29:03.164  INFO 11284 --- [cluster-ClusterId{value='6038b14f3ca424693f07c27a', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=7665600}
+2021-02-26 09:29:03.186  INFO 11284 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2021-02-26 09:29:03.260  INFO 11284 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-02-26 09:29:03.322  INFO 11284 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
+2021-02-26 09:29:03.326  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : Started AtalayaApplication in 0.562 seconds (JVM running for 1613.293)
+2021-02-26 09:29:03.328  INFO 11284 --- [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2021-02-26 09:29:14.496  INFO 11284 --- [http-nio-8084-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-02-26 09:29:14.497  INFO 11284 --- [http-nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-02-26 09:29:14.498  INFO 11284 --- [http-nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2021-02-26 09:29:14.506  INFO 11284 --- [http-nio-8084-exec-1] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:20, serverValue:34}] to localhost:27017
+2021-02-26 09:29:14.536  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : ESTAMOS EN MODO MULTIHILO CON  10  HILOS EN DISPOSICION....
+2021-02-26 09:29:14.537  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#LecturaFichero.ROWCOUNT = 10)
+2021-02-26 09:29:14.538  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: LecturaFichero
+2021-02-26 09:29:14.640  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador LecturaFichero | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@f631264 | en la posicion 9
+2021-02-26 09:29:14.640  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : El indicador LecturaFichero ha finalizado.
+2021-02-26 09:29:14.640  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
+2021-02-26 09:29:27.353  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : ESTAMOS EN MODO MULTIHILO CON  10  HILOS EN DISPOSICION....
+2021-02-26 09:29:27.354  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#LecturaFichero.ROWCOUNT = 10)
+2021-02-26 09:29:27.354  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: LecturaFichero
+2021-02-26 09:29:27.455  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador LecturaFichero | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@4079f33d | en la posicion 9
+2021-02-26 09:29:27.455  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : El indicador LecturaFichero ha finalizado.
+2021-02-26 09:29:27.455  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
+2021-02-26 09:29:44.259  INFO 11284 --- [http-nio-8084-exec-4] com.atalaya.evaluador.AnalisisProxy      : ESTAMOS EN MODO MULTIHILO CON  10  HILOS EN DISPOSICION....
+2021-02-26 09:29:44.260  INFO 11284 --- [http-nio-8084-exec-4] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#LecturaFichero.ROWCOUNT = 10)
+2021-02-26 09:29:44.260  INFO 11284 --- [http-nio-8084-exec-4] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: LecturaFichero
+2021-02-26 09:29:44.360  INFO 11284 --- [http-nio-8084-exec-4] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador LecturaFichero | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@a52ac51 | en la posicion 9
+2021-02-26 09:29:44.360  INFO 11284 --- [http-nio-8084-exec-4] com.atalaya.evaluador.AnalisisProxy      : El indicador LecturaFichero ha finalizado.
+2021-02-26 09:29:44.360  INFO 11284 --- [http-nio-8084-exec-4] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
+2021-02-26 09:30:25.607  INFO 11284 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : ESTAMOS EN MODO MULTIHILO CON  10  HILOS EN DISPOSICION....
+2021-02-26 09:30:25.608  INFO 11284 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#LecturaFichero.ROWCOUNT = 10)
+2021-02-26 09:30:25.608  INFO 11284 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: LecturaFichero
+2021-02-26 09:30:25.708  INFO 11284 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador LecturaFichero | EJECUTANDO | com.atalaya.evaluador.IndicadorProxy@6b6386b | en la posicion 9
+2021-02-26 09:30:28.619  INFO 11284 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : El indicador LecturaFichero ha finalizado.
+2021-02-26 09:30:28.620  INFO 11284 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
+2021-02-26 09:30:59.959  INFO 11284 --- [Thread-43] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2021-02-26 09:30:59.963  INFO 11284 --- [Thread-43] org.mongodb.driver.connection            : Closed connection [connectionId{localValue:20, serverValue:34}] to localhost:27017 because the pool has been closed.
+2021-02-26 09:31:00.096  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : Starting AtalayaApplication using Java 1.8.0_231 on PC1BXD99 with PID 11284 (C:\Users\0011564\git\atalayaFull\target\classes started by 0011564 in C:\Users\0011564\git\atalayaFull)
+2021-02-26 09:31:00.097  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : No active profile set, falling back to default profiles: default
+2021-02-26 09:31:00.304  INFO 11284 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2021-02-26 09:31:00.321  INFO 11284 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 16 ms. Found 1 MongoDB repository interfaces.
+2021-02-26 09:31:00.402  INFO 11284 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
+2021-02-26 09:31:00.402  INFO 11284 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-02-26 09:31:00.402  INFO 11284 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.41]
+2021-02-26 09:31:00.414  INFO 11284 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-02-26 09:31:00.414  INFO 11284 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 313 ms
+2021-02-26 09:31:00.432  INFO 11284 --- [restartedMain] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
+2021-02-26 09:31:00.451  INFO 11284 --- [cluster-ClusterId{value='6038b1c43ca424693f07c27b', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:21, serverValue:35}] to localhost:27017
+2021-02-26 09:31:00.453  INFO 11284 --- [cluster-rtt-ClusterId{value='6038b1c43ca424693f07c27b', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:22, serverValue:36}] to localhost:27017
+2021-02-26 09:31:00.453  INFO 11284 --- [cluster-ClusterId{value='6038b1c43ca424693f07c27b', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=8516700}
+2021-02-26 09:31:00.477  INFO 11284 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2021-02-26 09:31:00.534  INFO 11284 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-02-26 09:31:00.589  INFO 11284 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
+2021-02-26 09:31:00.593  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : Started AtalayaApplication in 0.529 seconds (JVM running for 1730.558)
+2021-02-26 09:31:00.594  INFO 11284 --- [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2021-02-26 09:38:43.921  INFO 11284 --- [http-nio-8084-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-02-26 09:38:43.921  INFO 11284 --- [http-nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-02-26 09:38:43.922  INFO 11284 --- [http-nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2021-02-26 09:38:43.939  INFO 11284 --- [http-nio-8084-exec-1] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:23, serverValue:37}] to localhost:27017
+2021-02-26 09:38:43.979  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : ESTAMOS EN MODO MULTIHILO CON  10  HILOS EN DISPOSICION....
+2021-02-26 09:38:43.979  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#LecturaFichero.CALIFICACION > 5)
+2021-02-26 09:38:43.982  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: LecturaFichero
+2021-02-26 09:38:44.083  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador DatosJorge | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@72b27da5 | en la posicion 9
+2021-02-26 09:38:44.183  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador LecturaFichero | EJECUTANDO | com.atalaya.evaluador.IndicadorProxy@f33352f | en la posicion 9
+2021-02-26 09:38:44.183  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : El indicador asociado DatosJorge ha finalizado.
+2021-02-26 09:38:44.183  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 1
+2021-02-26 09:38:44.183  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : El indicador asociado LecturaFichero ha finalizado.
+2021-02-26 09:38:44.183  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 1
+2021-02-26 09:38:44.183  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : El indicador LecturaFichero ha finalizado.
+2021-02-26 09:38:44.184  INFO 11284 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 1
+2021-02-26 09:46:26.318  INFO 11284 --- [Thread-52] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2021-02-26 09:46:26.322  INFO 11284 --- [Thread-52] org.mongodb.driver.connection            : Closed connection [connectionId{localValue:23, serverValue:37}] to localhost:27017 because the pool has been closed.
+2021-02-26 09:46:26.498  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : Starting AtalayaApplication using Java 1.8.0_231 on PC1BXD99 with PID 11284 (C:\Users\0011564\git\atalayaFull\target\classes started by 0011564 in C:\Users\0011564\git\atalayaFull)
+2021-02-26 09:46:26.499  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : No active profile set, falling back to default profiles: default
+2021-02-26 09:46:26.675  INFO 11284 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2021-02-26 09:46:26.691  INFO 11284 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 16 ms. Found 1 MongoDB repository interfaces.
+2021-02-26 09:46:26.783  INFO 11284 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
+2021-02-26 09:46:26.784  INFO 11284 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-02-26 09:46:26.784  INFO 11284 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.41]
+2021-02-26 09:46:26.795  INFO 11284 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-02-26 09:46:26.796  INFO 11284 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 293 ms
+2021-02-26 09:46:26.810  INFO 11284 --- [restartedMain] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
+2021-02-26 09:46:26.827  INFO 11284 --- [cluster-rtt-ClusterId{value='6038b5623ca424693f07c27c', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:24, serverValue:39}] to localhost:27017
+2021-02-26 09:46:26.827  INFO 11284 --- [cluster-ClusterId{value='6038b5623ca424693f07c27c', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:25, serverValue:38}] to localhost:27017
+2021-02-26 09:46:26.829  INFO 11284 --- [cluster-ClusterId{value='6038b5623ca424693f07c27c', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=4449100}
+2021-02-26 09:46:26.849  INFO 11284 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2021-02-26 09:46:26.917  INFO 11284 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-02-26 09:46:26.986  INFO 11284 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
+2021-02-26 09:46:26.989  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : Started AtalayaApplication in 0.524 seconds (JVM running for 2656.936)
+2021-02-26 09:46:26.990  INFO 11284 --- [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2021-02-26 09:47:29.414  INFO 11284 --- [http-nio-8084-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-02-26 09:47:29.414  INFO 11284 --- [http-nio-8084-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-02-26 09:47:29.415  INFO 11284 --- [http-nio-8084-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2021-02-26 09:47:29.425  INFO 11284 --- [http-nio-8084-exec-2] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:26, serverValue:40}] to localhost:27017
+2021-02-26 09:47:29.447  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : ESTAMOS EN MODO MULTIHILO CON  10  HILOS EN DISPOSICION....
+2021-02-26 09:47:29.447  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#LecturaFichero.ROWCOUNT = 10)
+2021-02-26 09:47:29.449  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: LecturaFichero
+2021-02-26 09:47:29.550  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador LecturaFichero | EJECUTANDO | com.atalaya.evaluador.IndicadorProxy@7a7914b0 | en la posicion 9
+2021-02-26 09:48:27.724  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : El indicador LecturaFichero ha finalizado.
+2021-02-26 09:48:27.724  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
+2021-02-26 09:49:13.227  INFO 11284 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : ESTAMOS EN MODO MULTIHILO CON  10  HILOS EN DISPOSICION....
+2021-02-26 09:49:13.228  INFO 11284 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#LecturaFichero.CALIFICACION > 5)
+2021-02-26 09:49:13.228  INFO 11284 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: LecturaFichero
+2021-02-26 09:49:13.329  INFO 11284 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador DatosJorge | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@bf67465 | en la posicion 9
+2021-02-26 09:49:13.429  INFO 11284 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador LecturaFichero | EJECUTANDO | com.atalaya.evaluador.IndicadorProxy@7f6626d6 | en la posicion 9
+2021-02-26 09:49:13.429  INFO 11284 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : El indicador asociado DatosJorge ha finalizado.
+2021-02-26 09:49:13.429  INFO 11284 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 1
+2021-02-26 09:49:13.429  INFO 11284 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : El indicador asociado LecturaFichero ha finalizado.
+2021-02-26 09:49:13.429  INFO 11284 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 1
+2021-02-26 09:49:13.429  INFO 11284 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : El indicador LecturaFichero ha finalizado.
+2021-02-26 09:49:13.429  INFO 11284 --- [http-nio-8084-exec-6] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 1
+2021-02-26 10:04:07.604  INFO 11284 --- [Thread-59] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2021-02-26 10:04:07.608  INFO 11284 --- [Thread-59] org.mongodb.driver.connection            : Closed connection [connectionId{localValue:26, serverValue:40}] to localhost:27017 because the pool has been closed.
+2021-02-26 10:04:07.830  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : Starting AtalayaApplication using Java 1.8.0_231 on PC1BXD99 with PID 11284 (C:\Users\0011564\git\atalayaFull\target\classes started by 0011564 in C:\Users\0011564\git\atalayaFull)
+2021-02-26 10:04:07.830  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : No active profile set, falling back to default profiles: default
+2021-02-26 10:04:08.096  INFO 11284 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2021-02-26 10:04:08.114  INFO 11284 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 16 ms. Found 1 MongoDB repository interfaces.
+2021-02-26 10:04:08.234  INFO 11284 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
+2021-02-26 10:04:08.234  INFO 11284 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-02-26 10:04:08.235  INFO 11284 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.41]
+2021-02-26 10:04:08.251  INFO 11284 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-02-26 10:04:08.251  INFO 11284 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 415 ms
+2021-02-26 10:04:08.268  INFO 11284 --- [restartedMain] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
+2021-02-26 10:04:08.290  INFO 11284 --- [cluster-rtt-ClusterId{value='6038b9883ca424693f07c27d', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:28, serverValue:41}] to localhost:27017
+2021-02-26 10:04:08.292  INFO 11284 --- [cluster-ClusterId{value='6038b9883ca424693f07c27d', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:27, serverValue:42}] to localhost:27017
+2021-02-26 10:04:08.292  INFO 11284 --- [cluster-ClusterId{value='6038b9883ca424693f07c27d', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=7482600}
+2021-02-26 10:04:08.322  INFO 11284 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2021-02-26 10:04:08.432  INFO 11284 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-02-26 10:04:08.527  INFO 11284 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
+2021-02-26 10:04:08.533  INFO 11284 --- [restartedMain] com.atalaya.AtalayaApplication           : Started AtalayaApplication in 0.754 seconds (JVM running for 3718.478)
+2021-02-26 10:04:08.535  INFO 11284 --- [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2021-02-26 10:05:18.055  INFO 11284 --- [http-nio-8084-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-02-26 10:05:18.055  INFO 11284 --- [http-nio-8084-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-02-26 10:05:18.056  INFO 11284 --- [http-nio-8084-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2021-02-26 10:05:18.069  INFO 11284 --- [http-nio-8084-exec-2] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:29, serverValue:43}] to localhost:27017
+2021-02-26 10:05:18.114  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : ESTAMOS EN MODO MULTIHILO CON  10  HILOS EN DISPOSICION....
+2021-02-26 10:05:18.114  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#LecturaFichero.rowcount > 0)
+2021-02-26 10:05:18.116  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: LecturaFichero
+2021-02-26 10:13:26.071  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador DatosJorge | EJEUCTADO | com.atalaya.evaluador.IndicadorProxy@4612b37c | en la posicion 9
+2021-02-26 10:13:28.143  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador LecturaFichero | EJECUTANDO | com.atalaya.evaluador.IndicadorProxy@1fa32c44 | en la posicion 9
+2021-02-26 10:13:38.482  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : El indicador asociado DatosJorge ha finalizado.
+2021-02-26 10:13:38.483  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
+2021-02-26 10:13:40.515  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : El indicador asociado LecturaFichero ha finalizado.
+2021-02-26 10:13:40.515  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
+2021-02-26 10:13:40.515  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : El indicador LecturaFichero ha finalizado.
+2021-02-26 10:13:40.515  INFO 11284 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
+2021-02-26 10:27:17.905  INFO 15008 --- [main] com.atalaya.AtalayaApplicationTests      : Starting AtalayaApplicationTests using Java 1.8.0_231 on PC1BXD99 with PID 15008 (started by 0011564 in C:\Users\0011564\git\atalayaFull)
+2021-02-26 10:27:17.911  INFO 15008 --- [main] com.atalaya.AtalayaApplicationTests      : No active profile set, falling back to default profiles: default
+2021-02-26 10:27:18.889  INFO 15008 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2021-02-26 10:27:19.033  INFO 15008 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 131 ms. Found 1 MongoDB repository interfaces.
+2021-02-26 10:27:20.609  INFO 15008 --- [main] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
+2021-02-26 10:27:20.748  INFO 15008 --- [cluster-ClusterId{value='6038bef89393e923e6678d19', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:1, serverValue:44}] to localhost:27017
+2021-02-26 10:27:20.748  INFO 15008 --- [cluster-rtt-ClusterId{value='6038bef89393e923e6678d19', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:2, serverValue:45}] to localhost:27017
+2021-02-26 10:27:20.751  INFO 15008 --- [cluster-ClusterId{value='6038bef89393e923e6678d19', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=50564800}
+2021-02-26 10:27:22.516  INFO 15008 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-02-26 10:27:23.411  INFO 15008 --- [main] com.atalaya.AtalayaApplicationTests      : Started AtalayaApplicationTests in 6.122 seconds (JVM running for 7.845)
+2021-02-26 10:27:23.892  INFO 15008 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2021-02-26 10:47:51.180  INFO 21252 --- [restartedMain] com.atalaya.AtalayaApplication           : Starting AtalayaApplication using Java 1.8.0_231 on PC1BXD99 with PID 21252 (C:\Users\0011564\git\atalayaFull\target\classes started by 0011564 in C:\Users\0011564\git\atalayaFull)
+2021-02-26 10:47:51.193  INFO 21252 --- [restartedMain] com.atalaya.AtalayaApplication           : No active profile set, falling back to default profiles: default
+2021-02-26 10:47:51.524  INFO 21252 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2021-02-26 10:47:51.539  INFO 21252 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2021-02-26 10:47:53.456  INFO 21252 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2021-02-26 10:47:53.576  INFO 21252 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 110 ms. Found 1 MongoDB repository interfaces.
+2021-02-26 10:47:55.686  INFO 21252 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
+2021-02-26 10:47:55.714  INFO 21252 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-02-26 10:47:55.715  INFO 21252 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.41]
+2021-02-26 10:47:55.871  INFO 21252 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-02-26 10:47:55.872  INFO 21252 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4330 ms
+2021-02-26 10:47:56.303  INFO 21252 --- [restartedMain] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
+2021-02-26 10:47:56.455  INFO 21252 --- [cluster-ClusterId{value='6038c3cc9796803a84ac1e47', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:2, serverValue:46}] to localhost:27017
+2021-02-26 10:47:56.455  INFO 21252 --- [cluster-rtt-ClusterId{value='6038c3cc9796803a84ac1e47', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:1, serverValue:47}] to localhost:27017
+2021-02-26 10:47:56.456  INFO 21252 --- [cluster-ClusterId{value='6038c3cc9796803a84ac1e47', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=41660700}
+2021-02-26 10:47:57.063  INFO 21252 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2021-02-26 10:47:57.616  INFO 21252 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-02-26 10:47:58.179  INFO 21252 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
+2021-02-26 10:47:58.202  INFO 21252 --- [restartedMain] com.atalaya.AtalayaApplication           : Started AtalayaApplication in 8.561 seconds (JVM running for 10.156)
+2021-02-26 10:48:06.708  INFO 21252 --- [http-nio-8084-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-02-26 10:48:06.709  INFO 21252 --- [http-nio-8084-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-02-26 10:48:06.711  INFO 21252 --- [http-nio-8084-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2021-02-26 10:48:06.861  INFO 21252 --- [http-nio-8084-exec-2] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:3, serverValue:48}] to localhost:27017
+2021-02-26 10:48:07.008  INFO 21252 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : ESTAMOS EN MODO MULTIHILO CON  10  HILOS EN DISPOSICION....
+2021-02-26 10:48:07.010  INFO 21252 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#EscrituraFichero.ROWCOUNT > 0)
+2021-02-26 10:48:07.014  INFO 21252 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: EscrituraFichero
+2021-02-26 10:48:18.675  INFO 21252 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador Alumnos | EJECUTANDO | com.atalaya.evaluador.IndicadorProxy@4ea09da3 | en la posicion 9
+2021-02-26 10:48:23.164  INFO 21252 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador EscrituraFichero | EJECUTANDO | com.atalaya.evaluador.IndicadorProxy@2c8e9376 | en la posicion 8
+2021-02-26 10:48:29.054  INFO 21252 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : El indicador asociado EscrituraFichero ha finalizado.
+2021-02-26 10:48:29.056  INFO 21252 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
+2021-02-26 10:48:29.056  INFO 21252 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : El indicador EscrituraFichero ha finalizado.
+2021-02-26 10:48:29.057  INFO 21252 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
+2021-02-26 10:56:21.330  INFO 5552 --- [restartedMain] com.atalaya.AtalayaApplication           : Starting AtalayaApplication using Java 1.8.0_231 on PC1BXD99 with PID 5552 (C:\Users\0011564\git\atalayaFull\target\classes started by 0011564 in C:\Users\0011564\git\atalayaFull)
+2021-02-26 10:56:21.342  INFO 5552 --- [restartedMain] com.atalaya.AtalayaApplication           : No active profile set, falling back to default profiles: default
+2021-02-26 10:56:21.502  INFO 5552 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2021-02-26 10:56:21.503  INFO 5552 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2021-02-26 10:56:23.054  INFO 5552 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2021-02-26 10:56:23.185  INFO 5552 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 118 ms. Found 1 MongoDB repository interfaces.
+2021-02-26 10:56:25.713  INFO 5552 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
+2021-02-26 10:56:25.756  INFO 5552 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-02-26 10:56:25.758  INFO 5552 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.41]
+2021-02-26 10:56:25.986  INFO 5552 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-02-26 10:56:25.988  INFO 5552 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4483 ms
+2021-02-26 10:56:26.613  INFO 5552 --- [restartedMain] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
+2021-02-26 10:56:26.829  INFO 5552 --- [cluster-ClusterId{value='6038c5cac4127874462124be', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:1, serverValue:49}] to localhost:27017
+2021-02-26 10:56:26.829  INFO 5552 --- [cluster-rtt-ClusterId{value='6038c5cac4127874462124be', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:2, serverValue:50}] to localhost:27017
+2021-02-26 10:56:26.830  INFO 5552 --- [cluster-ClusterId{value='6038c5cac4127874462124be', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=64400700}
+2021-02-26 10:56:27.740  INFO 5552 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2021-02-26 10:56:28.366  INFO 5552 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-02-26 10:56:29.354  INFO 5552 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
+2021-02-26 10:56:29.380  INFO 5552 --- [restartedMain] com.atalaya.AtalayaApplication           : Started AtalayaApplication in 9.192 seconds (JVM running for 10.776)
+2021-02-26 10:57:50.690  INFO 5552 --- [http-nio-8084-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-02-26 10:57:50.691  INFO 5552 --- [http-nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-02-26 10:57:50.693  INFO 5552 --- [http-nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2021-02-26 10:57:50.849  INFO 5552 --- [http-nio-8084-exec-1] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:3, serverValue:51}] to localhost:27017
+2021-02-26 10:57:50.980  INFO 5552 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : ESTAMOS EN MODO MULTIHILO CON  10  HILOS EN DISPOSICION....
+2021-02-26 10:57:50.980  INFO 5552 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#LecturaFichero.ROWCOUNT = 10)
+2021-02-26 10:57:50.983  INFO 5552 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: LecturaFichero
+2021-02-26 10:58:03.634  INFO 5552 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador LecturaFichero | EJECUTANDO | com.atalaya.evaluador.IndicadorProxy@616420a4 | en la posicion 9
+2021-02-26 10:58:39.501  INFO 5552 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : El indicador LecturaFichero ha finalizado.
+2021-02-26 10:58:39.502  INFO 5552 --- [http-nio-8084-exec-1] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
+2021-02-26 10:58:51.294  INFO 5552 --- [http-nio-8084-exec-3] com.atalaya.evaluador.AnalisisProxy      : ESTAMOS EN MODO MULTIHILO CON  10  HILOS EN DISPOSICION....
+2021-02-26 10:58:51.295  INFO 5552 --- [http-nio-8084-exec-3] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#EscrituraFichero.ROWCOUNT > 0)
+2021-02-26 10:58:51.295  INFO 5552 --- [http-nio-8084-exec-3] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: EscrituraFichero
+2021-02-26 10:58:51.397  INFO 5552 --- [http-nio-8084-exec-3] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador Alumnos | EJECUTANDO | com.atalaya.evaluador.IndicadorProxy@59195530 | en la posicion 9
+2021-02-26 10:58:52.111  INFO 5552 --- [http-nio-8084-exec-3] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador EscrituraFichero | EJECUTANDO | com.atalaya.evaluador.IndicadorProxy@696a7530 | en la posicion 8
+2021-02-26 10:59:07.831  INFO 5552 --- [http-nio-8084-exec-3] com.atalaya.evaluador.AnalisisProxy      : El indicador asociado EscrituraFichero ha finalizado.
+2021-02-26 10:59:07.831  INFO 5552 --- [http-nio-8084-exec-3] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
+2021-02-26 10:59:07.832  INFO 5552 --- [http-nio-8084-exec-3] com.atalaya.evaluador.AnalisisProxy      : El indicador EscrituraFichero ha finalizado.
+2021-02-26 10:59:07.832  INFO 5552 --- [http-nio-8084-exec-3] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0
+2021-02-26 10:59:41.856  INFO 5552 --- [Thread-5] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2021-02-26 10:59:41.866  INFO 5552 --- [Thread-5] org.mongodb.driver.connection            : Closed connection [connectionId{localValue:3, serverValue:51}] to localhost:27017 because the pool has been closed.
+2021-02-26 10:59:42.153  INFO 5552 --- [restartedMain] com.atalaya.AtalayaApplication           : Starting AtalayaApplication using Java 1.8.0_231 on PC1BXD99 with PID 5552 (C:\Users\0011564\git\atalayaFull\target\classes started by 0011564 in C:\Users\0011564\git\atalayaFull)
+2021-02-26 10:59:42.154  INFO 5552 --- [restartedMain] com.atalaya.AtalayaApplication           : No active profile set, falling back to default profiles: default
+2021-02-26 10:59:42.568  INFO 5552 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2021-02-26 10:59:42.600  INFO 5552 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 31 ms. Found 1 MongoDB repository interfaces.
+2021-02-26 10:59:42.790  INFO 5552 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
+2021-02-26 10:59:42.791  INFO 5552 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-02-26 10:59:42.791  INFO 5552 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.41]
+2021-02-26 10:59:42.810  INFO 5552 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-02-26 10:59:42.811  INFO 5552 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 645 ms
+2021-02-26 10:59:42.840  INFO 5552 --- [restartedMain] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
+2021-02-26 10:59:42.868  INFO 5552 --- [cluster-rtt-ClusterId{value='6038c68ec4127874462124bf', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:5, serverValue:52}] to localhost:27017
+2021-02-26 10:59:42.872  INFO 5552 --- [cluster-ClusterId{value='6038c68ec4127874462124bf', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:4, serverValue:53}] to localhost:27017
+2021-02-26 10:59:42.872  INFO 5552 --- [cluster-ClusterId{value='6038c68ec4127874462124bf', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=9955200}
+2021-02-26 10:59:42.916  INFO 5552 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2021-02-26 10:59:43.098  INFO 5552 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-02-26 10:59:43.309  INFO 5552 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
+2021-02-26 10:59:43.328  INFO 5552 --- [restartedMain] com.atalaya.AtalayaApplication           : Started AtalayaApplication in 1.266 seconds (JVM running for 204.724)
+2021-02-26 10:59:43.332  INFO 5552 --- [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2021-02-26 11:04:55.919  INFO 20092 --- [main] com.atalaya.AtalayaApplicationTests      : Starting AtalayaApplicationTests using Java 1.8.0_231 on PC1BXD99 with PID 20092 (started by 0011564 in C:\Users\0011564\git\atalayaFull)
+2021-02-26 11:04:55.925  INFO 20092 --- [main] com.atalaya.AtalayaApplicationTests      : No active profile set, falling back to default profiles: default
+2021-02-26 11:04:57.485  INFO 20092 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2021-02-26 11:04:57.574  INFO 20092 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 81 ms. Found 1 MongoDB repository interfaces.
+2021-02-26 11:04:59.195  INFO 20092 --- [main] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[atalayadb:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
+2021-02-26 11:05:00.774  INFO 20092 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-02-26 11:05:01.568  INFO 20092 --- [main] com.atalaya.AtalayaApplicationTests      : Started AtalayaApplicationTests in 6.289 seconds (JVM running for 7.83)
+2021-02-26 11:05:02.156  INFO 20092 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2021-02-26 11:17:49.442  INFO 22964 --- [main] com.atalaya.AtalayaApplicationTests      : Starting AtalayaApplicationTests using Java 1.8.0_231 on PC1BXD99 with PID 22964 (started by 0011564 in C:\Users\0011564\git\atalayaFull)
+2021-02-26 11:17:49.448  INFO 22964 --- [main] com.atalaya.AtalayaApplicationTests      : No active profile set, falling back to default profiles: default
+2021-02-26 11:17:50.404  INFO 22964 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2021-02-26 11:17:50.545  INFO 22964 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 131 ms. Found 1 MongoDB repository interfaces.
+2021-02-26 11:17:52.048  INFO 22964 --- [main] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
+2021-02-26 11:17:52.180  INFO 22964 --- [cluster-ClusterId{value='6038cad093c5ab0c302375c2', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:1, serverValue:57}] to localhost:27017
+2021-02-26 11:17:52.180  INFO 22964 --- [cluster-rtt-ClusterId{value='6038cad093c5ab0c302375c2', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:2, serverValue:56}] to localhost:27017
+2021-02-26 11:17:52.181  INFO 22964 --- [cluster-ClusterId{value='6038cad093c5ab0c302375c2', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=45255200}
+2021-02-26 11:17:53.663  INFO 22964 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-02-26 11:17:54.363  INFO 22964 --- [main] com.atalaya.AtalayaApplicationTests      : Started AtalayaApplicationTests in 5.516 seconds (JVM running for 6.95)
+2021-02-26 11:17:54.846  INFO 22964 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2021-02-26 11:23:41.729  INFO 11632 --- [restartedMain] com.atalaya.AtalayaApplication           : Starting AtalayaApplication using Java 1.8.0_231 on PC1BXD99 with PID 11632 (C:\Users\0011564\git\atalayaFull\target\classes started by 0011564 in C:\Users\0011564\git\atalayaFull)
+2021-02-26 11:23:41.741  INFO 11632 --- [restartedMain] com.atalaya.AtalayaApplication           : No active profile set, falling back to default profiles: default
+2021-02-26 11:23:41.895  INFO 11632 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2021-02-26 11:23:41.895  INFO 11632 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2021-02-26 11:23:43.475  INFO 11632 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2021-02-26 11:23:43.592  INFO 11632 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 107 ms. Found 1 MongoDB repository interfaces.
+2021-02-26 11:23:45.707  INFO 11632 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8084 (http)
+2021-02-26 11:23:45.738  INFO 11632 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-02-26 11:23:45.738  INFO 11632 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.41]
+2021-02-26 11:23:45.901  INFO 11632 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-02-26 11:23:45.902  INFO 11632 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4005 ms
+2021-02-26 11:23:46.320  INFO 11632 --- [restartedMain] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
+2021-02-26 11:23:46.511  INFO 11632 --- [cluster-rtt-ClusterId{value='6038cc322ced1b747b214001', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:1, serverValue:58}] to localhost:27017
+2021-02-26 11:23:46.511  INFO 11632 --- [cluster-ClusterId{value='6038cc322ced1b747b214001', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:2, serverValue:59}] to localhost:27017
+2021-02-26 11:23:46.513  INFO 11632 --- [cluster-ClusterId{value='6038cc322ced1b747b214001', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=49583700}
+2021-02-26 11:23:47.208  INFO 11632 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2021-02-26 11:23:47.754  INFO 11632 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-02-26 11:23:48.444  INFO 11632 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8084 (http) with context path ''
+2021-02-26 11:23:48.497  INFO 11632 --- [restartedMain] com.atalaya.AtalayaApplication           : Started AtalayaApplication in 7.877 seconds (JVM running for 9.134)
+2021-02-26 11:25:09.643  INFO 11632 --- [http-nio-8084-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-02-26 11:25:09.643  INFO 11632 --- [http-nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-02-26 11:25:09.645  INFO 11632 --- [http-nio-8084-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2021-02-26 11:26:03.455  INFO 11632 --- [http-nio-8084-exec-2] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:3, serverValue:60}] to localhost:27017
+2021-02-26 11:26:03.545  INFO 11632 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : ESTAMOS EN MODO MULTIHILO CON  10  HILOS EN DISPOSICION....
+2021-02-26 11:26:03.546  INFO 11632 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : condicion completa a evaluar:  (#LecturaFichero.ROWCOUNT = 10)
+2021-02-26 11:26:03.547  INFO 11632 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : Interpretando operando de tipo indicador: LecturaFichero
+2021-02-26 11:26:03.649  INFO 11632 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : Arranco nuevo hilo para el indicador LecturaFichero | EJECUTANDO | com.atalaya.evaluador.IndicadorProxy@27ad8541 | en la posicion 9
+2021-02-26 11:26:50.873  INFO 11632 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : El indicador LecturaFichero ha finalizado.
+2021-02-26 11:26:50.874  INFO 11632 --- [http-nio-8084-exec-2] com.atalaya.evaluador.AnalisisProxy      : El numero de hilos ocupados es: 0

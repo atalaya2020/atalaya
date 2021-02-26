@@ -155,7 +155,9 @@ public class IndicadorProxy implements IIndicadorProxy, Runnable  {
 			this.setEstado(IIndicadorProxy.ESTADO_EJECUTANDO);
 			
 			if (this.getIndicador().getTipo().equals(IIndicadorProxyType.tipo_bucle)
-				|| this.getIndicador().getTipo().equals(IIndicadorProxyType.tipo_ws))
+				|| this.getIndicador().getTipo().equals(IIndicadorProxyType.tipo_ws)
+				|| this.getIndicador().getTipo().equals(IIndicadorProxyType.tipo_fichero_Reader)
+				|| this.getIndicador().getTipo().equals(IIndicadorProxyType.tipo_fichero_Writer))
 			{
 				IIndicadorProxyType indicadorProxyType = null;
 				
@@ -187,8 +189,8 @@ public class IndicadorProxy implements IIndicadorProxy, Runnable  {
 					try {
 		
 						conexion = DriverManager.getConnection(
-								//"jdbc:mysql://localhost:3306/alumnadodb?useServerPrepStmts=true&useSSL=false&allowPublicKeyRetrieval=true",
-								"jdbc:mysql://alumnadodb:3306/alumnadodb?useServerPrepStmts=true&useSSL=false&allowPublicKeyRetrieval=true",
+								"jdbc:mysql://localhost:3306/alumnadodb?useServerPrepStmts=true&useSSL=false&allowPublicKeyRetrieval=true",
+								//"jdbc:mysql://alumnadodb:3306/alumnadodb?useServerPrepStmts=true&useSSL=false&allowPublicKeyRetrieval=true",
 								"root", "atalaya"); 
 		 
 						PreparedStatement pstmt = conexion.prepareStatement(this.indicador.getComando());
@@ -415,16 +417,24 @@ public class IndicadorProxy implements IIndicadorProxy, Runnable  {
 					{					
 						String columna = tramos[1];
 						Object valParam = new Object();
-						Object[] linea = indicadoresProxy.get(nombreIndicador).getResultadoEjecucion().elementAt(0);
-						int c = 0;
-						while (c < indicadoresProxy.get(nombreIndicador).getIndicador().getResultado().length ) {
-							if (columna.equals(indicadoresProxy.get(nombreIndicador).getIndicador().getResultado()[c])) {
-								valParam = linea[c];
-								break;
+						
+						if (columna.equals("TODO")) {
+							valParam = tramos[0];
+						}else {
+							Object[] linea = indicadoresProxy.get(nombreIndicador).getResultadoEjecucion().elementAt(0);
+							int c = 0;
+							while (c < indicadoresProxy.get(nombreIndicador).getIndicador().getResultado().length ) {
+								if (columna.equals(indicadoresProxy.get(nombreIndicador).getIndicador().getResultado()[c])) {
+									valParam = linea[c];
+									break;
+								}
+								c++;
 							}
-							c++;
+							
 						}
-						this.getIndicador().getParametros().get(p).setValor(valParam.toString());					
+						
+						this.getIndicador().getParametros().get(p).setValor(valParam.toString());
+											
 					}
 				}
 			}

@@ -7,17 +7,20 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Analisis {
 	private String nombre;
 	private String descripcion;
+
 	private ArrayList<Indicador> indicadores;
 	private ArrayList<Criterio> criterios;
 	private ArrayList<Evento> eventos;
-
-	public Analisis(String nombre, String descripcion , ArrayList<Indicador> indicadores, ArrayList<Criterio> criterios, ArrayList<Evento> eventos) {
+	private ArrayList<Configuracion> configuraciones;
+	
+	public Analisis(String nombre, String descripcion , ArrayList<Indicador> indicadores, ArrayList<Criterio> criterios, ArrayList<Evento> eventos, ArrayList<Configuracion> configuraciones) {
 		super();
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.indicadores = indicadores;
 		this.criterios = criterios;
 		this.eventos = eventos;
+		this.configuraciones = configuraciones;
 	}
 
 	public String getNombre() {
@@ -60,58 +63,14 @@ public class Analisis {
 		this.eventos = eventos;
 	}
 
-	/*public boolean validar() {
-		boolean valido = true;
+	public ArrayList<Configuracion> getConfiguraciones() {
+		return configuraciones;
+	}
 
-		if(this.getNombre().equals("")) {
-			valido = false;
-						// Falta nombre
-		}
-		else if(this.getDescripcion().equals("")) {
-			valido = false;
-			// Falta descripcion
-		}
+	public void setConfiguraciones(ArrayList<Configuracion> configuraciones) {
+		this.configuraciones = configuraciones;
+	}
 
-		/*else {
-
-			ArrayList<Indicador> indicadores= this.getIndicadores();
-
-			for (int i = 0; i<indicadores.size(); i++) {
-				valido = indicadores.get(i).validar();
-				if(valido == false) {
-					return valido;
-					// un indicador no es valido
-				}
-			}
-
-			ArrayList<Criterio> criterios= this.getCriterios();
-
-			for (int i = 0; i<criterios.size(); i++) {
-				valido = criterios.get(i).validar();
-				if(valido == false) {
-					return valido;
-					// un criterio no es valido
-				}
-			}
-
-			ArrayList<Evento> eventos= this.getEventos();
-
-			for (int i = 0; i<eventos.size(); i++) {
-				valido = eventos.get(i).validar();
-				if(valido == false) {
-					return valido;
-					// un criterio no es valido
-				}
-			}
-
-		}
-
-
-
-
-
-
-		return valido;
-	}*/
-
+	
+	
 }

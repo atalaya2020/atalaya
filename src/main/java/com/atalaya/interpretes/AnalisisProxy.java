@@ -1,6 +1,5 @@
 package com.atalaya.interpretes;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
@@ -57,6 +56,8 @@ public class AnalisisProxy extends Ejecutable implements Runnable {
 		
 	public AnalisisProxy (Analisis analisis) 
 	{			
+		setHashCode(hashCode());
+		
 		log = LoggerFactory.getLogger(AnalisisProxy.class);
 		
 		this.parametros = new ArrayList<Parametro>();
@@ -64,19 +65,20 @@ public class AnalisisProxy extends Ejecutable implements Runnable {
 		
 		setEstado(ESTADO_NOEJEUCTADO);
 		
+		cabeceralog = "Analisis " +this.getAnalisis().getNombre() + "|" + this.getHashCode() + ":";
 		log.info(cabeceralog + "Cargando configuracion");
 		obtenerConfAnalisis(analisis,"Threads");
 		obtenerConfAnalisis(analisis,"Tiempos");
 		
 		hilos = new Thread[numHilos];
-		setHashCode(hashCode());
-
 		
-		cabeceralog = "Analisis " +this.getAnalisis().getNombre() + "|" + this.getHashCode() + ":";
+		
 	}
 	
 	public AnalisisProxy (Analisis analisis, ArrayList<Parametro> parametros) 
 	{
+		setHashCode(hashCode());
+		
 		log = LoggerFactory.getLogger(AnalisisProxy.class);
 		
 		this.parametros = parametros;
@@ -85,29 +87,30 @@ public class AnalisisProxy extends Ejecutable implements Runnable {
 		setEstado(ESTADO_NOEJEUCTADO);
 		
 		cargarAnalisisProxy(analisis);
+		cabeceralog = "Analisis "+ this.getAnalisis().getNombre() + "|" + this.getHashCode() + ":";
 		log.info(cabeceralog + "Cargando configuracion");
 		obtenerConfAnalisis(analisis,"Threads");
 		obtenerConfAnalisis(analisis,"Tiempos");
 		
 		hilos = new Thread[numHilos];
-		setHashCode(hashCode());
-		
-		
-		cabeceralog = "Analisis "+ this.getAnalisis().getNombre() + "|" + this.getHashCode() + ":";
 	}
 	
 	//Este metodo tendria mas sentido si le metemos la validacion de cada uno de los elementos del analisis
 	private void cargarAnalisisProxy(Analisis analisis) {
+	Hashtable<String,IndicadorProxy> indicadoresAnalisis;
 		
 		this.criterios = new ArrayList<CriterioProxy>();	
 		for (int i = 0; i < analisis.getCriterios().size(); i++) {
 			CriterioProxy criProxy = new CriterioProxy(analisis.getCriterios().get(i));
+			criProxy.setAnalisis(this.getHashCode());
 			this.criterios.add(i, criProxy);
 		}
 		
-		setIndicadores(new Hashtable<String,IndicadorProxy>());
+//		setIndicadores(new Hashtable<String,IndicadorProxy>());
+		indicadoresAnalisis = new Hashtable<String,IndicadorProxy>();
 		for (int i = 0; i < analisis.getIndicadores().size(); i++) {
 			IndicadorProxy indProxy = new IndicadorProxy(analisis.getIndicadores().get(i));
+			indProxy.setAnalisis(this.getHashCode());
 			
 			//Recorro los parametros del indicador para identificar aquellos que hacen referencia a un parametro de entrada #PARAM.NOMBRE_PARAMETRO
 			ArrayList<Parametro> parametros = indProxy.getIndicador().getParametros();
@@ -127,14 +130,18 @@ public class AnalisisProxy extends Ejecutable implements Runnable {
 					}
 				}
 			}
+			indicadoresAnalisis.put(indProxy.getIndicador().getNombre(), indProxy);
 			
-			super.getIndicadores().put(analisis.getIndicadores().get(i).getNombre(), indProxy);
+//			super.getIndicadores().put(analisis.getIndicadores().get(i).getNombre(), indProxy);
 		}
+		
+		super.getIndicadores().put(this.getHashCode(), indicadoresAnalisis);
 		
 		this.eventos = new ArrayList<IndicadorProxy>();
 		for (int i = 0; i < analisis.getEventos().size(); i++) 
 		{
 			IndicadorProxy eveProxy = new IndicadorProxy(analisis.getEventos().get(i));
+			eveProxy.setAnalisis(this.getHashCode());
 			this.eventos.add(i, eveProxy);
 		}
 		
@@ -158,19 +165,23 @@ public class AnalisisProxy extends Ejecutable implements Runnable {
 			while(!this.ejecutado())
 			{	
 				//Validar si se han superado los tiempos maximos de espera en los indicadores
-				Enumeration<String> enumIndicadores = this.getIndicadores().keys();
+				Enumeration<String> enumIndicadores = this.getIndicadores().get(this.getHashCode()).keys();
+//				Enumeration<String> enumIndicadores = this.getIndicadores().keys();
 				long ahora = Calendar.getInstance().getTimeInMillis();
 				//Recorremos todos los indicadores lanzados para este Analisis
 				while(enumIndicadores.hasMoreElements())
 				{
 					String nombreIndicador = (String)enumIndicadores.nextElement();
 					//Paramos aquellos indicadores que han superado el tiempo maximo de ejecucion
-					if (this.getIndicadores().get(nombreIndicador).ejecutando())
+//					if (this.getIndicadores().get(nombreIndicador).ejecutando())
+					if (super.getIndicadorNombre(this.getHashCode(), nombreIndicador).ejecutando())
 					{
-						if ((ahora - this.getIndicadores().get(nombreIndicador).getCrono()) > tiempo_max) //TAREA añadir nuevo parametro de ejecucion a nivel de indicador TIEMPO MAX DE EJECUCION
+//						if ((ahora - this.getIndicadores().get(nombreIndicador).getCrono()) > tiempo_max) //TAREA añadir nuevo parametro de ejecucion a nivel de indicador TIEMPO MAX DE EJECUCION
+						if ((ahora - super.getIndicadorNombre(this.getHashCode(), nombreIndicador).getCrono()) > tiempo_max) //TAREA añadir nuevo parametro de ejecucion a nivel de indicador TIEMPO MAX DE EJECUCION
 						{
 							//Forzamos su parada por haber superado el tiempo maximo de ejeucion
-							this.getIndicadores().get(nombreIndicador).detener();
+//							this.getIndicadores().get(nombreIndicador).detener();
+							super.getIndicadorNombre(this.getHashCode(), nombreIndicador).detener();
 							log.info(cabeceralog+"Parado el indicador:" +nombreIndicador+ " por sobrepasar el tiempo maximo de ejecucion "+ tiempo_max);
 						}
 					}
@@ -192,7 +203,6 @@ public class AnalisisProxy extends Ejecutable implements Runnable {
 					if (criterio.getDescripcionEstado()==FIN_OK)
 					{
 						numCriEjecutadosOk++;
-						
 						this.lanzarEventos(criterio);
 					}
 					else if (criterio.getDescripcionEstado()==FIN_FORZADO)
@@ -226,7 +236,7 @@ public class AnalisisProxy extends Ejecutable implements Runnable {
 					
 					if (criterio.noejecutado())
 					{
-						//Ejecuto el indicador
+						//Ejecuto el criterio
 						if (numHilos<=minHilos)
 							criterio.ejecutar();
 						else
@@ -234,16 +244,27 @@ public class AnalisisProxy extends Ejecutable implements Runnable {
 					}
 				}
 			
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			
 			}
 			
 			log.info(cabeceralog + "Finalizada la ejeucion del analisis.");
+			// Se borran de la lista estática de indicadores de Ejecutable los indicadores de este análisis
+			Enumeration<String> enumIndicadores = this.getIndicadores().get(this.getHashCode()).keys();
+			while(enumIndicadores.hasMoreElements()) {
+				String nombreIndicador = (String)enumIndicadores.nextElement();
+				// falta comprobar en la configuración si el indicador es persisntente o no para decidir si se borra o no;
+				super.getIndicadores().get(this.getHashCode()).remove(nombreIndicador);
+				// Si la lista de indicadores del análisis está vacía (se han borrado todos sus indicadores), se borra el análisis de la lista de la clase Ejecutable
+				if (super.getIndicadores().get(this.getHashCode()).isEmpty()) {
+					super.getIndicadores().remove(this.getHashCode());
+				}
+			}			
 		}
 		
 		return true;
@@ -257,7 +278,8 @@ public class AnalisisProxy extends Ejecutable implements Runnable {
 		volcado = volcado + "Estado: " + this.getEstado() + "\n";
 		volcado = volcado + "Descripcion del estado: " + this.getDescripcionEstado() + "\n";
 		volcado = volcado + super.volcadoResultado(modo);
-		
+		log.info("Volcado:");
+		log.info(volcado);
 		return volcado;
 	}
 	

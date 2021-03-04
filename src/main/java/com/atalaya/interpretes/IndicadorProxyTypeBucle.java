@@ -48,8 +48,9 @@ public class IndicadorProxyTypeBucle extends IndicadorProxyType implements IIndi
 				{
 					indicador.listaIndicadoresHijos = new ArrayList<IndicadorProxy>();
 					
-					//Recupero las caracterisiticas del indicador A
-					IndicadorProxy indicador_a = indicador.getIndicadores().get(arComando[1].substring(1));
+					//Recupero las caracterisiticas del indicador A					
+//					IndicadorProxy indicador_a = indicador.getIndicadores().get(arComando[1].substring(1));
+					IndicadorProxy indicador_a = indicador.getIndicadorNombre(indicador.getAnalisis(), arComando[1].substring(1));
 					//Ejecuto el alias_A
 					indicador_a.ejecutar();
 					
@@ -60,8 +61,8 @@ public class IndicadorProxyTypeBucle extends IndicadorProxyType implements IIndi
 						indicador_a.getResultadoEjecucion().size()>0) 
 					{
 						//Recupero las caracterisiticas del indicador B
-						IndicadorProxy indicador_b = indicador.getIndicadores().get(arComando[3].substring(1));
-						
+//						IndicadorProxy indicador_b = indicador.getIndicadores().get(arComando[3].substring(1));
+						IndicadorProxy indicador_b = indicador.getIndicadorNombre(indicador.getAnalisis(), arComando[3].substring(1));						
 						//Recupero el resultado del indicador A
 						Vector<Object[]> resultado_indicador_a = (Vector<Object[]>)indicador_a.getResultadoEjecucion();
 						
@@ -77,6 +78,7 @@ public class IndicadorProxyTypeBucle extends IndicadorProxyType implements IIndi
 								
 							//creo un indicador hijo con las mismas caracteristicas que el padre
 							indicador_auto = new IndicadorProxy(copia_ind_b,true,indicador_a.getIndicador().getNombre());
+							indicador_auto.setAnalisis(indicador.getAnalisis());
 							//Relacionamos el indicador hijo (su padre es el indicador_b) con el elemento correspondiente del indicador_a 
 							indicador_auto.setIndice(numAuto);
 							
@@ -101,7 +103,7 @@ public class IndicadorProxyTypeBucle extends IndicadorProxyType implements IIndi
 												break;
 											}
 											c++;
-										}
+										} 
 										indicador_auto.getIndicador().getParametros().get(p).setValor(valParam.toString());
 									}
 								}
@@ -113,10 +115,10 @@ public class IndicadorProxyTypeBucle extends IndicadorProxyType implements IIndi
 							
 							
 							//Ejecuto el indicador
-							if (Ejecutable.numHilos<=Ejecutable.minHilos)
+							/*if (Ejecutable.numHilos<=Ejecutable.minHilos)
 							{
 								indicador_auto.ejecutar();
-							}								
+							}*/								
 						}
 						
 						//Una vez copiados e intentado lanzar todos los indicadores_hijos, debemos esperar a que todos los indicadores hijos hayan 

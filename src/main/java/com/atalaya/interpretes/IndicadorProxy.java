@@ -1,19 +1,8 @@
 package com.atalaya.interpretes;
 
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Vector;
 
 import com.atalaya.evaluador.Comunes;
 import com.modelodatos.Indicador;
@@ -29,15 +18,19 @@ public class IndicadorProxy extends Ejecutable implements Runnable  {
 	
 	private boolean autoGenerado = false;
 	private String nombreIndicadorPadre = null; //nombre del indicador donde queremos alamcenar el resultado de este indicador, solo utilizado por los indicadores autogenerados
-	
-	protected static Hashtable<String,Connection> almacenPool;	//Contiene el listado de pooles de conexion disponibles, nombre de la fuente pool de conexion
+	private long analisis; 
 	
 	public final String TIPO_QUERY = "Query"; 	//Este tipo de indicador define una query con bind variables que pueden tomar valores fijos o dinamicos
 	public final String TIPO_BUCLE = "Bucle";	//Este tipo de alias define una relacion entre alias tipo para cada elemento del alias "a" aplica el alias "b" 
 	public final String TIPO_WS = "WS"; 		//Este tipo de indicador define un recurso tipo WebService
 	
+	public void setAnalisis(long analisis) {
+		this.analisis = analisis;
+	}
 	
-	
+	public long getAnalisis() {
+		return this.analisis;
+	}	
 	
 	String cabeceralog;
 
@@ -49,6 +42,10 @@ public class IndicadorProxy extends Ejecutable implements Runnable  {
 		indicador = ind;
 		
 		setHashCode(hashCode());
+		
+		
+			
+		
 		cabeceralog = "Indicador " + ind.getNombre() + "|" + this.getHashCode() + ":";
 	}
 	
@@ -126,7 +123,8 @@ public class IndicadorProxy extends Ejecutable implements Runnable  {
 			while (!this.ejecutado())
 			{
 				if (this.getIndicador().getTipo().equals(IIndicadorProxyType.tipo_bucle)
-					|| this.getIndicador().getTipo().equals(IIndicadorProxyType.tipo_ws))
+					|| this.getIndicador().getTipo().equals(IIndicadorProxyType.tipo_ws)
+					|| this.getIndicador().getTipo().equals(IIndicadorProxyType.tipo_query))
 				{
 					IIndicadorProxyType indicadorProxyType = null;
 					
@@ -153,10 +151,14 @@ public class IndicadorProxy extends Ejecutable implements Runnable  {
 					String[] palabras = comando.split(" ");
 					
 					String nombreInd = palabras[1].substring(1);
-					IndicadorProxy ind = indicadores.get(nombreInd);
+					IndicadorProxy ind = super.getIndicadorNombre(this.getAnalisis(), nombreInd);					
+//					IndicadorProxy ind = indicadores.get(this.getHashCode());	
 					
 					ind.volcadoResultado("trazas");
+					this.setEstado(ESTADO_EJECUTADO);
+					this.setDescripcionEstado(FIN_OK);
 				}
+				/*
 				else if (this.getIndicador().getTipo().equals(IIndicadorProxyType.tipo_query))
 				{
 					ResultSet rs = null;
@@ -298,8 +300,8 @@ public class IndicadorProxy extends Ejecutable implements Runnable  {
 									}
 			
 			
-									else if (column_types[i] == Types.VARCHAR) {
-			
+									else if (column_types[i] == Types.VARCHAR) 
+									{
 										try
 										{
 											value  = rs.getString(this.indicador.getResultado()[i]);
@@ -313,9 +315,9 @@ public class IndicadorProxy extends Ejecutable implements Runnable  {
 											value = null;
 											return false;
 										}
-			
 									}
-									else {
+									else 
+									{
 										try
 										{
 											value = rs.getObject(this.indicador.getResultado()[i]);
@@ -325,6 +327,7 @@ public class IndicadorProxy extends Ejecutable implements Runnable  {
 											value = null;
 										}
 									}
+									
 									row[i] = value;
 								}
 								
@@ -356,14 +359,15 @@ public class IndicadorProxy extends Ejecutable implements Runnable  {
 							}
 						}
 					}
-				}
+				}*/
 
 				
 				//Si se trata de un indice autogenerado, por un bucle, tenemos que incorporar a cada uno de los resultados obtenidos del indicador_a el resultado del indicador_b
 				if (this.autoGenerado && this.getIndice()>-1)
 				{
 					Object[] linea = null;
-					Object[] linea_a = getIndicadores().get(this.getNombreIndicadorPadre()).getResultadoEjecucion().elementAt(this.getIndice());
+//					Object[] linea_a = getIndicadores().get(this.getNombreIndicadorPadre()).getResultadoEjecucion().elementAt(this.getIndice());
+					Object[] linea_a = super.getIndicadorNombre(this.getAnalisis(), this.getNombreIndicadorPadre()).getResultadoEjecucion().elementAt(this.getIndice());
 					
 					if (this.getResultadoEjecucion()!=null && this.getResultadoEjecucion().size()>0)
 					{
@@ -382,8 +386,10 @@ public class IndicadorProxy extends Ejecutable implements Runnable  {
 					
 					
 					log.info("Indicador auto finalizado: " + this.getIndicador().getNombre());
-					getIndicadores().get(this.getNombreIndicadorPadre()).getResultadoEjecucion().setElementAt(linea, this.getIndice());
-					getIndicadores().get(this.getNombreIndicadorPadre()).setCountEjecutado();
+//					getIndicadores().get(this.getNombreIndicadorPadre()).getResultadoEjecucion().setElementAt(linea, this.getIndice());
+//					getIndicadores().get(this.getNombreIndicadorPadre()).setCountEjecutado();
+					super.getIndicadorNombre(this.getAnalisis(), this.getNombreIndicadorPadre()).getResultadoEjecucion().setElementAt(linea, this.getIndice());
+					super.getIndicadorNombre(this.getAnalisis(), this.getNombreIndicadorPadre()).setCountEjecutado();
 					this.setDescripcionEstado(FIN_OK);
 					//TAREA revisar si en este punto cuando damos por finalizado el hilo, tenemos que eliminar el indicador autogenerado o por el contrario se libera con la muerte del thread.
 				}
@@ -420,16 +426,21 @@ public class IndicadorProxy extends Ejecutable implements Runnable  {
 				tramos = this.getIndicador().getParametros().get(p).getValor().split(Comunes.tpSeparador);
 				String nombreIndicador = tramos[0].substring(1);
 				
-				if (getIndicadores().containsKey(nombreIndicador)) 
+				IndicadorProxy indProxy = super.getIndicadorNombre(this.getAnalisis(), nombreIndicador);
+				if (indProxy!=null) 
 				{
-					if (getIndicadores().get(nombreIndicador).ejecutar() && (getIndicadores().get(nombreIndicador).getResultadoEjecucion()!=null) && getIndicadores().get(nombreIndicador).getResultadoEjecucion().size()>0) 
+//					if (getIndicadores().get(nombreIndicador).ejecutar() && (getIndicadores().get(nombreIndicador).getResultadoEjecucion()!=null) && getIndicadores().get(nombreIndicador).getResultadoEjecucion().size()>0)
+					if (indProxy.ejecutar() && (indProxy.getResultadoEjecucion() != null) && indProxy.getResultadoEjecucion().size() > 0) 
 					{					
 						String columna = tramos[1];
 						Object valParam = new Object();
-						Object[] linea = getIndicadores().get(nombreIndicador).getResultadoEjecucion().elementAt(0);
+//						Object[] linea = getIndicadores().get(nombreIndicador).getResultadoEjecucion().elementAt(0);
+						Object[] linea = indProxy.getResultadoEjecucion().elementAt(0);
 						int c = 0;
-						while (c < getIndicadores().get(nombreIndicador).getIndicador().getResultado().length ) {
-							if (columna.equals(getIndicadores().get(nombreIndicador).getIndicador().getResultado()[c])) {
+//						while (c < getIndicadores().get(nombreIndicador).getIndicador().getResultado().length ) {
+//							if (columna.equals(getIndicadores().get(nombreIndicador).getIndicador().getResultado()[c])) {
+						while (c < indProxy.getIndicador().getResultado().length ) {
+							if (columna.equals(indProxy.getIndicador().getResultado()[c])) {
 								valParam = linea[c];
 								break;
 							}
@@ -457,9 +468,13 @@ public class IndicadorProxy extends Ejecutable implements Runnable  {
 				String nombreIndicador = tramos[0].substring(1);
 				
 				//Busco en la lista de indicadores
-				if (getIndicadores().containsKey(nombreIndicador))
+				IndicadorProxy indProxy = super.getIndicadorNombre(this.getAnalisis(), nombreIndicador);
+				
+//				if (getIndicadores().containsKey(nombreIndicador))
+				if (indProxy!=null)
 				{
-					if (getIndicadores().get(nombreIndicador).noejecutado() || getIndicadores().get(nombreIndicador).ejecutando())
+//					if (getIndicadores().get(nombreIndicador).noejecutado() || getIndicadores().get(nombreIndicador).ejecutando())
+					if (super.getIndicadorNombre(this.getAnalisis(), nombreIndicador).noejecutado() || super.getIndicadorNombre(this.getAnalisis(), nombreIndicador).ejecutando())
 					{
 						esDependiente = true;
 						break;
@@ -489,12 +504,13 @@ public class IndicadorProxy extends Ejecutable implements Runnable  {
 				
 				String nombreIndicador = tramos[0].substring(1);
 				//Busco en la lista de indicadores
-				if ((nombreIndicador.equals("CURSOR") || getIndicadores().containsKey(nombreIndicador)) && !listaInd.contains(nombreIndicador)) 
+				if ((nombreIndicador.equals("CURSOR") || getIndicadorNombre(this.getAnalisis(), nombreIndicador)!=null) && !listaInd.contains(nombreIndicador)) 
 				{
 					listaInd.add(nombreIndicador);
 					log.info(cabeceralog+" Añadimos a la lista de indicadores dependientes:"+nombreIndicador);
 					//Llamamos recursivamente a este metodo hasta llegar al nivel de profundidad necesario y almacenando en un lista todos aquellos indicadores que esten asociados al indicador inicial
-					getIndicadores().get(nombreIndicador).ObtenerIndicadorAsociado(listaInd);
+//					getIndicadores().get(nombreIndicador).ObtenerIndicadorAsociado(listaInd);
+					super.getIndicadorNombre(this.getAnalisis(), nombreIndicador).ObtenerIndicadorAsociado(listaInd);
 				}
 			}
 		}

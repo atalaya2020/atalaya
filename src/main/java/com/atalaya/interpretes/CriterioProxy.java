@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.List;
 
 import com.atalaya.evaluador.Comunes;
@@ -20,6 +21,8 @@ public class CriterioProxy extends Ejecutable implements Runnable {
 	
 	private ArrayList<CondicionMultiple> evaluacion = new ArrayList<CondicionMultiple>();
 	private int indCondicion = 0;
+	private long analisis;
+
 
 	String cabeceralog;
 	
@@ -44,6 +47,14 @@ public class CriterioProxy extends Ejecutable implements Runnable {
 	
 	public Criterio getCriterio()  {
 		return this.criterio;
+	}
+	
+	public long getAnalisis() {
+		return analisis;
+	}
+
+	public void setAnalisis(long analisis) {
+		this.analisis = analisis;
 	}
 	
 	public void run()
@@ -119,7 +130,7 @@ public class CriterioProxy extends Ejecutable implements Runnable {
 							}
 						}				
 					}			
-				}
+				} 
 			}
 
 			return result;
@@ -134,16 +145,17 @@ public class CriterioProxy extends Ejecutable implements Runnable {
 		
 		if (indicadores!=null && indicadores.size()>0)
 		{
-			Enumeration<String> enumIndicadores = this.getIndicadores().keys();
+			Hashtable<String,IndicadorProxy> listaIndicadores = this.getIndicadores().get(this.getAnalisis());
+			Enumeration<String> enumIndicadores = listaIndicadores.keys();
 			//Recorremos todos los indicadores lanzados para este Analisis
 			while(enumIndicadores.hasMoreElements())
 			{
 				String nombreIndicador = (String)enumIndicadores.nextElement();
 				//Paramos los indicadores
-				if (this.getIndicadores().get(nombreIndicador).ejecutando())
+				if (listaIndicadores.get(nombreIndicador).ejecutando())
 				{
 					//Forzamos su parada por haber superado el tiempo maximo de ejeucion
-					this.getIndicadores().get(nombreIndicador).detener();
+					listaIndicadores.get(nombreIndicador).detener();
 					log.info(cabeceralog+"Parado el indicador:" +nombreIndicador+ " por sobrepasar el tiempo maximo de ejecucion el criterio: " + this.getCriterio().getNombre() + tiempo_max);
 				}
 			}
@@ -348,7 +360,7 @@ public class CriterioProxy extends Ejecutable implements Runnable {
 			tramos = operando.split("\\.");
 			String nombreIndicador = tramos[0].substring(1);
 			
-			if (this.getIndicadores().containsKey(nombreIndicador))
+			if (getIndicadorNombre(this.getAnalisis(),nombreIndicador)!=null)
 			{
 				esIndica = Comunes.tpIndicador;
 			}	
@@ -997,7 +1009,7 @@ public class CriterioProxy extends Ejecutable implements Runnable {
 				String campoIndicador = camposIndicador(op.getNombre(),"Campo");
 				
 				//Recuperamos el indicador de la lista de indicadores
-				IndicadorProxy indicador = super.getIndicadores().get(nombreIndicador); 
+				IndicadorProxy indicador = getIndicadorNombre(this.getAnalisis(),nombreIndicador); 
 				log.info(cabeceralog + " Interpretar el operando de tipo indicador: "+op.getNombre());
 				
 				//Lista para almacenar los indicadores linkados al indicador origen
@@ -1021,7 +1033,7 @@ public class CriterioProxy extends Ejecutable implements Runnable {
 								String nombreIndicadorAsociado = listaIndicadoreAsociado.get(i);	
 								
 								//Recupero el indicador asociado
-								indicadorAsociado = super.getIndicadores().get(nombreIndicadorAsociado);
+								indicadorAsociado = getIndicadorNombre(this.getAnalisis(),nombreIndicadorAsociado); 
 								
 								//Si el indicadorasociadlo no está ejecutado y no es depediente de ningun otro indicador puede ejecutarse
 								if (indicadorAsociado!=null && !indicadorAsociado.ejecutado() && !indicadorAsociado.ejecutando() && !indicadorAsociado.esDependiente())

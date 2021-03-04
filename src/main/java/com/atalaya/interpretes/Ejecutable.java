@@ -1,6 +1,5 @@
 package com.atalaya.interpretes;
 
-import java.sql.Connection;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -37,18 +36,22 @@ public abstract class Ejecutable {
 	private static long count = 0;								//Almacena un contador de instancias para la generacion del codigo hash del objeto
 	private long hashCode;										//Almacena el codigo hash creado para la instancia del objeto
 
-	protected static Thread[] hilos;								//Almacena los hilos lanzados por los analisis (se trata de un atributo de clase)
-	protected static Hashtable<String,IndicadorProxy> indicadores;	//Almacena los indicadores de un alias, los ejecutables manejan la informacion obtenida en los indicadores
-	private Vector<Object[]> resultadoEjecucion;					//Almacena el resultado
+	protected static Thread[] hilos;												//Almacena los hilos lanzados por los analisis (se trata de un atributo de clase)
+	protected static Hashtable<Long,Hashtable<String,IndicadorProxy>> indicadores;	//Almacena los indicadores de un alias, los ejecutables manejan la informacion obtenida en los indicadores
+	private Vector<Object[]> resultadoEjecucion;									//Almacena el resultado
 	
 	
 	public int hashCode()
 	{
+		count++;
 		int hash = (count + this.getClass().getSimpleName()).hashCode(); 
 		return  hash;
 	}
 	
-	public Hashtable<String,IndicadorProxy> getIndicadores() {
+	public Hashtable<Long,Hashtable<String,IndicadorProxy>> getIndicadores() {
+		if (indicadores == null ) {
+			indicadores = new Hashtable<Long,Hashtable<String,IndicadorProxy>>();
+		}
 		return indicadores;
 	}
 	
@@ -116,7 +119,7 @@ public abstract class Ejecutable {
 		return resultadoEjecucion;
 	}
 	
-	public void setIndicadores(Hashtable<String, IndicadorProxy> indicadores) {
+	public void setIndicadores(Hashtable<Long,Hashtable<String,IndicadorProxy>> indicadores) {
 		Ejecutable.indicadores = indicadores;
 	}
 
@@ -169,12 +172,12 @@ public abstract class Ejecutable {
 					if (modo.equals("html"))
 						volcado.append("</br>");
 					else
-						volcado.append("\\n");
+						volcado.append("\n");
 				}
 			}
 		}
-		else 
-			volcado = volcado.append("");
+		//else 
+		//	volcado = volcado.append("Sin Resultados\n");
 		
 		log.info("Volcado:");
 		log.info(volcado.toString());
@@ -230,5 +233,18 @@ public abstract class Ejecutable {
 		}
 		
 		return nuevoHilo;
+	}
+	
+	public IndicadorProxy getIndicadorNombre(long analisis, String nombre) {
+		IndicadorProxy indProxy = null;
+		
+		if (indicadores!=null && indicadores.size()>0)
+		{	
+			Hashtable<String,IndicadorProxy> lista =indicadores.get(analisis);
+			if (lista!=null && lista.size()>0)	
+				indProxy = lista.get(nombre);
+		}
+		
+		return indProxy;
 	}
 }

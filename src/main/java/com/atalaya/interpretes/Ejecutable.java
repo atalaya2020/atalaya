@@ -1,10 +1,19 @@
 package com.atalaya.interpretes;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Properties;
 import java.util.Vector;
 
-import org.slf4j.Logger;
+import com.modelodatos.Analisis;
+import com.modelodatos.Configuracion;
+import com.modelodatos.Evento;
+import com.modelodatos.Indicador;
+import com.modelodatos.Parametro;
 
+import redis.clients.jedis.Jedis;
+
+import org.slf4j.Logger;
 
 /** 
  * Esta clase abstracta que define los atributos y metodos comunes de los ejecutables que componen un analisis (analisis,criterio,indicador y evento) 
@@ -20,17 +29,20 @@ public abstract class Ejecutable {
 	public final static String FIN_OK = "FIN OK";								//Esta descripción indica una ejecución satisfactoria sin error ni parada forzada
 	public final static String FIN_OK_SIN_RESULTADO = "FIN OK SIN RESULTADOS";	//Esta descripción indica una ejecución satisfactoria sin error ni parada forzada
 	public final static String FIN_FORZADO = "FIN FORZADO";						//Esta descripción indica una ejecución satisfactoria sin error ni parada forzada
+	public final static String FIN_KO_VOLCADO = "FIN KO VOLCADO";						//Esta descripción indica una ejecución satisfactoria sin error ni parada forzada
 	
 	public final static int minHilos = 2;
-	
+	public final static int minHilosAtalaya = 100;
+	public final static int tiempo_max_def = 30000;
 	public final static String VOLCADO_HTML = "HTML";
 		
 	private volatile String estado;								//Almacena el estado en el que se encuentra el analisis
 	private volatile String descripcion_estado;					//Almacena la descripcion del estado en el que se encuentra el analisis
 	private long crono;											//Almacena el momento en el que comienza la interpretacion un ejecutable
 
-	protected static int numHilos = 5;								//Define el numero de hilos definido para la ejecucion
-	protected static int tiempo_max = 600000;							//Define el tiempo maximo de ejecucion de un ejecutable
+	protected static int numHilosAtalaya = minHilosAtalaya;		//Define el numero de hilos definido para Atalaya
+	protected int numHilos = minHilos;
+	protected int tiempo_max = tiempo_max_def;					//Define el tiempo maximo de ejecucion de un ejecutable
 	
 	protected static Logger log;								//log
 	private static long count = 0;								//Almacena un contador de instancias para la generacion del codigo hash del objeto
@@ -40,7 +52,10 @@ public abstract class Ejecutable {
 	protected static Hashtable<Long,Hashtable<String,IndicadorProxy>> indicadores;	//Almacena los indicadores de un alias, los ejecutables manejan la informacion obtenida en los indicadores
 	private Vector<Object[]> resultadoEjecucion;									//Almacena el resultado
 	
+	protected static Properties confFuentes = null;
+	private static Jedis redis = null;
 	
+
 	public int hashCode()
 	{
 		count++;
@@ -118,14 +133,36 @@ public abstract class Ejecutable {
 	public Vector<Object[]> getResultadoEjecucion() {
 		return resultadoEjecucion;
 	}
+
+	public void setResultadoEjecucion(Vector<Object[]> resultadoEjecucion) {
+		
+		this.resultadoEjecucion = resultadoEjecucion;
+	}
 	
 	public void setIndicadores(Hashtable<Long,Hashtable<String,IndicadorProxy>> indicadores) {
 		Ejecutable.indicadores = indicadores;
 	}
 
-	public void setResultadoEjecucion(Vector<Object[]> resultadoEjecucion) {
-		this.resultadoEjecucion = resultadoEjecucion;
+	public static Properties getConfFuentes() {
+		return confFuentes;
 	}
+
+	public static void setConfFuentes(Properties confFuentes) {
+		Ejecutable.confFuentes = confFuentes;
+	}
+	
+	public static Jedis getRedis() {
+		return redis;
+	}
+
+	public static void setRedis() {
+		
+		if (redis==null)
+			redis = new Jedis("localhost",6379);
+	}
+
+	
+	
 	
 	public abstract boolean ejecutar();
 
@@ -142,6 +179,80 @@ public abstract class Ejecutable {
 		}
 		
 		
+	}
+	public void obtenerConfiguracion (Object entradaclase, String nombreConf){
+
+		ArrayList<Configuracion> configuraciones = new ArrayList<>(0);
+		
+		if(entradaclase instanceof Analisis){ //OBTENER CONFIGURACIONES DE ANALISIS
+			Analisis entrada = (Analisis)entradaclase;
+			configuraciones = entrada.getConfiguraciones();
+		}else if (entradaclase instanceof Indicador){ //OBTENER CONFIGURACIONES DE INDICADOR
+			Indicador entrada = (Indicador)entradaclase;
+			configuraciones = entrada.getConfiguraciones();
+		}else if (entradaclase instanceof Evento){ //OBTENER CONFIGURACIONES DE EVENTO
+			Evento entrada = (Evento)entradaclase;
+			configuraciones = entrada.getConfiguraciones();
+		}
+		//Si no existe una configuracion se establece por defecto
+		if(configuraciones == null || configuraciones.size() == 0){
+			log.info("ERROR al cargar configuracion de "+nombreConf+". No se tiene informacion de configuracion");
+		}else{
+			int i=0;
+			while(i<configuraciones.size() && configuraciones.get(i).getNombre() != nombreConf){ //Avanzo configuraciones hasta dar con la  que quiero
+				i++;
+			}
+			if(i == configuraciones.size()){ // No se ha encontrado la configuracion con ese nombre
+				log.info("No se ha encontrado configuracion para "+nombreConf);
+			}else{
+				String nombreConfiguracion = 	  configuraciones.get(i).getNombre();
+				//String descripcionConfiguracion = configuraciones.get(i).getDescripcion();
+				Parametro parametro = configuraciones.get(i).getParametro();
+
+				switch (nombreConfiguracion) {
+					//CONFIGURACION DE THREADS
+					case "Threads":
+						if(parametro.getNombre() == "NumeroHilos"){ 
+							try {
+								int hilos = Integer.parseInt(parametro.getValor());
+								if(hilos <= minHilos){ // Si el numero de hilos es menor que el minimo se deja por defecto 
+									log.info(entradaclase.getClass().getName() +" EN MODO SECUENCIAL...");
+								}else{
+									numHilos = hilos;
+									log.info(entradaclase.getClass().getName() + " EN MODO MULTIHILO CON  " + numHilos + "  HILOS EN DISPOSICION....");
+								}
+							} catch (Exception e) {
+								log.info("WARNING Valor de hilos no valido. Se deja por defecto");
+							}
+						}else{
+							log.info("ERROR parametro de "+nombreConf+" no valido");
+						}	
+						break;
+					//CONFIGURACION DE TIEMPOS
+					case "Tiempos":
+						if(parametro.getNombre() == "TiempoEjecucion"){
+							try {
+								int tiempo = Integer.parseInt(parametro.getValor());
+								if(tiempo > 0){
+									tiempo_max = tiempo;
+									log.info("Definido tiempo maximo para ejecutar analisis en " + tiempo_max);
+								}else{
+									log.info("WARNING Tiempo de ejecucion no válido. Se deja por defecto");
+								}
+								
+							} catch (Exception e) {
+								log.info("WARNING Tiempo de ejecucion no válido. Se deja por defecto");
+							}
+						}else{
+							log.info("ERROR parametro de "+nombreConf+" no valido");
+						} 	
+						break;
+
+					default:
+						log.info("ERROR parametro de "+nombreConf+" no valido");
+				}//Se podrian añadir mas casos de configuracion
+			}
+		}
 	}
 	
 	public String volcadoResultado (String modo)

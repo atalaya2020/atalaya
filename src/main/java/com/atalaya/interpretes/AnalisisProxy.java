@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Properties;
 
 import org.slf4j.LoggerFactory;
-
-//import org.slf4j.LoggerFactory;
-
 import com.modelodatos.Analisis;
-import com.modelodatos.Configuracion;
 import com.modelodatos.Parametro;
 
 /** 
@@ -53,27 +50,6 @@ public class AnalisisProxy extends Ejecutable implements Runnable {
 	public Analisis getAnalisis() {
 		return analisis;
 	}
-		
-	public AnalisisProxy (Analisis analisis) 
-	{			
-		setHashCode(hashCode());
-		
-		log = LoggerFactory.getLogger(AnalisisProxy.class);
-		
-		this.parametros = new ArrayList<Parametro>();
-		cargarAnalisisProxy(analisis);
-		
-		setEstado(ESTADO_NOEJEUCTADO);
-		
-		cabeceralog = "Analisis " +this.getAnalisis().getNombre() + "|" + this.getHashCode() + ":";
-		log.info(cabeceralog + "Cargando configuracion");
-		obtenerConfAnalisis(analisis,"Threads");
-		obtenerConfAnalisis(analisis,"Tiempos");
-		
-		hilos = new Thread[numHilos];
-		
-		
-	}
 	
 	public AnalisisProxy (Analisis analisis, ArrayList<Parametro> parametros) 
 	{
@@ -89,11 +65,56 @@ public class AnalisisProxy extends Ejecutable implements Runnable {
 		cargarAnalisisProxy(analisis);
 		cabeceralog = "Analisis "+ this.getAnalisis().getNombre() + "|" + this.getHashCode() + ":";
 		log.info(cabeceralog + "Cargando configuracion");
-		obtenerConfAnalisis(analisis,"Threads");
-		obtenerConfAnalisis(analisis,"Tiempos");
+		obtenerConfiguracion(analisis, "Threads");
+		obtenerConfiguracion(analisis, "Tiempos");
 		
 		hilos = new Thread[numHilos];
 	}
+	
+	public AnalisisProxy (Analisis analisis, ArrayList<Parametro> parametros, Properties confFuentes) 
+	{
+		setConfFuentes(confFuentes);
+		setRedis();
+		setHashCode(hashCode());
+		
+		log = LoggerFactory.getLogger(AnalisisProxy.class);
+		
+		this.parametros = parametros;
+		this.analisis = analisis;
+		
+		setEstado(ESTADO_NOEJEUCTADO);
+		
+		cargarAnalisisProxy(analisis);
+		cabeceralog = "Analisis "+ this.getAnalisis().getNombre() + "|" + this.getHashCode() + ":";
+		log.info(cabeceralog + "Cargando configuracion");
+		obtenerConfiguracion(analisis, "Threads");
+		obtenerConfiguracion(analisis, "Tiempos");
+		
+		hilos = new Thread[numHilos];
+	}
+	
+	/*public AnalisisProxy (Analisis analisis, ArrayList<Parametro> parametros, Properties confFuentes, RedisRepository redis) 
+	{
+		setConfFuentes(confFuentes);
+		//setRedis(redis);
+
+		setHashCode(hashCode());
+		
+		log = LoggerFactory.getLogger(AnalisisProxy.class);
+		
+		this.parametros = parametros;
+		this.analisis = analisis;
+		
+		setEstado(ESTADO_NOEJEUCTADO);
+		
+		cargarAnalisisProxy(analisis);
+		cabeceralog = "Analisis "+ this.getAnalisis().getNombre() + "|" + this.getHashCode() + ":";
+		log.info(cabeceralog + "Cargando configuracion");
+		obtenerConfiguracion(analisis, "Threads");
+		obtenerConfiguracion(analisis, "Tiempos");
+		
+		hilos = new Thread[numHilos];
+	}*/
 	
 	//Este metodo tendria mas sentido si le metemos la validacion de cada uno de los elementos del analisis
 	private void cargarAnalisisProxy(Analisis analisis) {
@@ -164,25 +185,37 @@ public class AnalisisProxy extends Ejecutable implements Runnable {
 			//Bucle para el control del ciclo de vida del hilo
 			while(!this.ejecutado())
 			{	
+				long ahora = Calendar.getInstance().getTimeInMillis();
+				
+				if ((ahora - this.getCrono()) > this.tiempo_max) //TAREA añadir nuevo parametro de ejecucion a nivel de indicador TIEMPO MAX DE EJECUCION
+				{
+					this.detener();
+					log.info(cabeceralog+"Parado el analisis:" +this.getAnalisis().getNombre()+ " por sobrepasar el tiempo maximo de ejecucion "+ this.tiempo_max);
+				}
+				
 				//Validar si se han superado los tiempos maximos de espera en los indicadores
 				Enumeration<String> enumIndicadores = this.getIndicadores().get(this.getHashCode()).keys();
 //				Enumeration<String> enumIndicadores = this.getIndicadores().keys();
-				long ahora = Calendar.getInstance().getTimeInMillis();
+				
 				//Recorremos todos los indicadores lanzados para este Analisis
 				while(enumIndicadores.hasMoreElements())
 				{
 					String nombreIndicador = (String)enumIndicadores.nextElement();
 					//Paramos aquellos indicadores que han superado el tiempo maximo de ejecucion
 //					if (this.getIndicadores().get(nombreIndicador).ejecutando())
-					if (super.getIndicadorNombre(this.getHashCode(), nombreIndicador).ejecutando())
+					IndicadorProxy indicador = super.getIndicadorNombre(this.getHashCode(), nombreIndicador);
+					if (indicador.ejecutando())
 					{
 //						if ((ahora - this.getIndicadores().get(nombreIndicador).getCrono()) > tiempo_max) //TAREA añadir nuevo parametro de ejecucion a nivel de indicador TIEMPO MAX DE EJECUCION
-						if ((ahora - super.getIndicadorNombre(this.getHashCode(), nombreIndicador).getCrono()) > tiempo_max) //TAREA añadir nuevo parametro de ejecucion a nivel de indicador TIEMPO MAX DE EJECUCION
+						int tiempo_max_indicador = indicador.tiempo_max;
+						if (indicador.tiempo_max==Ejecutable.tiempo_max_def)
+							tiempo_max_indicador = this.tiempo_max;
+						if ((ahora - indicador.getCrono()) > tiempo_max_indicador) //TAREA añadir nuevo parametro de ejecucion a nivel de indicador TIEMPO MAX DE EJECUCION
 						{
 							//Forzamos su parada por haber superado el tiempo maximo de ejeucion
 //							this.getIndicadores().get(nombreIndicador).detener();
-							super.getIndicadorNombre(this.getHashCode(), nombreIndicador).detener();
-							log.info(cabeceralog+"Parado el indicador:" +nombreIndicador+ " por sobrepasar el tiempo maximo de ejecucion "+ tiempo_max);
+							indicador.detener();
+							log.info(cabeceralog+"Parado el indicador:" +nombreIndicador+ " por sobrepasar el tiempo maximo de ejecucion "+ tiempo_max_indicador);
 						}
 					}
 				}
@@ -223,13 +256,17 @@ public class AnalisisProxy extends Ejecutable implements Runnable {
 					}
 					
 					//Paramos aquellos criterios que han superado el tiempo maximo de ejecucion
-					if ((ahora - criterio.getCrono()) > tiempo_max) //TAREA añadir nuevo parametro de ejecucion a nivel de indicador TIEMPO MAX DE EJECUCION
+					
+					int tiempo_max_criterio = criterio.tiempo_max;
+					if (criterio.tiempo_max==Ejecutable.tiempo_max_def)
+						tiempo_max_criterio = this.tiempo_max;
+					if ((ahora - criterio.getCrono()) > tiempo_max_criterio) //TAREA añadir nuevo parametro de ejecucion a nivel de indicador TIEMPO MAX DE EJECUCION
 					{
 						//Forzamos su parada por haber superado el tiempo maximo de ejeucion
 						if (criterio.ejecutando())
 						{
 							criterio.detener();
-							log.info(cabeceralog+"Parado el criterio:" +criterio.getCriterio().getNombre()+ " por sobrepasar el tiempo maximo de ejecucion "+ tiempo_max);
+							log.info(cabeceralog+"Parado el criterio:" +criterio.getCriterio().getNombre()+ " por sobrepasar el tiempo maximo de ejecucion "+ tiempo_max_criterio);
 							continue;
 						}
 					}
@@ -306,64 +343,4 @@ public class AnalisisProxy extends Ejecutable implements Runnable {
 		return evento;
 	}
 	
-	public void obtenerConfAnalisis (Analisis analisis, String nombreConf){
-		
-		ArrayList<Configuracion> configuraciones = analisis.getConfiguraciones();
-
-		//Si no existe una configuracion se establece una por defecto o se define en otro lugar?
-		if(configuraciones.size() == 0){
-			log.info("No se tiene informacion de configuracion");
-		}
-		else
-		{
-			boolean encontrado = false;
-			for(int j=0;j<configuraciones.size();j++)
-			{
-				if (configuraciones.get(j).getNombre().equals(nombreConf))
-				{
-					encontrado=true;
-					
-					String nombreConfiguracion = 	  configuraciones.get(j).getNombre();
-					//String descripcionConfiguracion = configuraciones.get(j).getDescripcion();
-					ArrayList<Parametro> parametros = configuraciones.get(j).getParametros();
-
-					switch (nombreConfiguracion) {
-						case "Threads":
-						//añadir if para comprobar que el parametro corresponde
-							for (int x=0; x<parametros.size();x++)
-							{
-								if (parametros.get(x).getNombre() != "NumeroHilos")
-								{
-									int numhilos = Integer.parseInt(parametros.get(x).getValor());
-									if(numHilos <= minHilos){
-										log.info("ESTAMOS EN MODO SECUENCIAL...");
-									}
-									else
-									{
-										numHilos = numhilos;
-										log.info("ESTAMOS EN MODO MULTIHILO CON  " + numHilos + "  HILOS EN DISPOSICION....");
-									}
-								}
-							}
-							break;
-					
-						case "Tiempos":
-							for (int x=0; x<parametros.size();x++)
-							{
-								if (parametros.get(x).getNombre() != "tiempo_max")
-								{
-									tiempo_max = Integer.parseInt(parametros.get(x).getValor());
-									log.info("Definido tiempo maximo para ejecutar analisis en " + tiempo_max);
-									
-								}
-							}					
-							break;
-					}//Se podrian añadir mas casos de configuracion
-				}
-			}
-			
-			if (!encontrado)
-				log.info("No existe informacion configurada para el elemento: "+ nombreConf);
-		}
-	}
 }

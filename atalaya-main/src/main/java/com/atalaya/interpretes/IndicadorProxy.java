@@ -409,31 +409,6 @@ public class IndicadorProxy extends Ejecutable implements Runnable  {
 	
 	public void detener()
 	{
-		if(indicador.getStopper()){
-			super.detener();
-		
-			if (this.listaIndicadoresHijos!=null && this.listaIndicadoresHijos.size()>0)
-			{
-				for(int i=0;i<this.listaIndicadoresHijos.size();i++)
-				{
-					IndicadorProxy indHijo = this.listaIndicadoresHijos.get(i);
-					//Buscamos los indicadores autogenerados hijos 
-					indHijo.detener();
-					log.info(cabeceralog+"Parado el indicador hijo:" +indHijo.getIndice()+ " por sobrepasar el tiempo maximo de ejecucion "+ tiempo_max);
-				}
-			}
-		}else{
-			this.setEstado(ESTADO_EJECUTADO);
-			this.setDescripcionEstado(FIN_FORZADO);
-		
-			try {
-				this.finalize();
-			} catch (Throwable e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
 		super.detener();
 		
 		if (this.listaIndicadoresHijos!=null && this.listaIndicadoresHijos.size()>0)

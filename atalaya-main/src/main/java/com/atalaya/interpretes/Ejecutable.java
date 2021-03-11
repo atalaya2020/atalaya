@@ -167,7 +167,7 @@ public abstract class Ejecutable {
 			configuraciones = entrada.getConfiguraciones();
 		}
 		//Si no existe una configuracion se establece por defecto
-		if(configuraciones.size() == 0){
+		if(configuraciones == null || configuraciones.size() == 0){
 			log.info("ERROR al cargar configuracion de "+nombreConf+". No se tiene informacion de configuracion");
 		}else{
 			int i=0;

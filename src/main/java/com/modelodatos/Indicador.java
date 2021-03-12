@@ -17,9 +17,11 @@ public class Indicador {
 	private String comando;
 	private ArrayList<Parametro> parametros;
 	private String[] resultado;
+	private ArrayList<Configuracion> configuraciones;
+	private boolean stopper;
 
 	public Indicador(String nombre, String descripcion, String fuente, String tipo, String comando,
-			ArrayList<Parametro> parametros, String[] resultado) {
+			ArrayList<Parametro> parametros, String[] resultado, ArrayList<Configuracion> configuraciones, boolean stopper) {
 		super();
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -28,6 +30,8 @@ public class Indicador {
 		this.comando = comando;
 		this.parametros = parametros;
 		this.resultado = resultado;
+		this.configuraciones = configuraciones;
+		this.stopper = stopper;
 	}
 	
 	public String getNombre() {
@@ -71,5 +75,17 @@ public class Indicador {
 	}
 	public void setResultado(String[] resultado) {
 		this.resultado = resultado;
+	}
+	public ArrayList<Configuracion> getConfiguraciones() {
+		return configuraciones;
+	}
+	public void setConfiguraciones(ArrayList<Configuracion> configuraciones) {
+		this.configuraciones = configuraciones;
+	}
+	public boolean getStopper(){
+		return this.stopper;
+	}
+	public void setStopper(boolean stopper){
+		this.stopper = stopper;
 	}
 }

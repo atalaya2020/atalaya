@@ -1048,13 +1048,18 @@ public class CriterioProxy extends Ejecutable implements Runnable {
 									else
 										super.nuevoHilo(indicadorAsociado);
 								}
-								//Alguno de los indicadores dependientes se ha ejecutado pero sin resultado, damos por hecho que todos los indicadores dependientes son stoppers
+								//Alguno de los indicadores dependientes se ha ejecutado pero sin resultado
 								else if (indicadorAsociado!=null && indicadorAsociado.ejecutado() && !indicadorAsociado.getDescripcionEstado().equals(FIN_OK))
 								{
-									log.info(cabeceralog+" Interpretado el indicador asociado: "+indicadorAsociado.getIndicador().getNombre()+" sin resultados");
+									//se comprueba que los indicadores dependientes sean stoppers
+									if(indicadorAsociado.getIndicador().getStopper()){
+										log.info(cabeceralog+" Interpretado el indicador STOPPER asociado: "+indicadorAsociado.getIndicador().getNombre()+" sin resultados. Fin");
 									
-									indicador.setEstado(ESTADO_EJECUTADO);
-									indicador.setDescripcionEstado(indicadorAsociado.getDescripcionEstado());
+										indicador.setEstado(ESTADO_EJECUTADO);
+										indicador.setDescripcionEstado(indicadorAsociado.getDescripcionEstado());
+									}else{
+										log.info(cabeceralog+" Interpretado el indicador NO STOPPER asociado: "+indicadorAsociado.getIndicador().getNombre()+" sin resultados.");
+									}
 								}
 							}
 							

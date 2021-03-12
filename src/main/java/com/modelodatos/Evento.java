@@ -10,8 +10,8 @@ public class Evento extends Indicador {
 	}
 
 	public Evento(String nombre, String descripcion, String fuente, String tipo, String comando,
-			ArrayList<Parametro> parametros, String[] resultado) {
-		super(nombre, descripcion, fuente, tipo, comando, parametros, resultado);
+			ArrayList<Parametro> parametros, String[] resultado, ArrayList<Configuracion> configuraciones, boolean stopper) {
+		super(nombre, descripcion, fuente, tipo, comando, parametros, resultado, configuraciones, stopper);
 		// TODO Auto-generated constructor stub
 	}
 

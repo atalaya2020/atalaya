@@ -41,10 +41,11 @@ public class IndicadorProxy extends Ejecutable implements Runnable  {
 		countEjecutado = 0;
 		indicador = ind;
 		
+		log.info(cabeceralog + "Cargando configuracion");
+		obtenerConfiguracion(indicador, "Threads");
+		obtenerConfiguracion(indicador, "Tiempos");
+		
 		setHashCode(hashCode());
-		
-		
-			
 		
 		cabeceralog = "Indicador " + ind.getNombre() + "|" + this.getHashCode() + ":";
 	}
@@ -56,6 +57,10 @@ public class IndicadorProxy extends Ejecutable implements Runnable  {
 		
 		indice = 0;
 		indicador = ind;
+		
+		log.info(cabeceralog + "Cargando configuracion");
+		obtenerConfiguracion(indicador, "Threads");
+		obtenerConfiguracion(indicador, "Tiempos");
 		
 		this.autoGenerado = autoGenerado;
 		this.nombreIndicadorPadre = nombreIndicadorPadre;

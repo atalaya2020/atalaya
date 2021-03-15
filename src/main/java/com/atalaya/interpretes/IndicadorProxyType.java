@@ -3,6 +3,7 @@ package com.atalaya.interpretes;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
+import com.modelodatos.Configuracion;
 import com.modelodatos.Indicador;
 import com.modelodatos.Parametro;
 
@@ -47,17 +48,7 @@ public class IndicadorProxyType {
 			cnf.printStackTrace();
 			last_error = "No puedo encontrar la clase: (" + class_name + ")";
 			throw new Exception(last_error);
-		}
-		/*catch(InstantiationException in)
-		{
-			last_error = "No puedo instanciar la clase: (" + class_name + ")";
-			throw new Exception(last_error);
-		}*/
-		/*catch(IllegalAccessException ia)
-		{
-			last_error = "No puedo acceso a la clase: (" + class_name + ")";
-			throw new Exception(last_error);
-		}*/	
+		}	
 		catch (SecurityException ese) {
 			// TODO Auto-generated catch block
 			ese.printStackTrace();
@@ -90,6 +81,9 @@ public class IndicadorProxyType {
 		String comando = new String(ind.getComando());
 		String destino = new String(ind.getDestino());
 		
+		ArrayList<Configuracion> configuraciones = ind.getConfiguraciones();
+		Boolean stooper = new Boolean(ind.getStopper());
+		
 		ArrayList<Parametro> parametros_copia = new ArrayList<Parametro>();
 		for (int i=0;i<ind.getParametros().size();i++)
 		{
@@ -101,7 +95,7 @@ public class IndicadorProxyType {
 		}
 		String[] resultado = ind.getResultado().clone();
 		
-		Indicador ind_copia = new Indicador(nombre, descripcion, fuente, destino, tipo, comando, parametros_copia, resultado); 
+		Indicador ind_copia = new Indicador(nombre, descripcion, fuente, destino, tipo, comando, parametros_copia, resultado, configuraciones, stooper); 
 		
 		return ind_copia;
 	}

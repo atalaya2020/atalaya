@@ -88,6 +88,7 @@ public class IndicadorProxyType {
 		String fuente = new String(ind.getFuente());
 		String tipo = new String(ind.getTipo());
 		String comando = new String(ind.getComando());
+		String destino = new String(ind.getDestino());
 		
 		ArrayList<Parametro> parametros_copia = new ArrayList<Parametro>();
 		for (int i=0;i<ind.getParametros().size();i++)
@@ -100,7 +101,7 @@ public class IndicadorProxyType {
 		}
 		String[] resultado = ind.getResultado().clone();
 		
-		Indicador ind_copia = new Indicador(nombre, descripcion, fuente, tipo, comando, parametros_copia, resultado); 
+		Indicador ind_copia = new Indicador(nombre, descripcion, fuente, destino, tipo, comando, parametros_copia, resultado); 
 		
 		return ind_copia;
 	}

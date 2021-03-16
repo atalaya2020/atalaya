@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.atalaya.evaluador.AnalisisProxy;
-import com.atalaya.evaluador.Ejecutable;
+import com.atalaya.interpretes.AnalisisProxy;
+import com.atalaya.interpretes.Ejecutable;
 //import com.atalaya.evaluador.ParametroProxy;
 import com.modelodatos.Analisis;
 import com.modelodatos.Parametro;

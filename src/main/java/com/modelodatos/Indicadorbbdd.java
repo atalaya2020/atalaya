@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="indicador")
-public class Indicador {
+public class Indicadorbbdd {
 	@Id
 	private String id;
 	
@@ -12,11 +12,11 @@ public class Indicador {
 	private String fuente;
 	private String comando;
 	
-	public Indicador() {
+	public Indicadorbbdd() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Indicador(String name, String fuente, String comando) {
+	public Indicadorbbdd(String name, String fuente, String comando) {
 		
 		setName(name);
 		setFuente(fuente);

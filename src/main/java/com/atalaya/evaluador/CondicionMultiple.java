@@ -1,6 +1,5 @@
 package com.atalaya.evaluador;
 
-import java.util.ArrayList;
 // Clase para representar cada una de las condiciones compuestas que forman parte de una condición compleja
 public class CondicionMultiple {
 	private String tipo;				// Tipo de relación, AND u OR, entre las condiciones simples que forman la condición compuesta

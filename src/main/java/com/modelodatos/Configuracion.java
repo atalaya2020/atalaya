@@ -1,20 +1,19 @@
 package com.modelodatos;
 
-import java.util.ArrayList;
-
 public class Configuracion {
 
 	
 	private String nombre;
 	private String descripcion;
-	private ArrayList<Parametro> parametros;
+	private String tipo;
+	private String valor;
 	
-	public Configuracion(String nombre, String descripcion, ArrayList<Parametro> parametros) {
+	public Configuracion(String nombre, String descripcion, String tipo, String valor) {
 		super();
 		this.nombre = nombre;
 		this.descripcion = descripcion;
-		this.parametros = parametros;
-		
+		this.tipo = tipo;
+		this.valor = valor;
 	}
 
 	public String getNombre() {
@@ -33,13 +32,19 @@ public class Configuracion {
 		this.descripcion = descripcion;
 	}
 
-	public ArrayList<Parametro> getParametros() {
-		return parametros;
+	public String getTipo() {
+		return tipo;
 	}
 
-	public void setParametros(ArrayList<Parametro> parametros) {
-		this.parametros = parametros;
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 	
-	
+	public String getValor() {
+		return valor;
+	}
+
+	public void setValor(String valor) {
+		this.valor = valor;
+	}
 }

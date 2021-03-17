@@ -1,6 +1,7 @@
 package com.atalaya.interpretes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Vector;
@@ -31,6 +32,8 @@ public abstract class Ejecutable {
 	public final static String FIN_FORZADO = "FIN FORZADO";						//Esta descripción indica una ejecución satisfactoria sin error ni parada forzada
 	public final static String FIN_KO_VOLCADO = "FIN KO VOLCADO";						//Esta descripción indica una ejecución satisfactoria sin error ni parada forzada
 	
+	public final static String[] POSIBLES_CONFIGURACIONES = {"Threads","Tiempos"};
+
 	public final static int minHilos = 2;
 	public final static int minHilosAtalaya = 100;
 	public final static int tiempo_max_def = 30000;
@@ -180,6 +183,54 @@ public abstract class Ejecutable {
 		
 		
 	}
+
+	public void obtenerConfiguracion (Object claseEntrada, String nombreConf){ //Metodo para obtener las configuraciones indispensables (Threads y Tiempos)
+		ArrayList<Configuracion> configuraciones = new ArrayList<>(0);
+		
+		if(claseEntrada instanceof Analisis){ //OBTENER CONFIGURACIONES DE ANALISIS
+			Analisis entrada = (Analisis)claseEntrada;
+			configuraciones = entrada.getConfiguraciones();
+		}else if (claseEntrada instanceof Indicador){ //OBTENER CONFIGURACIONES DE INDICADOR
+			Indicador entrada = (Indicador)claseEntrada;
+			configuraciones = entrada.getConfiguraciones();
+		}else if (claseEntrada instanceof Evento){ //OBTENER CONFIGURACIONES DE EVENTO
+			Evento entrada = (Evento)claseEntrada;
+			configuraciones = entrada.getConfiguraciones();
+		}
+		//Si no existe una configuracion se establece por defecto
+		if(configuraciones == null || configuraciones.size() == 0){
+			log.info("ERROR al cargar configuracion de "+nombreConf+". No se tiene informacion de configuracion");
+		}else{
+
+			for (Configuracion configuracion : configuraciones) { //Recorremos las configuraciones
+				if(Arrays.asList(POSIBLES_CONFIGURACIONES).contains(configuracion.getNombre())){
+					int valor=0;
+					try {
+						valor = Integer.parseInt(configuracion.getValor());
+					} catch (Exception e) {
+						log.info("ERROR al obtener el valor de configuracion");
+					}
+					if (configuracion.getNombre() == nombreConf && configuracion.getNombre() == "Threads") {
+						if(valor > minHilos){
+							numHilos = valor;
+							log.info(claseEntrada.getClass().getSimpleName() + " EN MODO MULTIHILO CON  " + numHilos + "  HILOS EN DISPOSICION....");
+						}else{
+							log.info(claseEntrada.getClass().getSimpleName() +" EN MODO SECUENCIAL...");
+						}
+					}else if (configuracion.getNombre() == nombreConf && configuracion.getNombre() == "Tiempos"){
+						if(valor > 0){
+							tiempo_max = valor;
+							log.info("Definido tiempo maximo para ejecutar "+claseEntrada.getClass().getSimpleName()+" en " + tiempo_max);
+						}else{
+							log.info("WARNING Tiempo de ejecucion no válido. Se deja por defecto");
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/*
 	public void obtenerConfiguracion (Object entradaclase, String nombreConf){
 
 		ArrayList<Configuracion> configuraciones = new ArrayList<>(0);
@@ -254,7 +305,7 @@ public abstract class Ejecutable {
 			}
 		}
 	}
-	
+	*/
 	public String volcadoResultado (String modo)
 	{
 		StringBuffer volcado = new StringBuffer();

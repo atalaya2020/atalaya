@@ -10,7 +10,6 @@ import com.modelodatos.Analisis;
 import com.modelodatos.Configuracion;
 import com.modelodatos.Evento;
 import com.modelodatos.Indicador;
-import com.modelodatos.Parametro;
 
 import redis.clients.jedis.Jedis;
 
@@ -33,7 +32,7 @@ public abstract class Ejecutable {
 	public final static String FIN_KO_VOLCADO = "FIN KO VOLCADO";						//Esta descripción indica una ejecución satisfactoria sin error ni parada forzada
 	
 	public final static String[] POSIBLES_CONFIGURACIONES = {"Threads","Tiempos"};
-
+	
 	public final static int minHilos = 2;
 	public final static int minHilosAtalaya = 100;
 	public final static int tiempo_max_def = 30000;
@@ -134,6 +133,9 @@ public abstract class Ejecutable {
 	}
 	
 	public Vector<Object[]> getResultadoEjecucion() {
+		if (resultadoEjecucion==null)
+			resultadoEjecucion = new Vector<Object[]>();
+			
 		return resultadoEjecucion;
 	}
 
@@ -183,7 +185,6 @@ public abstract class Ejecutable {
 		
 		
 	}
-
 	public void obtenerConfiguracion (Object claseEntrada, String nombreConf){ //Metodo para obtener las configuraciones indispensables (Threads y Tiempos)
 		ArrayList<Configuracion> configuraciones = new ArrayList<>(0);
 		
@@ -229,83 +230,7 @@ public abstract class Ejecutable {
 			}
 		}
 	}
-
-	/*
-	public void obtenerConfiguracion (Object entradaclase, String nombreConf){
-
-		ArrayList<Configuracion> configuraciones = new ArrayList<>(0);
-		
-		if(entradaclase instanceof Analisis){ //OBTENER CONFIGURACIONES DE ANALISIS
-			Analisis entrada = (Analisis)entradaclase;
-			configuraciones = entrada.getConfiguraciones();
-		}else if (entradaclase instanceof Indicador){ //OBTENER CONFIGURACIONES DE INDICADOR
-			Indicador entrada = (Indicador)entradaclase;
-			configuraciones = entrada.getConfiguraciones();
-		}else if (entradaclase instanceof Evento){ //OBTENER CONFIGURACIONES DE EVENTO
-			Evento entrada = (Evento)entradaclase;
-			configuraciones = entrada.getConfiguraciones();
-		}
-		//Si no existe una configuracion se establece por defecto
-		if(configuraciones == null || configuraciones.size() == 0){
-			log.info("ERROR al cargar configuracion de "+nombreConf+". No se tiene informacion de configuracion");
-		}else{
-			int i=0;
-			while(i<configuraciones.size() && configuraciones.get(i).getNombre() != nombreConf){ //Avanzo configuraciones hasta dar con la  que quiero
-				i++;
-			}
-			if(i == configuraciones.size()){ // No se ha encontrado la configuracion con ese nombre
-				log.info("No se ha encontrado configuracion para "+nombreConf);
-			}else{
-				String nombreConfiguracion = 	  configuraciones.get(i).getNombre();
-				//String descripcionConfiguracion = configuraciones.get(i).getDescripcion();
-				Parametro parametro = configuraciones.get(i).getParametro();
-
-				switch (nombreConfiguracion) {
-					//CONFIGURACION DE THREADS
-					case "Threads":
-						if(parametro.getNombre() == "NumeroHilos"){ 
-							try {
-								int hilos = Integer.parseInt(parametro.getValor());
-								if(hilos <= minHilos){ // Si el numero de hilos es menor que el minimo se deja por defecto 
-									log.info(entradaclase.getClass().getName() +" EN MODO SECUENCIAL...");
-								}else{
-									numHilos = hilos;
-									log.info(entradaclase.getClass().getName() + " EN MODO MULTIHILO CON  " + numHilos + "  HILOS EN DISPOSICION....");
-								}
-							} catch (Exception e) {
-								log.info("WARNING Valor de hilos no valido. Se deja por defecto");
-							}
-						}else{
-							log.info("ERROR parametro de "+nombreConf+" no valido");
-						}	
-						break;
-					//CONFIGURACION DE TIEMPOS
-					case "Tiempos":
-						if(parametro.getNombre() == "TiempoEjecucion"){
-							try {
-								int tiempo = Integer.parseInt(parametro.getValor());
-								if(tiempo > 0){
-									tiempo_max = tiempo;
-									log.info("Definido tiempo maximo para ejecutar analisis en " + tiempo_max);
-								}else{
-									log.info("WARNING Tiempo de ejecucion no válido. Se deja por defecto");
-								}
-								
-							} catch (Exception e) {
-								log.info("WARNING Tiempo de ejecucion no válido. Se deja por defecto");
-							}
-						}else{
-							log.info("ERROR parametro de "+nombreConf+" no valido");
-						} 	
-						break;
-
-					default:
-						log.info("ERROR parametro de "+nombreConf+" no valido");
-				}//Se podrian añadir mas casos de configuracion
-			}
-		}
-	}
-	*/
+	
 	public String volcadoResultado (String modo)
 	{
 		StringBuffer volcado = new StringBuffer();

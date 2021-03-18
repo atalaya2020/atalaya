@@ -1,7 +1,5 @@
 package com.atalaya.interpretes;
 
-import java.io.File;
-import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,10 +10,6 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.Hashtable;
 import java.util.Vector;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-
 import com.modelodatos.Indicador;
 
 import com.zaxxer.hikari.HikariConfig;
@@ -25,10 +19,7 @@ public class IndicadorProxyTypeQuery implements IIndicadorProxyType {
 	
 	private static IndicadorProxyTypeQuery instance;
 	
-	private String modoVolcado = "memoria";
-	private int numFilasParaVolcarFichero = 100;
 	private int numFilasParaLeer = 1000;
-	private String ficheroVolcado = "c://users/0015814/Desktop/volcado.txt";
 	
 	private static Hashtable<String,HikariDataSource>almacenPool; 
 	//statement.setFetchSize(Integer.MIN_VALUE);
@@ -58,44 +49,35 @@ public class IndicadorProxyTypeQuery implements IIndicadorProxyType {
 		try
 		{			
 			HikariDataSource pool = null;
+			String nombreFuente = indicador.getIndicador().getFuente();
+			
 			
 			if (almacenPool==null || (almacenPool!=null && almacenPool.size()==0))
 				almacenPool = new Hashtable<String,HikariDataSource>();
 			
-			if (almacenPool.containsKey(indicador.getIndicador().getFuente()))
-				pool = almacenPool.get(indicador.getIndicador().getFuente());
+			if (almacenPool.containsKey(nombreFuente))
+				pool = almacenPool.get(nombreFuente);
 			
 			
-			if (!almacenPool.containsKey(indicador.getIndicador().getFuente()))
+			if (!almacenPool.containsKey(nombreFuente))
 			{
-				if (indicador.getIndicador().getFuente().equals("AlumnadoDB"))
-				{
-					HikariConfig config = new HikariConfig();
-					config.setJdbcUrl("jdbc:mysql://localhost:3306/alumnadodb?useServerPrepStmts=true&useSSL=false&allowPublicKeyRetrieval=true");
-					//config.setJdbcUrl("jdbc:mysql://alumnadodb:3306/alumnadodb?useServerPrepStmts=true&useSSL=false&allowPublicKeyRetrieval=true");
-					config.setUsername("root");
-					config.setPassword("atalaya");
-					config.addDataSourceProperty("cachePrepStmts", "true");
-					config.addDataSourceProperty("prepStmtCacheSize", "250");
-					config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-					config.addDataSourceProperty("maximum-pool-size", "20");
+				HikariConfig config = new HikariConfig();
+				config.setJdbcUrl(Ejecutable.getConfFuentes().getProperty(nombreFuente+"."+IIndicadorProxyType.propiedad_url));
+				config.setUsername(Ejecutable.getConfFuentes().getProperty(nombreFuente+"."+IIndicadorProxyType.propiedad_user));
+				config.setPassword(Ejecutable.getConfFuentes().getProperty(nombreFuente+"."+IIndicadorProxyType.propiedad_password));
+				config.addDataSourceProperty("cachePrepStmts",Ejecutable.getConfFuentes().getProperty(nombreFuente+"."+IIndicadorProxyType.propiedad_cachePrepStmts));
+				config.addDataSourceProperty("prepStmtCacheSize",Ejecutable.getConfFuentes().getProperty(nombreFuente+"."+IIndicadorProxyType.propiedad_prepStmtCacheSize));
+				config.addDataSourceProperty("prepStmtCacheSqlLimit",Ejecutable.getConfFuentes().getProperty(nombreFuente+"."+IIndicadorProxyType.propiedad_prepStmtCacheSqlLimit));
+				config.addDataSourceProperty("maximum-pool-size", Ejecutable.getConfFuentes().getProperty(nombreFuente+"."+IIndicadorProxyType.propiedad_maximumpoolsize));
 	
-					pool = new HikariDataSource(config);
-					almacenPool.put(indicador.getIndicador().getFuente(), pool);
-				}
+				pool = new HikariDataSource(config);
+				almacenPool.put(indicador.getIndicador().getFuente(), pool);
 			}
 			
 			if (pool!=null)
 			{
 				Connection conexion = null;
 				ResultSet rs = null;
-				
-				PrintWriter fichero = null;
-				
-				if (modoVolcado.equals("memoria"))
-					indicador.setResultadoEjecucion(new Vector<Object[]>());
-				else
-					fichero = new PrintWriter(new File(ficheroVolcado));
 				
 				try
 				{
@@ -146,7 +128,7 @@ public class IndicadorProxyTypeQuery implements IIndicadorProxyType {
 	
 					int num_columnas = metadata.getColumnCount();
 	
-					if (def_indicador.getResultado() == null ||  def_indicador.getResultado().length == 0)
+					if (def_indicador.getResultado() == null || def_indicador.getResultado().length == 0)
 					{
 						num_columnas_extraccion = num_columnas;
 						def_indicador.setResultado(new String[num_columnas]);
@@ -188,13 +170,10 @@ public class IndicadorProxyTypeQuery implements IIndicadorProxyType {
 						}
 					}
 					
-					int numRows = 0;
-					
+					Object[] row = null;
 					while(rs.next())
 					{
-						++numRows;
-						
-						Object[] row = new Object[num_columnas_extraccion];
+						row = new Object[num_columnas_extraccion];							
 						for(int i=0;i<num_columnas_extraccion;i++)
 						{
 							Object value = new Object();
@@ -268,23 +247,17 @@ public class IndicadorProxyTypeQuery implements IIndicadorProxyType {
 							}
 							
 							row[i] = value;	
+							//rs.deleteRow();
 						}
 						
-						if (modoVolcado.equals("memoria"))
-						{
-							if (indicador.getResultadoEjecucion()!=null)
-								indicador.getResultadoEjecucion().add(row);
-						}
-						else
-						{
-							fichero.println(row.toString());
-							if(numRows % numFilasParaVolcarFichero == 0)
-						        fichero.flush();
-						}
-						indicador.setDescripcionEstado(Ejecutable.FIN_OK);
+						//añadimos las filas al resultado del indicador si llega al numero de filas que definen el bloque de volcado
+						indicador.setResultadoEjecucion(row,false);
 					}
 					
+					//añadimos las filas al resultado del indicador si no han sido añadidas por no llegar al numero de filas que definen el bloque de volcado
+					indicador.setResultadoEjecucion(null,true);
 					indicador.setEstado(Ejecutable.ESTADO_EJECUTADO);
+					
 					exec = true;
 	
 				} 

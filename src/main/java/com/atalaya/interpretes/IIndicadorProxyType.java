@@ -9,6 +9,8 @@ public interface IIndicadorProxyType {
 	
 	final static String comando_bucle = "para";
 	final static String comando_ws = "ws";
+
+	//"/var/lib/sistemaFicheros/"
 	
 	public boolean ejecutar(IndicadorProxy IndicadorProxy) throws Exception;
 	

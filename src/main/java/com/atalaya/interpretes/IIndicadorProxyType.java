@@ -9,6 +9,10 @@ public interface IIndicadorProxyType {
 	
 	final static String comando_bucle = "para";
 	final static String comando_ws = "ws";
+	final static String comando_fichero_Reader = "fileReader";
+	final static String comando_fichero_Writer = "fileWriter";
+	
+	final static String separadorFichero = "\\|";
 
 	//"/var/lib/sistemaFicheros/"
 	
